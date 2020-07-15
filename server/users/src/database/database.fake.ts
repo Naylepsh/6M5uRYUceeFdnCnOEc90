@@ -9,11 +9,13 @@ export class FakeDatabase {
 
   static findById(id: string): UserDto {
     const foundUsers = users.filter(user => user.id === id);
-    return foundUsers ? foundUsers[0] : null;
+    const user = foundUsers ? foundUsers[0] : undefined;
+    return user;
   }
 
   static createUser(user: UserDto): void {
-    users.push(user);
+    const id = users.length + '';
+    users.push({ ...user, id });
   }
 
   static updateUser(updatedUserData: UserDto): void {

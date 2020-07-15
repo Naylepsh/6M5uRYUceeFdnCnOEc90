@@ -13,7 +13,7 @@ export class UsersService {
 
   async findById(id: string): Promise<UserDto> {
     const user = await this.userRepository.findById(id);
-    if (user === null) {
+    if (user === undefined) {
       throw new NotFoundException();
     }
 

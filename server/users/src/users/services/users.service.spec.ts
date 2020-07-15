@@ -74,7 +74,7 @@ describe('UserService', () => {
 
     it('should throw an error if a user was not found', async () => {
       // override mock
-      initRepoCallMock(userRepository, 'findById', async () => null);
+      initRepoCallMock(userRepository, 'findById', async () => undefined);
 
       expect(() => usersService.findById(user.id)).rejects.toThrow(
         NotFoundException,
