@@ -63,4 +63,24 @@ describe('UserService', () => {
     // TODO:
     // it('should throw an error if invalid id is passed')
   });
+
+  describe('createUser', () => {
+    const user: UserDto = {
+      id: '1',
+      username: 'username',
+      password: 'password',
+    };
+
+    it('should call repository to create a new user', async () => {
+      const fn = jest
+        .spyOn(userRepository, 'createUser')
+        .mockImplementation(async () => null);
+
+      await usersService.createUser(user);
+
+      expect(fn).toBeCalled();
+    });
+
+    // TODO: validation check
+  });
 });
