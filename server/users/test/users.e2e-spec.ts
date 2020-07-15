@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { UsersModule } from '../src/users/users.module';
 import { UserDto } from './../src/users/dtos/user.dto';
@@ -58,7 +58,30 @@ describe('UsersController (e2e)', () => {
     });
   });
 
-  describe('/:id', () => {
+  describe('/ (POST)', () => {
+    const user: UserDto = { username: 'username42', password: 'password123' };
+
+    it('should return 201 if proper user payload was provided', async () => {
+      const res = await request(app.getHttpServer())
+        .post(apiEndpoint)
+        .send(user);
+
+      expect(res.status).toBe(HttpStatus.CREATED);
+    });
+
+    it('should create a new user in database', async () => {
+      const usersBeforeCall = FakeDatabase.findAll();
+
+      await request(app.getHttpServer())
+        .post(apiEndpoint)
+        .send(user);
+
+      const usersAfterCall = FakeDatabase.findAll();
+      return expect(usersAfterCall.length - usersBeforeCall.length).toBe(1);
+    });
+  });
+
+  describe('/:id (GET)', () => {
     it('should return an user if valid id is passed', () => {
       const id = '1';
 

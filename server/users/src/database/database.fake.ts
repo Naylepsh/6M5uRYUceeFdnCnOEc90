@@ -4,7 +4,7 @@ let users: UserDto[] = [];
 
 export class FakeDatabase {
   static findAll(): UserDto[] {
-    return users;
+    return [...users];
   }
 
   static findById(id: string): UserDto {
