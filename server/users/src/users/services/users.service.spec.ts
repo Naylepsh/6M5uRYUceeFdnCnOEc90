@@ -7,6 +7,7 @@ import { NotFoundException } from './../../exceptions/not-found.exception';
 describe('UserService', () => {
   let usersService: UsersService;
   let userRepository: UserRepository;
+  let repoCall;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -18,18 +19,21 @@ describe('UserService', () => {
     userRepository = moduleRef.get<UserRepository>(UserRepository);
   });
 
+  const initRepoCallMock = (
+    repo: any,
+    functionName: string,
+    mockImpl: () => any,
+  ) => {
+    repoCall = jest.spyOn(repo, functionName).mockImplementation(mockImpl);
+  };
+
   describe('findAll', () => {
     const users: UserDto[] = [
       { id: '1', username: 'username', password: 'password' },
     ];
-    let repoCall;
 
     beforeEach(() => {
-      repoCall = jest
-        .spyOn(userRepository, 'findAll')
-        .mockImplementation(async () => {
-          return users;
-        });
+      initRepoCallMock(userRepository, 'findAll', async () => users);
     });
 
     it('should call repository to find all users', async () => {
@@ -51,12 +55,9 @@ describe('UserService', () => {
       username: 'username',
       password: 'password',
     };
-    let repoCall;
 
     beforeEach(() => {
-      repoCall = jest
-        .spyOn(userRepository, 'findById')
-        .mockImplementation(async () => user);
+      initRepoCallMock(userRepository, 'findById', async () => user);
     });
 
     it('should call repo to find an user', async () => {
@@ -72,9 +73,8 @@ describe('UserService', () => {
     });
 
     it('should throw an error if a user was not found', async () => {
-      jest
-        .spyOn(userRepository, 'findById')
-        .mockImplementation(async () => null);
+      // override mock
+      initRepoCallMock(userRepository, 'findById', async () => null);
 
       expect(() => usersService.findById(user.id)).rejects.toThrow(
         NotFoundException,
@@ -92,11 +92,11 @@ describe('UserService', () => {
       password: 'password',
     };
 
-    it('should call repository to create a new user', async () => {
-      const repoCall = jest
-        .spyOn(userRepository, 'createUser')
-        .mockImplementation(async () => null);
+    beforeEach(() => {
+      initRepoCallMock(userRepository, 'createUser', async () => null);
+    });
 
+    it('should call repository to create a new user', async () => {
       await usersService.createUser(user);
 
       expect(repoCall).toBeCalled();
@@ -112,11 +112,11 @@ describe('UserService', () => {
       password: 'password',
     };
 
-    it('should call repository to update a new user', async () => {
-      const repoCall = jest
-        .spyOn(userRepository, 'updateUser')
-        .mockImplementation(async () => null);
+    beforeEach(() => {
+      initRepoCallMock(userRepository, 'updateUser', async () => null);
+    });
 
+    it('should call repository to update a new user', async () => {
       await usersService.updateUser(user);
 
       expect(repoCall).toBeCalled();
@@ -126,11 +126,12 @@ describe('UserService', () => {
   });
 
   describe('deleteUser', () => {
+    beforeEach(() => {
+      initRepoCallMock(userRepository, 'deleteUser', async () => null);
+    });
+
     it('should call repository to delete a new user', async () => {
       const id = '1';
-      const repoCall = jest
-        .spyOn(userRepository, 'deleteUser')
-        .mockImplementation(async () => null);
 
       await usersService.deleteUser(id);
 
