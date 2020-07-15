@@ -1,19 +1,21 @@
-let users = [];
+import { UserDto } from './../users/dtos/user.dto';
+
+let users: UserDto[] = [];
 
 export class FakeDatabase {
-  findAll() {
+  static findAll(): UserDto[] {
     return users;
   }
 
-  findById(id: string) {
+  static findById(id: string): UserDto[] {
     return users.filter(user => user.id === id);
   }
 
-  createUser(user): void {
+  static createUser(user: UserDto): void {
     users.push(user);
   }
 
-  updateUser(id: string, updatedUserData): void {
+  static updateUser(id: string, updatedUserData: UserDto): void {
     users = users.map(user => {
       if (user.id === id) {
         return updatedUserData;
@@ -23,7 +25,7 @@ export class FakeDatabase {
     });
   }
 
-  deleteUser(id: string): void {
+  static deleteUser(id: string): void {
     users = users.filter(user => user.id !== id);
   }
 }
