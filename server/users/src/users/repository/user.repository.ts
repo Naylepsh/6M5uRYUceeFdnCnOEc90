@@ -13,10 +13,14 @@ export class UserRepository {
   }
 
   async createUser(user: UserDto): Promise<void> {
-    FakeDatabase.createUser(user);
+    return FakeDatabase.createUser(user);
   }
 
   async updateUser(user: UserDto): Promise<void> {
-    FakeDatabase.updateUser(user);
+    return FakeDatabase.updateUser(user);
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    return FakeDatabase.deleteUser(id);
   }
 }

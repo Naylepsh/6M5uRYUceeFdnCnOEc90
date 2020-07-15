@@ -124,4 +124,17 @@ describe('UserService', () => {
 
     // TODO: validation check
   });
+
+  describe('deleteUser', () => {
+    it('should call repository to delete a new user', async () => {
+      const id = '1';
+      const repoCall = jest
+        .spyOn(userRepository, 'deleteUser')
+        .mockImplementation(async () => null);
+
+      await usersService.deleteUser(id);
+
+      expect(repoCall).toBeCalled();
+    });
+  });
 });
