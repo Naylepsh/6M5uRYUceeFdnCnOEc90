@@ -2,6 +2,7 @@ import { UsersService } from './users.service';
 import { Test } from '@nestjs/testing';
 import { UserDto } from './../dtos/user.dto';
 import { UserRepository } from './../repository/user.repository';
+import { NotFoundException } from './../../exceptions/not-found.exception';
 
 describe('UserService', () => {
   let usersService: UsersService;
@@ -23,7 +24,6 @@ describe('UserService', () => {
         { id: '1', username: 'username', password: 'password' },
       ];
       jest.spyOn(userRepository, 'findAll').mockImplementation(async () => {
-        console.log('sadasds');
         return users;
       });
 
@@ -31,5 +31,36 @@ describe('UserService', () => {
 
       expect(res).toBe(users);
     });
+  });
+
+  describe('findById', () => {
+    const user: UserDto = {
+      id: '1',
+      username: 'username',
+      password: 'password',
+    };
+
+    it('should return an user if a valid id is passed', async () => {
+      jest
+        .spyOn(userRepository, 'findById')
+        .mockImplementation(async () => user);
+
+      const res = await usersService.findById(user.id);
+
+      expect(res).toBe(user);
+    });
+
+    it('should throw an error if a user was not found', async () => {
+      jest
+        .spyOn(userRepository, 'findById')
+        .mockImplementation(async () => null);
+
+      expect(() => usersService.findById(user.id)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    // TODO:
+    // it('should throw an error if invalid id is passed')
   });
 });
