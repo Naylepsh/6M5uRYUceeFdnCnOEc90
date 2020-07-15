@@ -49,12 +49,11 @@ describe('UsersController (e2e)', () => {
   };
 
   describe('/ (GET)', () => {
-    it('should return all users', () => {
-      return request(app.getHttpServer())
-        .get(apiEndpoint)
-        .expect(({ body }) => {
-          expect(body.length).toBe(2);
-        });
+    it('should return all users', async () => {
+      const res = await request(app.getHttpServer()).get(apiEndpoint);
+
+      expect(res.status).toBe(HttpStatus.OK);
+      expect(res.body.length).toBe(2);
     });
   });
 
@@ -82,36 +81,38 @@ describe('UsersController (e2e)', () => {
   });
 
   describe('/:id (GET)', () => {
-    it('should return an user if valid id is passed', () => {
+    it('should return an user if valid id is passed', async () => {
       const id = '1';
 
-      return request(app.getHttpServer())
-        .get(`${apiEndpoint}/${id}`)
-        .expect(200)
-        .expect(({ body }) => {
-          expect(body).toHaveProperty('id', id);
-        });
+      const res = await request(app.getHttpServer()).get(
+        `${apiEndpoint}/${id}`,
+      );
+
+      expect(res.status).toBe(HttpStatus.OK);
+      expect(res.body).toHaveProperty('id', id);
     });
 
-    it('should return an existing user from database', () => {
+    it('should return an existing user from database', async () => {
       const id = '1';
       const userFromDatabase = FakeDatabase.findById(id);
 
-      return request(app.getHttpServer())
-        .get(`${apiEndpoint}/${id}`)
-        .expect(200)
-        .expect(({ body }) => {
-          expect(body).toHaveProperty('id', userFromDatabase.id);
-          expect(body).toHaveProperty('username', userFromDatabase.username);
-        });
+      const res = await request(app.getHttpServer()).get(
+        `${apiEndpoint}/${id}`,
+      );
+
+      expect(res.status).toBe(HttpStatus.OK);
+      expect(res.body).toHaveProperty('id', userFromDatabase.id);
+      expect(res.body).toHaveProperty('username', userFromDatabase.username);
     });
 
-    it('should return 404 if user was not found', () => {
+    it('should return 404 if user was not found', async () => {
       const id = '42';
 
-      return request(app.getHttpServer())
-        .get(`${apiEndpoint}/${id}`)
-        .expect(404);
+      const res = await request(app.getHttpServer()).get(
+        `${apiEndpoint}/${id}`,
+      );
+
+      expect(res.status).toBe(HttpStatus.NOT_FOUND);
     });
   });
 
