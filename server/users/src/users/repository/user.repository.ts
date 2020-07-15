@@ -15,4 +15,8 @@ export class UserRepository {
   async createUser(user: UserDto): Promise<void> {
     FakeDatabase.createUser(user);
   }
+
+  async updateUser(user: UserDto): Promise<void> {
+    FakeDatabase.updateUser(user);
+  }
 }

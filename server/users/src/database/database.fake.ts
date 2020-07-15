@@ -16,9 +16,9 @@ export class FakeDatabase {
     users.push(user);
   }
 
-  static updateUser(id: string, updatedUserData: UserDto): void {
+  static updateUser(updatedUserData: UserDto): void {
     users = users.map(user => {
-      if (user.id === id) {
+      if (user.id === updatedUserData.id) {
         return updatedUserData;
       } else {
         return user;

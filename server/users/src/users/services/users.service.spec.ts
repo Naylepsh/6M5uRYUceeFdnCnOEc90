@@ -19,14 +19,26 @@ describe('UserService', () => {
   });
 
   describe('findAll', () => {
-    it('should return all users', async () => {
-      const users: UserDto[] = [
-        { id: '1', username: 'username', password: 'password' },
-      ];
-      jest.spyOn(userRepository, 'findAll').mockImplementation(async () => {
-        return users;
-      });
+    const users: UserDto[] = [
+      { id: '1', username: 'username', password: 'password' },
+    ];
+    let repoCall;
 
+    beforeEach(() => {
+      repoCall = jest
+        .spyOn(userRepository, 'findAll')
+        .mockImplementation(async () => {
+          return users;
+        });
+    });
+
+    it('should call repository to find all users', async () => {
+      await usersService.findAll();
+
+      expect(repoCall).toBeCalled();
+    });
+
+    it('should return all users', async () => {
       const res = await usersService.findAll();
 
       expect(res).toBe(users);
@@ -39,12 +51,21 @@ describe('UserService', () => {
       username: 'username',
       password: 'password',
     };
+    let repoCall;
 
-    it('should return an user if a valid id is passed', async () => {
-      jest
+    beforeEach(() => {
+      repoCall = jest
         .spyOn(userRepository, 'findById')
         .mockImplementation(async () => user);
+    });
 
+    it('should call repo to find an user', async () => {
+      await usersService.findById(user.id);
+
+      expect(repoCall).toBeCalled();
+    });
+
+    it('should return an user if a valid id is passed', async () => {
       const res = await usersService.findById(user.id);
 
       expect(res).toBe(user);
@@ -72,13 +93,33 @@ describe('UserService', () => {
     };
 
     it('should call repository to create a new user', async () => {
-      const fn = jest
+      const repoCall = jest
         .spyOn(userRepository, 'createUser')
         .mockImplementation(async () => null);
 
       await usersService.createUser(user);
 
-      expect(fn).toBeCalled();
+      expect(repoCall).toBeCalled();
+    });
+
+    // TODO: validation check
+  });
+
+  describe('updateUser', () => {
+    const user: UserDto = {
+      id: '1',
+      username: 'username',
+      password: 'password',
+    };
+
+    it('should call repository to update a new user', async () => {
+      const repoCall = jest
+        .spyOn(userRepository, 'updateUser')
+        .mockImplementation(async () => null);
+
+      await usersService.updateUser(user);
+
+      expect(repoCall).toBeCalled();
     });
 
     // TODO: validation check
