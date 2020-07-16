@@ -82,22 +82,21 @@ describe('UsersController (e2e)', () => {
 
   describe('/:id (GET)', () => {
     it('should return an user if valid id is passed', async () => {
-      const id = '1';
+      const userFromDatabase = FakeDatabase.findAll()[0];
 
       const res = await request(app.getHttpServer()).get(
-        `${apiEndpoint}/${id}`,
+        `${apiEndpoint}/${userFromDatabase.id}`,
       );
 
       expect(res.status).toBe(HttpStatus.OK);
-      expect(res.body).toHaveProperty('id', id);
+      expect(res.body).toHaveProperty('id', userFromDatabase.id);
     });
 
     it('should return an existing user from database', async () => {
-      const id = '1';
-      const userFromDatabase = FakeDatabase.findById(id);
+      const userFromDatabase = FakeDatabase.findAll()[0];
 
       const res = await request(app.getHttpServer()).get(
-        `${apiEndpoint}/${id}`,
+        `${apiEndpoint}/${userFromDatabase.id}`,
       );
 
       expect(res.status).toBe(HttpStatus.OK);
@@ -114,6 +113,71 @@ describe('UsersController (e2e)', () => {
 
       expect(res.status).toBe(HttpStatus.NOT_FOUND);
     });
+  });
+
+  describe('/:id (PUT)', () => {
+    it('should return 200 if proper user payload was passed', async () => {
+      const userFromDatabase = FakeDatabase.findAll()[0];
+      userFromDatabase.username = 'different-username';
+
+      const res = await request(app.getHttpServer()).put(
+        `${apiEndpoint}/${userFromDatabase.id}`,
+      );
+
+      expect(res.status).toBe(HttpStatus.OK);
+    });
+
+    it('should update an user if proper user payload was passed', async () => {
+      const userFromDatabase = FakeDatabase.findAll()[0];
+      userFromDatabase.username = 'different-username';
+
+      await request(app.getHttpServer()).put(
+        `${apiEndpoint}/${userFromDatabase.id}`,
+      );
+      const updatedUserFromDatabase = FakeDatabase.findById(
+        userFromDatabase.id,
+      );
+
+      expect(updatedUserFromDatabase).toHaveProperty(
+        'username',
+        updatedUserFromDatabase.username,
+      );
+    });
+
+    it('should NOT change database records if user was not found', async () => {
+      const usersBeforeCall = FakeDatabase.findAll();
+      const userFromDatabase = usersBeforeCall[0];
+      userFromDatabase.username = 'different-username';
+      const id = '42';
+
+      const res = await request(app.getHttpServer())
+        .put(`${apiEndpoint}/${id}`)
+        .send(userFromDatabase);
+
+      const usersAfterCall = FakeDatabase.findAll();
+
+      expect(res.status).toBe(HttpStatus.OK);
+      expectUsersToBeTheSame(usersBeforeCall, usersAfterCall);
+    });
+
+    const expectUsersToBeTheSame = (expected: UserDto[], actual: UserDto[]) => {
+      expect(expected.length).toBe(actual.length);
+
+      for (const expectedUser of expected) {
+        for (const actualUser of actual) {
+          if (expectedUser.id === actualUser.id) {
+            expect(actualUser).toHaveProperty(
+              'username',
+              expectedUser.username,
+            );
+            expect(actualUser).toHaveProperty(
+              'password',
+              expectedUser.password,
+            );
+          }
+        }
+      }
+    };
   });
 
   // it('/ (GET)', () => {
