@@ -7,10 +7,8 @@ export class FakeDatabase {
     return [...users];
   }
 
-  static findById(id: string): UserDto {
-    const foundUsers = users.filter(user => user.id === id);
-    const user = foundUsers ? foundUsers[0] : undefined;
-    return user;
+  static findById(id: string): UserDto | undefined {
+    return users.find(user => user.id === id);
   }
 
   static createUser(user: UserDto): void {

@@ -11,7 +11,7 @@ export class UsersService {
     return this.userRepository.findAll();
   }
 
-  async findById(id: string): Promise<UserDto> {
+  async findById(id: string): Promise<UserDto | undefined> {
     const user = await this.userRepository.findById(id);
     if (user === undefined) {
       throw new NotFoundException();
