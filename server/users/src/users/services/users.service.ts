@@ -27,6 +27,7 @@ export class UsersService {
   }
 
   async updateUser(user: UserDto): Promise<void> {
+    console.log('user:', user);
     const hashedPassword = await hash(user.password);
     await this.userRepository.updateUser({ ...user, password: hashedPassword });
   }

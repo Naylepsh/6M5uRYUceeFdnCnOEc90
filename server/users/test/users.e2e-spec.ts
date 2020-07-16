@@ -33,7 +33,6 @@ describe('UsersController (e2e)', () => {
   const populateDatabase = () => {
     const users: UserDto[] = [
       {
-        id: '1',
         username: 'username1',
         firstName: 'john',
         lastName: 'doe',
@@ -41,7 +40,6 @@ describe('UsersController (e2e)', () => {
         password: 'password',
       },
       {
-        id: '2',
         username: 'username2',
         firstName: 'john',
         lastName: 'doe',
@@ -73,7 +71,6 @@ describe('UsersController (e2e)', () => {
 
   describe('/ (POST)', () => {
     const user: UserDto = {
-      id: '1',
       username: 'username1',
       firstName: 'john',
       lastName: 'doe',
@@ -141,9 +138,9 @@ describe('UsersController (e2e)', () => {
       const userFromDatabase = FakeDatabase.findAll()[0];
       userFromDatabase.username = 'different-username';
 
-      const res = await request(app.getHttpServer()).put(
-        `${apiEndpoint}/${userFromDatabase.id}`,
-      );
+      const res = await request(app.getHttpServer())
+        .put(`${apiEndpoint}/${userFromDatabase.id}`)
+        .send(userFromDatabase);
 
       expect(res.status).toBe(HttpStatus.OK);
     });
@@ -152,9 +149,9 @@ describe('UsersController (e2e)', () => {
       const userFromDatabase = FakeDatabase.findAll()[0];
       userFromDatabase.username = 'different-username';
 
-      await request(app.getHttpServer()).put(
-        `${apiEndpoint}/${userFromDatabase.id}`,
-      );
+      await request(app.getHttpServer())
+        .put(`${apiEndpoint}/${userFromDatabase.id}`)
+        .send(userFromDatabase);
       const updatedUserFromDatabase = FakeDatabase.findById(
         userFromDatabase.id,
       );
