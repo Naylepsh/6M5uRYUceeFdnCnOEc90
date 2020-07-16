@@ -180,10 +180,26 @@ describe('UsersController (e2e)', () => {
     };
   });
 
-  // it('/ (GET)', () => {
-  //   return request(app.getHttpServer())
-  //     .get('/')
-  //     .expect(200)
-  //     .expect('Hello World!');
-  // });
+  describe('/users/:id (DELETE)', () => {
+    it('should delete an user from database if valid id was passed', async () => {
+      const userFromDatabase = FakeDatabase.findAll()[0];
+
+      await request(app.getHttpServer()).del(
+        `${apiEndpoint}/${userFromDatabase.id}`,
+      );
+
+      const user = FakeDatabase.findById(userFromDatabase.id);
+      expect(user).not.toBeDefined();
+    });
+
+    it('should not change database if user of passed id doesnt exists', async () => {
+      const usersBeforeCall = FakeDatabase.findAll();
+      const id = '42';
+
+      await request(app.getHttpServer()).del(`${apiEndpoint}/${id}`);
+
+      const usersAfterCall = FakeDatabase.findAll();
+      expect(usersAfterCall.length).toBe(usersBeforeCall.length);
+    });
+  });
 });
