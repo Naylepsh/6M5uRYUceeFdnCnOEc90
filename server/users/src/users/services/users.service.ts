@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UserDto } from '../dtos/user.dto';
 import { UserRepository } from './../repository/user.repository';
 import { NotFoundException } from './../../exceptions/not-found.exception';
+import { hash } from '../../utils/hashing';
 
 @Injectable()
 export class UsersService {
@@ -21,11 +22,13 @@ export class UsersService {
   }
 
   async createUser(user: UserDto): Promise<void> {
-    await this.userRepository.createUser(user);
+    const hashedPassword = await hash(user.password);
+    await this.userRepository.createUser({ ...user, password: hashedPassword });
   }
 
   async updateUser(user: UserDto): Promise<void> {
-    await this.userRepository.updateUser(user);
+    const hashedPassword = await hash(user.password);
+    await this.userRepository.updateUser({ ...user, password: hashedPassword });
   }
 
   async deleteUser(id: string): Promise<void> {
