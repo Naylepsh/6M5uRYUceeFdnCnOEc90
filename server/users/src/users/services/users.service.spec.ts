@@ -8,6 +8,14 @@ describe('UserService', () => {
   let usersService: UsersService;
   let userRepository: UserRepository;
   let repoCall;
+  const user: UserDto = {
+    id: '1',
+    username: 'username',
+    firstName: 'john',
+    lastName: 'doe',
+    avatarUrl: 'path/to/avatar',
+    password: 'password',
+  };
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -28,9 +36,7 @@ describe('UserService', () => {
   };
 
   describe('findAll', () => {
-    const users: UserDto[] = [
-      { id: '1', username: 'username', password: 'password' },
-    ];
+    const users: UserDto[] = [user];
 
     beforeEach(() => {
       initRepoCallMock(userRepository, 'findAll', async () => users);
@@ -50,12 +56,6 @@ describe('UserService', () => {
   });
 
   describe('findById', () => {
-    const user: UserDto = {
-      id: '1',
-      username: 'username',
-      password: 'password',
-    };
-
     beforeEach(() => {
       initRepoCallMock(userRepository, 'findById', async () => user);
     });
@@ -86,12 +86,6 @@ describe('UserService', () => {
   });
 
   describe('createUser', () => {
-    const user: UserDto = {
-      id: '1',
-      username: 'username',
-      password: 'password',
-    };
-
     beforeEach(() => {
       initRepoCallMock(userRepository, 'createUser', async () => null);
     });
@@ -106,12 +100,6 @@ describe('UserService', () => {
   });
 
   describe('updateUser', () => {
-    const user: UserDto = {
-      id: '1',
-      username: 'username',
-      password: 'password',
-    };
-
     beforeEach(() => {
       initRepoCallMock(userRepository, 'updateUser', async () => null);
     });

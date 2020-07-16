@@ -32,8 +32,22 @@ describe('UsersController (e2e)', () => {
 
   const populateDatabase = () => {
     const users: UserDto[] = [
-      { username: 'user1', password: 'password1' },
-      { username: 'user2', password: 'password2' },
+      {
+        id: '1',
+        username: 'username1',
+        firstName: 'john',
+        lastName: 'doe',
+        avatarUrl: 'path/to/avatar',
+        password: 'password',
+      },
+      {
+        id: '2',
+        username: 'username2',
+        firstName: 'john',
+        lastName: 'doe',
+        avatarUrl: 'path/to/avatar',
+        password: 'password',
+      },
     ];
 
     for (const user of users) {
@@ -58,7 +72,14 @@ describe('UsersController (e2e)', () => {
   });
 
   describe('/ (POST)', () => {
-    const user: UserDto = { username: 'username42', password: 'password123' };
+    const user: UserDto = {
+      id: '1',
+      username: 'username1',
+      firstName: 'john',
+      lastName: 'doe',
+      avatarUrl: 'path/to/avatar',
+      password: 'password',
+    };
 
     it('should return 201 if proper user payload was provided', async () => {
       const res = await request(app.getHttpServer())
