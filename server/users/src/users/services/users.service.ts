@@ -2,11 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { UserDto } from '../dtos/user.dto';
 import { UserRepository } from './../repository/user.repository';
 import { NotFoundException } from './../../exceptions/not-found.exception';
-import { hash } from '../../utils/hashing';
+import { HashingService } from '../../utils/hashing.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly hashingService: HashingService,
+  ) {}
 
   async findAll(): Promise<UserDto[]> {
     return this.userRepository.findAll();
@@ -14,21 +17,21 @@ export class UsersService {
 
   async findById(id: string): Promise<UserDto | undefined> {
     const user = await this.userRepository.findById(id);
-    if (user === undefined) {
-      throw new NotFoundException();
-    }
+    return user;
+  }
 
+  async findOneByUsername(username: string): Promise<UserDto | undefined> {
+    const user = await this.userRepository.findOneByUsername(username);
     return user;
   }
 
   async createUser(user: UserDto): Promise<void> {
-    const hashedPassword = await hash(user.password);
+    const hashedPassword = await this.hashingService.hash(user.password);
     await this.userRepository.createUser({ ...user, password: hashedPassword });
   }
 
   async updateUser(user: UserDto): Promise<void> {
-    console.log('user:', user);
-    const hashedPassword = await hash(user.password);
+    const hashedPassword = await this.hashingService.hash(user.password);
     await this.userRepository.updateUser({ ...user, password: hashedPassword });
   }
 

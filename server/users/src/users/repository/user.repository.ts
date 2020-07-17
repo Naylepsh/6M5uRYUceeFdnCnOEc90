@@ -8,8 +8,12 @@ export class UserRepository {
     return FakeDatabase.findAll();
   }
 
-  async findById(id: string): Promise<UserDto> {
+  async findById(id: string): Promise<UserDto | undefined> {
     return FakeDatabase.findById(id);
+  }
+
+  async findOneByUsername(username: string): Promise<UserDto | undefined> {
+    return FakeDatabase.findOneByUsername(username);
   }
 
   async createUser(user: UserDto): Promise<void> {

@@ -11,6 +11,10 @@ export class FakeDatabase {
     return users.find(user => user.id === id);
   }
 
+  static findOneByUsername(username: string): UserDto | undefined {
+    return users.find(user => user.username === username);
+  }
+
   static createUser(user: UserDto): void {
     const id = users.length + '';
     users.push({ ...user, id });

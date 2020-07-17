@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { UserDto } from '../dtos/user.dto';
+import { NotFoundException } from './../../exceptions/not-found.exception';
 
 @Controller('users')
 export class UsersController {
@@ -26,7 +27,11 @@ export class UsersController {
 
   @Get(':id')
   async findById(@Param('id') id: string): Promise<UserDto> {
-    return await this.userService.findById(id);
+    const user = await this.userService.findById(id);
+    if (user === undefined) {
+      throw new NotFoundException();
+    }
+    return user;
   }
 
   @Put(':id')
