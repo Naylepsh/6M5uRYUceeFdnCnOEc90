@@ -7,5 +7,6 @@ import { HashingService } from './../utils/hashing.service';
 @Module({
   controllers: [UsersController],
   providers: [UsersService, HashingService, UserRepository],
+  exports: [UsersService],
 })
 export class UsersModule {}

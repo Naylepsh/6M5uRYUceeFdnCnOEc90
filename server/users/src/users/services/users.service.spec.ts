@@ -2,7 +2,6 @@ import { UsersService } from './users.service';
 import { Test } from '@nestjs/testing';
 import { UserDto } from './../dtos/user.dto';
 import { UserRepository } from './../repository/user.repository';
-import { NotFoundException } from './../../exceptions/not-found.exception';
 import { HashingService } from './../../utils/hashing.service';
 
 describe('UserService', () => {
