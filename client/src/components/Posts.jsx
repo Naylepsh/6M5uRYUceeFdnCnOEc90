@@ -1,10 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link } from "./../utils/react-router-next";
 import { format as formatDate } from "date-fns";
-import { useAppState } from "./../states/app-state";
+import { useAppState } from "./../states/AppState";
 import useDocWithCache from "./../use-doc-with-cache";
-import Avatar from "./avatar";
-import NewPost from "./new-post";
+import Avatar from "./Avatar";
+import NewPost from "./NewPost";
 import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import { deletePost } from "./../tools";
 import usePosts from "./use-posts";

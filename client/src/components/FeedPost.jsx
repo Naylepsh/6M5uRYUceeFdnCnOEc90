@@ -1,7 +1,7 @@
 import React from "react";
 import useDocWithCache from "./../use-doc-with-cache";
 import { Link, useLocation } from "./../utils/react-router-next";
-import Avatar from "./avatar";
+import Avatar from "./Avatar";
 import { format as formatDate, formatDistance } from "date-fns";
 
 const stopPropagation = (event) => event.stopPropagation();

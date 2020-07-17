@@ -1,5 +1,5 @@
 import React, { useRef, useReducer, useEffect } from "react";
-import FeedPost from "./feed-post";
+import FeedPost from "./FeedPost";
 import { loadFeedPosts, subscribeToNewFeedPosts } from "./../tools";
 
 const PER_PAGE = 3;

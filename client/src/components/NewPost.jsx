@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useAppState } from "./../states/app-state";
+import { useAppState } from "./../states/AppState";
 import { createPost, DATE_FORMAT } from "./../tools";
 import { format as formatDate } from "date-fns";
-import Avatar from "./avatar";
+import Avatar from "./Avatar";
 import { FaHome } from "react-icons/fa";
-import RecentPostsDropdown from "./recent-posts-dropdown";
+import RecentPostsDropdown from "./RecentPostsDropdown";
 
 const MAX_MESSAGE_LENGTH = 300;
 

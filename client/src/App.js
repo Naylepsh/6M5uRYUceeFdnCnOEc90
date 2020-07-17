@@ -1,5 +1,5 @@
 import React from "react";
-import LoggedIn from "./states/logged-in";
+import LoggedIn from "./states/LoggedIn";
 import "./App.css";
 
 function App() {

@@ -1,4 +1,11 @@
 import { db, auth, mode } from "./database";
+import {
+  differenceInDays,
+  startOfWeek,
+  subDays,
+  addDays,
+  format as formatDate,
+} from "date-fns";
 
 export { auth, db, mode };
 export const DATE_FORMAT = "YYYY-MM-DD";
@@ -9,6 +16,10 @@ export const fetchDoc = limitCalls(function fetchDoc(path) {
     .get()
     .then((doc) => doc.data());
 });
+
+export function logout() {
+  return auth().signOut();
+}
 
 export function isValidDate(year, month, day) {
   return month >= 0 && month < 12 && day > 0 && day <= daysInMonth(month, year);
@@ -26,6 +37,35 @@ export function daysInMonth(m, y) {
     default:
       return 31;
   }
+}
+
+export function calculateWeeks(posts, startDate, numWeeks) {
+  // ends up like [[s, m, t, w, t, f, s], week, week]
+  const weeks = [];
+
+  // ends up like: { "2019-03-19": [post, post] }
+  const postsByDay = {};
+  posts.forEach((post) => {
+    if (!postsByDay[post.date]) postsByDay[post.date] = [];
+    postsByDay[post.date].push(post);
+  });
+
+  const startDay = startOfWeek(subDays(startDate, (numWeeks - 1) * 7));
+  let weekCursor = -1;
+  Array.from({ length: numWeeks * 7 }).forEach((_, index) => {
+    const date = addDays(startDay, index);
+    const dayKey = formatDate(date, DATE_FORMAT);
+    const posts = postsByDay[dayKey] || [];
+    const dayta /*get it?!*/ = { date, posts };
+    if (index % 7) {
+      weeks[weekCursor].push(dayta);
+    } else {
+      weeks.push([dayta]);
+      weekCursor++;
+    }
+  });
+
+  return weeks;
 }
 
 function limitCalls(fn, limit = 20) {
