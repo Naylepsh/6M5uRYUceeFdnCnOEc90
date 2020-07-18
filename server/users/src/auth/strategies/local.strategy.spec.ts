@@ -27,13 +27,14 @@ describe('Local Strategy', () => {
 
   describe('validate', () => {
     it('should return user if payload was validated properly', async () => {
-      jest
-        .spyOn(authService, 'validateUser')
-        .mockImplementation(async () => user);
+      const id = '1';
+      jest.spyOn(authService, 'validateUser').mockImplementation(async () => {
+        return { id, ...user };
+      });
 
       const res = await localStrategy.validate(user.username, user.password);
 
-      expect(res).toHaveProperty('username', user.username);
+      expect(res).toBe(id);
     });
 
     it('should throw an error if user payload failed validation', async () => {
