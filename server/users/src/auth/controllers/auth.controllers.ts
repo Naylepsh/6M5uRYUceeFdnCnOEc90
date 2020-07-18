@@ -3,6 +3,8 @@ import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { AuthService } from '../services/auth.service';
 import { AccessTokenDto } from '../dtos/token.auth.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { UsersService } from './../../users/services/users.service';
+import { UserDto } from 'src/users/dtos/user.dto';
 
 /*
  * === HOW GUARDS WORK ===
@@ -13,18 +15,22 @@ import { JwtAuthGuard } from '../guards/jwt-auth.guard';
  */
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   async login(@Request() req: any): Promise<AccessTokenDto> {
-    return this.authService.login(req.userId);
+    return this.authService.login(req.user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async getProfile(@Request() req: any): Promise<string> {
-    // TODO: call to user service to load user data (excluding password)
-    return req.user;
+  async getProfile(@Request() req: any): Promise<UserDto> {
+    const user = await this.usersService.findById(req.user);
+    delete user.password;
+    return user;
   }
 }

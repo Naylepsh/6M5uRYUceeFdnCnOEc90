@@ -20,6 +20,7 @@ describe('Auth (e2e)', () => {
     avatarUrl: 'path/to/avatar',
     password: 'password',
   };
+  let credentials;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -54,19 +55,17 @@ describe('Auth (e2e)', () => {
     }
   };
 
-  describe('auth/login', () => {
-    let credentials;
+  beforeEach(() => {
+    credentials = { username: user.username, password: user.password };
+  });
 
-    beforeEach(() => {
-      credentials = { username: user.username, password: user.password };
-    });
+  const login = () => {
+    return request(app.getHttpServer())
+      .post('/auth/login')
+      .send(credentials);
+  };
 
-    const login = () => {
-      return request(app.getHttpServer())
-        .post('/auth/login')
-        .send(credentials);
-    };
-
+  describe('/auth/login', () => {
     it('should return auth token if correct user credentials were passed', async () => {
       const { body } = await login();
 
@@ -85,6 +84,43 @@ describe('Auth (e2e)', () => {
       credentials.password = 'password-that-doesnt-match';
 
       const { status } = await login();
+      expect(status).toBe(HttpStatus.UNAUTHORIZED);
+    });
+  });
+
+  describe('/profile', () => {
+    let authToken;
+
+    const profile = () => {
+      return request(app.getHttpServer())
+        .get('/profile')
+        .set('Authorization', 'bearer ' + authToken);
+    };
+
+    beforeEach(() => {
+      authToken = null;
+    });
+
+    it('should return user data if proper auth token was passed', async () => {
+      const { body } = await login();
+      authToken = body.accessToken;
+
+      const res = await profile();
+
+      expect(res.status).toBe(HttpStatus.OK);
+      expect(res.body).toHaveProperty('username', user.username);
+    });
+
+    it('should return 401 if no token was passed', async () => {
+      const { status } = await profile();
+
+      expect(status).toBe(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return 401 if invalid token was passed', async () => {
+      authToken = 'sdasdadadsad';
+      const { status } = await profile();
+
       expect(status).toBe(HttpStatus.UNAUTHORIZED);
     });
   });
