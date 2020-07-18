@@ -1,8 +1,4 @@
-import {
-  INestApplication,
-  UnauthorizedException,
-  HttpStatus,
-} from '@nestjs/common';
+import { INestApplication, HttpStatus } from '@nestjs/common';
 import { TestingModule, Test } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AuthModule } from './../../src/auth/auth.module';
