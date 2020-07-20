@@ -6,6 +6,7 @@ import { HashingService } from '../../../utils/hashing.service';
 import { AuthModule } from '../auth.module';
 import { JwtService } from '@nestjs/jwt';
 import { UserDbMapper } from './../../../../src/modules/users/infrastructure/user.mapper';
+import { UserMapper } from './../../../../src/modules/users/application/mappers/user.mapper';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -36,7 +37,7 @@ describe('AuthService', () => {
     it('should return user if user was properly authenticated', async () => {
       jest
         .spyOn(userRepository, 'findOneByUsername')
-        .mockImplementation(async () => UserDbMapper.fromPersistance(user));
+        .mockImplementation(async () => UserMapper.fromDtoToUser(user));
       jest
         .spyOn(hashingService, 'compare')
         .mockImplementation(async () => true);
@@ -49,7 +50,7 @@ describe('AuthService', () => {
     it('should return null if user was not found', async () => {
       jest
         .spyOn(userRepository, 'findOneByUsername')
-        .mockImplementation(async () => undefined);
+        .mockImplementation(async () => null);
       jest
         .spyOn(hashingService, 'compare')
         .mockImplementation(async () => true);

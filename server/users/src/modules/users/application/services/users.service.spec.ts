@@ -3,6 +3,8 @@ import { Test } from '@nestjs/testing';
 import { UserDto } from '../dtos/user.dto';
 import { UserRepository } from '../../infrastructure/user.repository';
 import { HashingService } from '../../../../utils/hashing.service';
+import { UserMapper } from '../mappers/user.mapper';
+import { User } from '../../domain/user';
 
 describe('UserService', () => {
   let usersService: UsersService;
@@ -35,9 +37,10 @@ describe('UserService', () => {
   };
 
   describe('findAll', () => {
-    const users: UserDto[] = [user];
+    let users: User[] = [];
 
-    beforeEach(() => {
+    beforeEach(async () => {
+      users = [await UserMapper.fromDtoToUser(user)];
       initRepoCallMock(userRepository, 'findAll', async () => users);
     });
 
@@ -50,7 +53,11 @@ describe('UserService', () => {
     it('should return all users', async () => {
       const res = await usersService.findAll();
 
-      expect(res).toBe(users);
+      // expect(res).toBe(users);
+      const usernames = users.map(user => user.props.username);
+      for (const user of res) {
+        expect(usernames.includes(user.username)).toBe(true);
+      }
     });
   });
 

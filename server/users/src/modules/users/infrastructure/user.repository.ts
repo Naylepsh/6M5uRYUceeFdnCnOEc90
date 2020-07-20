@@ -12,11 +12,13 @@ export class UserRepository {
 
   async findById(id: string): Promise<User> {
     const user = FakeDatabase.findById(id);
+    if (!user) return null;
     return UserDbMapper.fromPersistance(user);
   }
 
   async findOneByUsername(username: string): Promise<User> {
     const user = FakeDatabase.findOneByUsername(username);
+    if (!user) return null;
     return UserDbMapper.fromPersistance(user);
   }
 
