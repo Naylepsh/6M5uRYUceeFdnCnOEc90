@@ -1,6 +1,6 @@
 import { AuthService } from '../services/auth.service';
 import { Test } from '@nestjs/testing';
-import { UserDto } from './../../users/dtos/user.dto';
+import { UserDto } from '../../modules/users/dtos/user.dto';
 import { UnauthorizedException } from '@nestjs/common';
 import { AuthModule } from '../auth.module';
 import { LocalStrategy } from './local.strategy';

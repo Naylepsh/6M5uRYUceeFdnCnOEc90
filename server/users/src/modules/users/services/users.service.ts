@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { UserDto } from '../dtos/user.dto';
-import { UserRepository } from './../repository/user.repository';
-import { NotFoundException } from './../../exceptions/not-found.exception';
-import { HashingService } from '../../utils/hashing.service';
+import { UserRepository } from '../repository/user.repository';
+import { NotFoundException } from '../../../exceptions/not-found.exception';
+import { HashingService } from '../../../utils/hashing.service';
 
 @Injectable()
 export class UsersService {

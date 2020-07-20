@@ -1,8 +1,8 @@
 import { UsersService } from './users.service';
 import { Test } from '@nestjs/testing';
-import { UserDto } from './../dtos/user.dto';
-import { UserRepository } from './../repository/user.repository';
-import { HashingService } from './../../utils/hashing.service';
+import { UserDto } from '../dtos/user.dto';
+import { UserRepository } from '../repository/user.repository';
+import { HashingService } from '../../../utils/hashing.service';
 
 describe('UserService', () => {
   let usersService: UsersService;

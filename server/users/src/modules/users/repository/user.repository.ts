@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserDto } from '../dtos/user.dto';
-import { FakeDatabase } from '../../database/database.fake';
+import { FakeDatabase } from '../../../database/database.fake';
 
 @Injectable()
 export class UserRepository {

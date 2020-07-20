@@ -1,4 +1,4 @@
-import { UserDto } from './../users/dtos/user.dto';
+import { UserDto } from '../modules/users/dtos/user.dto';
 
 let users: UserDto[] = [];
 

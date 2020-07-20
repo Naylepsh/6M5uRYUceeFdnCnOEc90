@@ -3,8 +3,8 @@ import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { AuthService } from '../services/auth.service';
 import { AccessTokenDto } from '../dtos/token.auth.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { UsersService } from './../../users/services/users.service';
-import { UserDto } from 'src/users/dtos/user.dto';
+import { UsersService } from '../../modules/users/services/users.service';
+import { UserDto } from 'src/modules/users/dtos/user.dto';
 
 /*
  * === HOW GUARDS WORK ===

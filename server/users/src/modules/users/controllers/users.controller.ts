@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { UserDto } from '../dtos/user.dto';
-import { NotFoundException } from './../../exceptions/not-found.exception';
+import { NotFoundException } from '../../../exceptions/not-found.exception';
 
 @Controller('users')
 export class UsersController {
