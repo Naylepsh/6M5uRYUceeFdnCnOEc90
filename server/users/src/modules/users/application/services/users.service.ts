@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { UserDto } from '../dtos/user.dto';
 import { UserRepository } from '../../infrastructure/user.repository';
-import { User } from '../../domain/user';
 import { UserMapper } from '../mappers/user.mapper';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async findAll(): Promise<User[]> {
-    return this.userRepository.findAll();
+  async findAll(): Promise<UserDto[]> {
+    const users = await this.userRepository.findAll();
+    return users.map(UserMapper.fromUserToDto);
   }
 
   async findById(id: string): Promise<UserDto> {
