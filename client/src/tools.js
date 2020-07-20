@@ -17,6 +17,43 @@ export const fetchDoc = limitCalls(function fetchDoc(path) {
     .then((doc) => doc.data());
 });
 
+export function onAuthStateChanged(callback) {
+  return auth().onAuthStateChanged(callback);
+}
+
+export async function signup({
+  email,
+  password,
+  displayName = "No Name",
+  photoURL = "https://placekitten.com/200/200",
+  startDate,
+}) {
+  try {
+    const { user } = await auth().createUserWithEmailAndPassword(
+      email,
+      password
+    );
+    await user.updateProfile({ displayName, photoURL });
+    await db.doc(`users/${user.uid}`).set({
+      displayName: displayName,
+      uid: user.uid,
+      photoURL: photoURL,
+      goal: 8000,
+      started: formatDate(startDate, DATE_FORMAT),
+    });
+  } catch (e) {
+    throw e;
+  }
+}
+
+export function sortByCreatedAtDescending(a, b) {
+  return b.createdAt - a.createdAt;
+}
+
+export function login(email, password) {
+  return auth().signInWithEmailAndPassword(email, password);
+}
+
 export function logout() {
   return auth().signOut();
 }
