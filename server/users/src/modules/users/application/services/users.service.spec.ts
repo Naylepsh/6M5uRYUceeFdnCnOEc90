@@ -1,8 +1,8 @@
 import { UsersService } from './users.service';
 import { Test } from '@nestjs/testing';
 import { UserDto } from '../dtos/user.dto';
-import { UserRepository } from '../repository/user.repository';
-import { HashingService } from '../../../utils/hashing.service';
+import { UserRepository } from '../../infrastructure/user.repository';
+import { HashingService } from '../../../../utils/hashing.service';
 
 describe('UserService', () => {
   let usersService: UsersService;
@@ -56,7 +56,10 @@ describe('UserService', () => {
 
   describe('findById', () => {
     beforeEach(() => {
-      initRepoCallMock(userRepository, 'findById', async () => user);
+      initRepoCallMock(userRepository, 'findById', async () => {
+        const props = { ...user, password: { value: user.password } };
+        return { props };
+      });
     });
 
     it('should call repo to find an user', async () => {
@@ -68,16 +71,13 @@ describe('UserService', () => {
     it('should return an user if a valid id is passed', async () => {
       const res = await usersService.findById(user.id);
 
-      expect(res).toBe(user);
+      expect(res).toStrictEqual(user);
     });
 
     it('should return undefined if a user was not found', async () => {
       // override mock
-      initRepoCallMock(userRepository, 'findById', async () => undefined);
+      initRepoCallMock(userRepository, 'findById', async () => null);
 
-      // expect(() => usersService.findById(user.id)).rejects.toThrow(
-      //   NotFoundException,
-      // );
       const res = await usersService.findById(user.id);
       expect(res).toBe(undefined);
     });
@@ -88,7 +88,10 @@ describe('UserService', () => {
 
   describe('findOneByUsername', () => {
     beforeEach(() => {
-      initRepoCallMock(userRepository, 'findOneByUsername', async () => user);
+      initRepoCallMock(userRepository, 'findOneByUsername', async () => {
+        const props = { ...user, password: { value: user.password } };
+        return { props };
+      });
     });
 
     it('should call repo to find an user', async () => {
@@ -97,10 +100,10 @@ describe('UserService', () => {
       expect(repoCall).toBeCalled();
     });
 
-    it('should return an user if a valid id is passed', async () => {
+    it('should return an user if a valid username is passed', async () => {
       const res = await usersService.findOneByUsername(user.username);
 
-      expect(res).toBe(user);
+      expect(res).toStrictEqual(user);
     });
 
     it('should return undefined if a user was not found', async () => {

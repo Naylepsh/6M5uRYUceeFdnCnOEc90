@@ -3,8 +3,8 @@ import { TestingModule, Test } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AuthModule } from '../../src/modules/auth/auth.module';
 import { FakeDatabase } from './../../src/database/database.fake';
-import { UserDto } from '../../src/modules/users/dtos/user.dto';
-import { UsersService } from '../../src/modules/users/services/users.service';
+import { UserDto } from '../../src/modules/users/application/dtos/user.dto';
+import { UsersService } from '../../src/modules/users/application/services/users.service';
 
 describe('Auth (e2e)', () => {
   let app: INestApplication;

@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { UsersModule } from '../../src/modules/users/users.module';
-import { UserDto } from '../../src/modules/users/dtos/user.dto';
+import { UserDto } from '../../src/modules/users/application/dtos/user.dto';
 import { FakeDatabase } from '../../src/database/database.fake';
 
 describe('UsersController (e2e)', () => {

@@ -7,8 +7,8 @@ import {
   Put,
   Delete,
 } from '@nestjs/common';
-import { UsersService } from '../services/users.service';
-import { UserDto } from '../dtos/user.dto';
+import { UsersService } from '../application/services/users.service';
+import { UserDto } from '../application/dtos/user.dto';
 import { NotFoundException } from '../../../exceptions/not-found.exception';
 
 @Controller('users')

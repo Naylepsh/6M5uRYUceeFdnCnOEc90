@@ -3,6 +3,7 @@ import { compare, hash } from 'bcrypt';
 
 interface UserPasswordProps {
   value: string;
+  hashed?: boolean;
 }
 
 export class UserPassword extends ValueObject<UserPasswordProps> {
@@ -11,7 +12,9 @@ export class UserPassword extends ValueObject<UserPasswordProps> {
   }
 
   public static async create(props: UserPasswordProps): Promise<UserPassword> {
-    const password = await UserPassword.hashPassword(props.value);
+    const password = props.hashed
+      ? props.value
+      : await UserPassword.hashPassword(props.value);
     return new UserPassword({ ...props, value: password });
   }
 
