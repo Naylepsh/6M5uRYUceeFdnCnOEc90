@@ -1,16 +1,20 @@
 import { UserPassword } from './user.password';
-import { Entity } from 'src/core/domain/entity';
+import { Entity } from './../../../../src/core/domain/entity';
 
 interface UserProps {
   firstName: string;
   lastName: string;
   username: string;
   password: UserPassword;
-  avatar: string;
+  avatarUrl: string;
 }
 
 export class User extends Entity<UserProps> {
   props: UserProps;
+
+  get id(): string {
+    return this._id;
+  }
 
   private constructor(props: UserProps, id: string) {
     super(props, id);

@@ -1,26 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { UserDto } from '../dtos/user.dto';
 import { FakeDatabase } from '../../../database/database.fake';
+import { User } from '../domain/user';
 
 @Injectable()
 export class UserRepository {
-  async findAll(): Promise<UserDto[]> {
+  async findAll(): Promise<User[]> {
     return FakeDatabase.findAll();
   }
 
-  async findById(id: string): Promise<UserDto | undefined> {
+  async findById(id: string): Promise<User> {
     return FakeDatabase.findById(id);
   }
 
-  async findOneByUsername(username: string): Promise<UserDto | undefined> {
+  async findOneByUsername(username: string): Promise<User> {
     return FakeDatabase.findOneByUsername(username);
   }
 
-  async createUser(user: UserDto): Promise<void> {
+  async createUser(user: User): Promise<void> {
     return FakeDatabase.createUser(user);
   }
 
-  async updateUser(user: UserDto): Promise<void> {
+  async updateUser(user: User): Promise<void> {
     return FakeDatabase.updateUser(user);
   }
 

@@ -1,26 +1,25 @@
-import { UserDto } from '../modules/users/dtos/user.dto';
+import { User } from 'src/modules/users/domain/user';
 
-let users: UserDto[] = [];
+let users: User[] = [];
 
 export class FakeDatabase {
-  static findAll(): UserDto[] {
+  static findAll(): User[] {
     return [...users];
   }
 
-  static findById(id: string): UserDto | undefined {
+  static findById(id: string): User {
     return users.find(user => user.id === id);
   }
 
-  static findOneByUsername(username: string): UserDto | undefined {
-    return users.find(user => user.username === username);
+  static findOneByUsername(username: string): User {
+    return users.find(user => user.props.username === username);
   }
 
-  static createUser(user: UserDto): void {
-    const id = users.length + '';
-    users.push({ ...user, id });
+  static createUser(user: User): void {
+    users.push(user);
   }
 
-  static updateUser(updatedUserData: UserDto): void {
+  static updateUser(updatedUserData: User): void {
     users = users.map(user => {
       if (user.id === updatedUserData.id) {
         return updatedUserData;
