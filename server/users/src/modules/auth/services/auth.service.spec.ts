@@ -37,10 +37,11 @@ describe('AuthService', () => {
     it('should return user if user was properly authenticated', async () => {
       jest
         .spyOn(userRepository, 'findOneByUsername')
-        .mockImplementation(async () => UserMapper.fromDtoToUser(user));
-      jest
-        .spyOn(hashingService, 'compare')
-        .mockImplementation(async () => true);
+        .mockImplementation(async () => {
+          const usr = await UserMapper.fromDtoToUser(user);
+          usr.props.password.comparePassword = async () => true;
+          return usr;
+        });
 
       const res = await authService.validateUser(user.username, user.password);
 
@@ -51,9 +52,6 @@ describe('AuthService', () => {
       jest
         .spyOn(userRepository, 'findOneByUsername')
         .mockImplementation(async () => null);
-      jest
-        .spyOn(hashingService, 'compare')
-        .mockImplementation(async () => true);
       const res = await authService.validateUser(user.username, user.password);
 
       expect(res).toBe(null);
@@ -62,10 +60,11 @@ describe('AuthService', () => {
     it('should return null if password didnt match', async () => {
       jest
         .spyOn(userRepository, 'findOneByUsername')
-        .mockImplementation(async () => UserDbMapper.fromPersistance(user));
-      jest
-        .spyOn(hashingService, 'compare')
-        .mockImplementation(async () => false);
+        .mockImplementation(async () => {
+          const usr = await UserMapper.fromDtoToUser(user);
+          usr.props.password.comparePassword = async () => false;
+          return usr;
+        });
       const res = await authService.validateUser(user.username, user.password);
 
       expect(res).toBe(null);

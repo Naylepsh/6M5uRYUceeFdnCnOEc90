@@ -23,7 +23,7 @@ export class AuthService {
     const user = await this.userRepository.findOneByUsername(username);
     if (!user) return null;
 
-    if (user.props.password.comparePassword(password)) {
+    if (await user.props.password.comparePassword(password)) {
       const userDto = UserMapper.fromUserToDto(user);
       delete userDto.password;
       return userDto;
