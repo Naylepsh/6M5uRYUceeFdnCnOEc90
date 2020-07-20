@@ -27,6 +27,7 @@
     "@nestjs/passport": "^7.1.0",
     "@nestjs/platform-express": "^7.0.0",
     "@types/bcrypt": "^3.0.0",
+    "@types/uuid": "^8.0.0",
     "bcrypt": "^5.0.0",
     "dotenv": "^8.2.0",
     "passport": "^0.4.1",
@@ -35,7 +36,8 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
-    "shallow-equal-object": "^1.1.1"
+    "shallow-equal-object": "^1.1.1",
+    "uuid": "^8.2.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.0.0",
