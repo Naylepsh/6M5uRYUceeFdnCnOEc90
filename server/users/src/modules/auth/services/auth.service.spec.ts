@@ -1,8 +1,8 @@
-import { UserDto } from '../../modules/users/dtos/user.dto';
+import { UserDto } from '../../users/dtos/user.dto';
 import { Test } from '@nestjs/testing';
-import { UserRepository } from '../../modules/users/repository/user.repository';
+import { UserRepository } from '../../users/repository/user.repository';
 import { AuthService } from './auth.service';
-import { HashingService } from './../../utils/hashing.service';
+import { HashingService } from '../../../utils/hashing.service';
 import { AuthModule } from '../auth.module';
 import { JwtService } from '@nestjs/jwt';
 

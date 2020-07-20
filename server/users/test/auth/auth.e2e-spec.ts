@@ -1,7 +1,7 @@
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import { TestingModule, Test } from '@nestjs/testing';
 import * as request from 'supertest';
-import { AuthModule } from './../../src/auth/auth.module';
+import { AuthModule } from '../../src/modules/auth/auth.module';
 import { FakeDatabase } from './../../src/database/database.fake';
 import { UserDto } from '../../src/modules/users/dtos/user.dto';
 import { UsersService } from '../../src/modules/users/services/users.service';

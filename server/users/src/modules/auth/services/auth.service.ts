@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../../modules/users/services/users.service';
-import { HashingService } from './../../utils/hashing.service';
+import { UsersService } from '../../users/services/users.service';
+import { HashingService } from '../../../utils/hashing.service';
 import { JwtService } from '@nestjs/jwt';
 import { AccessTokenDto } from '../dtos/token.auth.dto';
 import { UserDto } from 'src/modules/users/dtos/user.dto';
