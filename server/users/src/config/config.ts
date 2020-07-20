@@ -11,7 +11,7 @@ const dev = {
 
 const test = {
   app: {
-    port: process.env.TEST_PORT || 1337,
+    port: process.env.TEST_PORT || 1336,
   },
 };
 
