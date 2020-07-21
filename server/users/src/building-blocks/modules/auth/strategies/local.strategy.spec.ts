@@ -1,18 +1,15 @@
-import { AuthService } from '../services/auth.service';
 import { Test } from '@nestjs/testing';
-import { UserDto } from '../../../../modules/users/application/dtos/user.dto';
 import { UnauthorizedException } from '@nestjs/common';
+import { AuthService } from '../services/auth.service';
 import { AuthModule } from '../auth.module';
 import { LocalStrategy } from './local.strategy';
+import { UserAuthDto } from '../dtos/user-auth.dto';
 
 describe('Local Strategy', () => {
   let authService: AuthService;
   let localStrategy: LocalStrategy;
-  const user: UserDto = {
+  const user: UserAuthDto = {
     username: 'username',
-    firstName: 'john',
-    lastName: 'doe',
-    avatarUrl: 'path/to/avatar',
     password: 'password',
   };
 

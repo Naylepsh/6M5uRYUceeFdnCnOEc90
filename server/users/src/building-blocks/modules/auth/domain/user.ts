@@ -13,6 +13,14 @@ export class User extends Entity<UserProps> {
     return this._id;
   }
 
+  get username(): string {
+    return this.props.username;
+  }
+
+  get password(): string {
+    return this.props.password.value;
+  }
+
   private constructor(props: UserProps, id: string) {
     super(props, id);
   }

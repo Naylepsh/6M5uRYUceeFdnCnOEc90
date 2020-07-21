@@ -1,22 +1,17 @@
-import { UserDto } from '../../../../modules/users/application/dtos/user.dto';
 import { Test } from '@nestjs/testing';
-import { UserRepository } from '../../../../modules/users/infrastructure/user.repository';
+import { JwtService } from '@nestjs/jwt';
+import { UserRepository } from '../repositories/user.repository';
 import { AuthService } from './auth.service';
 import { AuthModule } from '../auth.module';
-import { JwtService } from '@nestjs/jwt';
-import { UserMapper } from '../../../../modules/users/application/mappers/user.mapper';
+import { UserDbMapper } from '../repositories/user.mapper';
+import { User } from '../domain/user';
+import { UserPassword } from '../domain/user.password';
 
 describe('AuthService', () => {
   let authService: AuthService;
   let userRepository: UserRepository;
   let jwtService: JwtService;
-  const user: UserDto = {
-    username: 'username',
-    firstName: 'john',
-    lastName: 'doe',
-    avatarUrl: 'path/to/avatar',
-    password: 'password',
-  };
+  let user: User;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -27,21 +22,28 @@ describe('AuthService', () => {
     userRepository = moduleRef.get<UserRepository>(UserRepository);
     authService = moduleRef.get<AuthService>(AuthService);
     jwtService = moduleRef.get<JwtService>(JwtService);
+
+    const password = await UserPassword.create({
+      value: 'password',
+      hashed: true,
+    });
+    const props = { username: 'username', password };
+    user = await User.create(props);
   });
 
   describe('validateUser', () => {
-    it('should return user if user was properly authenticated', async () => {
+    it('should return user id if user was properly authenticated', async () => {
       jest
         .spyOn(userRepository, 'findOneByUsername')
         .mockImplementation(async () => {
-          const usr = await UserMapper.fromDtoToUser(user);
+          const usr = await UserDbMapper.fromPersistance(user);
           usr.props.password.comparePassword = async () => true;
           return usr;
         });
 
-      const res = await authService.validateUser(user.username, user.password);
+      const id = await authService.validateUser(user.username, user.password);
 
-      expect(res).toHaveProperty('username', user.username);
+      expect(id).toBe(user.id);
     });
 
     it('should return null if user was not found', async () => {
@@ -57,7 +59,7 @@ describe('AuthService', () => {
       jest
         .spyOn(userRepository, 'findOneByUsername')
         .mockImplementation(async () => {
-          const usr = await UserMapper.fromDtoToUser(user);
+          const usr = await UserDbMapper.fromPersistance(user);
           usr.props.password.comparePassword = async () => false;
           return usr;
         });
