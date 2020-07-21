@@ -1,10 +1,7 @@
-import { Controller, Request, Post, UseGuards, Get } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards } from '@nestjs/common';
 import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { AuthService } from '../services/auth.service';
 import { AccessTokenDto } from '../dtos/token.auth.dto';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { UsersService } from '../../../../modules/users/application/services/users.service';
-import { UserDto } from 'src/modules/users/application/dtos/user.dto';
 
 /*
  * === HOW GUARDS WORK ===
@@ -15,22 +12,11 @@ import { UserDto } from 'src/modules/users/application/dtos/user.dto';
  */
 @Controller()
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   async login(@Request() req: any): Promise<AccessTokenDto> {
     return this.authService.login(req.user);
   }
-
-  // @UseGuards(JwtAuthGuard)
-  // @Get('profile')
-  // async getProfile(@Request() req: any): Promise<UserDto> {
-  //   const user = await this.usersService.findById(req.user);
-  //   delete user.password;
-  //   return user;
-  // }
 }
