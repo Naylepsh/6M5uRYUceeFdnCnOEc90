@@ -1,4 +1,4 @@
-import { db, auth, mode } from "./database";
+import { db, auth, mode } from "./fakedb";
 import {
   differenceInDays,
   startOfWeek,
@@ -7,15 +7,37 @@ import {
   format as formatDate,
 } from "date-fns";
 
+// data model is:
+//
+//   users = [{
+//     ...auth,
+//     posts,
+//     progress,
+//     expectedProgress,
+//     goal
+//   }]
+//
+//   post = [{
+//     createdAt, // milliseconds
+//     date, // "YYYY-MM-DD"
+//     minutes, // int
+//     uid,
+//     message
+//   }]
+//
+
 export { auth, db, mode };
+
+export const WORKOUT_DAYS_PER_YEAR = 260;
 export const DATE_FORMAT = "YYYY-MM-DD";
 
-export const fetchDoc = limitCalls(function fetchDoc(path) {
-  return db
-    .doc(path)
-    .get()
-    .then((doc) => doc.data());
-});
+export function login(email, password) {
+  return auth().signInWithEmailAndPassword(email, password);
+}
+
+export function logout() {
+  return auth().signOut();
+}
 
 export function onAuthStateChanged(callback) {
   return auth().onAuthStateChanged(callback);
@@ -46,22 +68,102 @@ export async function signup({
   }
 }
 
-export function sortByCreatedAtDescending(a, b) {
-  return b.createdAt - a.createdAt;
+export const fetchUser = limitCalls(async function fetchUser(uid) {
+  return fetchDoc(`users/${uid}`);
+});
+
+export const fetchDoc = limitCalls(function fetchDoc(path) {
+  return db
+    .doc(path)
+    .get()
+    .then((doc) => doc.data());
+});
+
+export const subscribeToPosts = limitCalls(function subscribeToPosts(
+  uid,
+  callback
+) {
+  let collection = db
+    .collection("posts")
+    .orderBy("createdAt")
+    .where("uid", "==", uid);
+  return collection.onSnapshot((snapshot) =>
+    callback(getDocsFromSnapshot(snapshot))
+  );
+});
+
+export const fetchPosts = limitCalls(function fetchPosts(uid) {
+  return db
+    .collection("posts")
+    .orderBy("createdAt")
+    .where("uid", "==", uid)
+    .get()
+    .then(getDocsFromSnapshot);
+});
+
+export async function createPost(post) {
+  return db
+    .collection("posts")
+    .add({ createdAt: Date.now(), ...post })
+    .then((ref) => ref.get())
+    .then((doc) => ({ ...doc.data(), id: doc.id }));
 }
 
-export function login(email, password) {
-  return auth().signInWithEmailAndPassword(email, password);
+export function deletePost(id) {
+  return db.doc(`posts/${id}`).delete();
 }
 
-export function logout() {
-  return auth().signOut();
-}
+export const getPosts = limitCalls(function getPosts(uid) {
+  return db
+    .collection("posts")
+    .orderBy("createdAt")
+    .where("uid", "==", uid)
+    .get()
+    .then(getDocsFromSnapshot);
+});
 
-export function isValidDate(year, month, day) {
-  return month >= 0 && month < 12 && day > 0 && day <= daysInMonth(month, year);
-}
+export const loadFeedPosts = limitCalls(function loadFeedPosts(
+  createdAtMax,
+  limit
+) {
+  return db
+    .collection("posts")
+    .orderBy("createdAt", "desc")
+    .where("createdAt", "<", createdAtMax)
+    .limit(limit)
+    .get()
+    .then(getDocsFromSnapshot);
+});
 
+export const subscribeToFeedPosts = limitCalls(function subscribeToFeedPosts(
+  createdAtMax,
+  limit,
+  callback
+) {
+  return db
+    .collection("posts")
+    .orderBy("createdAt", "desc")
+    .where("createdAt", "<", createdAtMax)
+    .limit(limit)
+    .onSnapshot((snapshot) => callback(getDocsFromSnapshot(snapshot)));
+});
+
+export const subscribeToNewFeedPosts = limitCalls(
+  function subscribeToNewFeedPosts(createdAtMin, callback) {
+    return db
+      .collection("posts")
+      .orderBy("createdAt", "desc")
+      .where("createdAt", ">=", createdAtMin)
+      .onSnapshot((snapshot) => {
+        callback(getDocsFromSnapshot(snapshot));
+      });
+  }
+);
+
+export { formatDate };
+
+// Thanks!
+// https://stackoverflow.com/questions/1433030/validate-number-of-days-in-a-given-month/1433119#1433119
 export function daysInMonth(m, y) {
   switch (m) {
     case 1:
@@ -74,6 +176,30 @@ export function daysInMonth(m, y) {
     default:
       return 31;
   }
+}
+
+export function isValidDate(year, month, day) {
+  return month >= 0 && month < 12 && day > 0 && day <= daysInMonth(month, year);
+}
+
+export function calculateTotalMinutes(posts) {
+  return posts.reduce((total, post) => post.minutes + total, 0);
+}
+
+export function calculateMakeup(total, expected, goal) {
+  const minutesPerWorkout = goal / WORKOUT_DAYS_PER_YEAR;
+  const deficit = expected - total;
+  return Math.round(deficit / minutesPerWorkout);
+}
+
+export function calculateExpectedMinutes(user) {
+  const days = differenceInDays(new Date(), user.started);
+  const perDay = user.goal / WORKOUT_DAYS_PER_YEAR;
+  return Math.round(days * perDay);
+}
+
+export function sortByCreatedAtDescending(a, b) {
+  return b.createdAt - a.createdAt;
 }
 
 export function calculateWeeks(posts, startDate, numWeeks) {
@@ -105,27 +231,9 @@ export function calculateWeeks(posts, startDate, numWeeks) {
   return weeks;
 }
 
-function limitCalls(fn, limit = 20) {
-  let calls = 0;
-  return (...args) => {
-    calls++;
-    if (calls > limit) {
-      throw new Error(`You've called "${fn.name}" too many times too quickly.`);
-    } else {
-      setTimeout(() => (calls = 0), 3000);
-    }
-    return fn(...args);
-  };
+function getDataFromDoc(doc) {
+  return { ...doc.data(), id: doc.id };
 }
-
-export const fetchPosts = limitCalls(function fetchPosts(uid) {
-  return db
-    .collection("posts")
-    .orderBy("createdAt")
-    .where("uid", "==", uid)
-    .get()
-    .then(getDocsFromSnapshot);
-});
 
 function getDocsFromSnapshot(snapshot) {
   const docs = [];
@@ -135,56 +243,41 @@ function getDocsFromSnapshot(snapshot) {
   return docs;
 }
 
-function getDataFromDoc(doc) {
-  return { ...doc.data(), id: doc.id };
+const easeOut = (progress) => Math.pow(progress - 1, 5) + 1;
+
+export function tween(duration, callback) {
+  let start = performance.now();
+  let elapsed = 0;
+  let frame;
+
+  const tick = (now) => {
+    elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const value = easeOut(progress);
+    if (progress < 1) {
+      callback(value);
+      frame = requestAnimationFrame(tick);
+    } else {
+      callback(value, true);
+    }
+  };
+
+  frame = requestAnimationFrame(tick);
+
+  return () => cancelAnimationFrame(frame);
 }
 
-export const subscribeToPosts = limitCalls(function subscribeToPosts(
-  uid,
-  callback
-) {
-  let collection = db
-    .collection("posts")
-    .orderBy("createdAt")
-    .where("uid", "==", uid);
-  return collection.onSnapshot((snapshot) =>
-    callback(getDocsFromSnapshot(snapshot))
-  );
-});
-
-export async function createPost(post) {
-  return db
-    .collection("posts")
-    .add({ createdAt: Date.now(), ...post })
-    .then((ref) => ref.get())
-    .then((doc) => ({ ...doc.data(), id: doc.id }));
+function limitCalls(fn, limit = 20) {
+  let calls = 0;
+  return (...args) => {
+    calls++;
+    if (calls > limit) {
+      throw new Error(
+        `EASY THERE: You've called "${fn.name}" too many times too quickly, did you forget the second argument to useEffect? Also, this is a message from React Training, not React.`
+      );
+    } else {
+      setTimeout(() => (calls = 0), 3000);
+    }
+    return fn(...args);
+  };
 }
-
-export function deletePost(id) {
-  return db.doc(`posts/${id}`).delete();
-}
-
-export const loadFeedPosts = limitCalls(function loadFeedPosts(
-  createdAtMax,
-  limit
-) {
-  return db
-    .collection("posts")
-    .orderBy("createdAt", "desc")
-    .where("createdAt", "<", createdAtMax)
-    .limit(limit)
-    .get()
-    .then(getDocsFromSnapshot);
-});
-
-export const subscribeToNewFeedPosts = limitCalls(
-  function subscribeToNewFeedPosts(createdAtMin, callback) {
-    return db
-      .collection("posts")
-      .orderBy("createdAt", "desc")
-      .where("createdAt", ">=", createdAtMin)
-      .onSnapshot((snapshot) => {
-        callback(getDocsFromSnapshot(snapshot));
-      });
-  }
-);

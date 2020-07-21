@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^7.1.2",
     "date-fns": "^2.15.0",
     "firebase": "^7.16.0",
+    "localforage": "^1.8.0",
     "reach": "^1.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

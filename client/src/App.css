@@ -1,10 +1,10 @@
 :root {
   --gray: hsl(197, 10%, 45%);
   --middle-gray: hsl(240, 6%, 92%);
-  --light-gray: hsl(240, 6%, 97%);
-  --accent: hsl(197, 100%, 44%);
-  --accent-hover: hsl(197, 100%, 40%);
-  --accent-active: hsl(197, 100%, 35%);
+  --light-gray: hsl(300, 7%, 97%);
+  --accent: hsl(300, 89%, 35%);
+  --accent-hover: hsl(300, 61%, 74%);
+  --accent-active: hsl(308, 97%, 26%);
   --focus-shadow: 0px 0px 2px var(--accent);
   --focus-border: solid 1px var(--accent);
   --focus-border-inactive: solid 1px transparent;
@@ -83,10 +83,9 @@ body {
 .Layout {
   min-height: 100vh;
   background-color: #edf4f7;
-  background-image: url("./utils/diamond-sunset.svg"),
-    url("./utils/diamond-sunset.svg"), url("./utils/diamond-sunset.svg");
-  background-position: 10vw 0, 25vw -10vw, 50vw -10vw;
-  background-size: 110vw, 110vw, 140vw;
+  background-image: url("./utils/Sun-Tornado.svg");
+  background-position: 0;
+  background-size: 200%;
   background-repeat: no-repeat;
 }
 
@@ -103,13 +102,13 @@ body {
   font-size: 125%;
   margin-top: 1rem;
   padding: 0.5rem;
-  width: 100%;
+  width: 94%;
 }
 
 .LoggedOut [data-reach-tabs] {
   margin: 0 2rem;
   align-self: center;
-  width: 300px;
+  width: 265px;
   background: #fff;
   border-radius: 0.8rem;
   box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.15);
@@ -121,7 +120,7 @@ body {
 }
 
 .LoggedOut [data-reach-tab] {
-  padding: 1rem 1.5rem;
+  padding: 1rem 1.8rem;
   border: none;
   flex: 1;
   text-align: center;

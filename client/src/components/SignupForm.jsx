@@ -51,16 +51,16 @@ export default function SignupForm() {
       )}
 
       <form onSubmit={handleSignup}>
-        <TextInput id="displayName" label="Display Name" />
-        <TextInput id="photoURL" label="Avatar URL" />
-        <TextInput id="email" label="Email" />
-        <TextInput id="password" type="password" label="Password" />
+        <TextInput id="displayName" label="imię i nazwisko" />
+        <TextInput id="photoURL" label="avatar URL" />
+        <TextInput id="email" label="email" />
+        <TextInput id="password" type="password" label="hasło" />
         <p>
-          <span aria-hidden="true">Start:</span>{" "}
+          <span aria-hidden="true">Data:</span>{" "}
           <DateFields value={startDate} onChange={setStartDate}>
-            <MonthField aria-label="Start Month" /> /{" "}
             <DayField aria-label="Start Day" /> /{" "}
-            <YearField start={2018} end={2019} aria-label="Start year" />
+            <MonthField aria-label="Start Month" /> /{" "}
+            <YearField start={1985} end={2019} aria-label="Start year" />
           </DateFields>
         </p>
         <TabsButton>
