@@ -3,7 +3,7 @@ import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { AuthService } from '../services/auth.service';
 import { AccessTokenDto } from '../dtos/token.auth.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { UsersService } from '../../users/application/services/users.service';
+import { UsersService } from '../../../../modules/users/application/services/users.service';
 import { UserDto } from 'src/modules/users/application/dtos/user.dto';
 
 /*
@@ -26,11 +26,11 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  async getProfile(@Request() req: any): Promise<UserDto> {
-    const user = await this.usersService.findById(req.user);
-    delete user.password;
-    return user;
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Get('profile')
+  // async getProfile(@Request() req: any): Promise<UserDto> {
+  //   const user = await this.usersService.findById(req.user);
+  //   delete user.password;
+  //   return user;
+  // }
 }

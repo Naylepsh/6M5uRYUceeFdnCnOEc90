@@ -1,10 +1,10 @@
-import { UserDto } from '../../users/application/dtos/user.dto';
+import { UserDto } from '../../../../modules/users/application/dtos/user.dto';
 import { Test } from '@nestjs/testing';
-import { UserRepository } from '../../users/infrastructure/user.repository';
+import { UserRepository } from '../../../../modules/users/infrastructure/user.repository';
 import { AuthService } from './auth.service';
 import { AuthModule } from '../auth.module';
 import { JwtService } from '@nestjs/jwt';
-import { UserMapper } from './../../../../src/modules/users/application/mappers/user.mapper';
+import { UserMapper } from '../../../../modules/users/application/mappers/user.mapper';
 
 describe('AuthService', () => {
   let authService: AuthService;

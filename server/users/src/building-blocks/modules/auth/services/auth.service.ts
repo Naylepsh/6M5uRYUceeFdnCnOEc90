@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AccessTokenDto } from '../dtos/token.auth.dto';
-import { UserDto } from './../../../../src/modules/users/application/dtos/user.dto';
-import { UserRepository } from './../../../../src/modules/users/infrastructure/user.repository';
-import { UserMapper } from '../../users/application/mappers/user.mapper';
+import { UserDto } from '../../../../modules/users/application/dtos/user.dto';
+import { UserRepository } from '../../../../modules/users/infrastructure/user.repository';
+import { UserMapper } from '../../../../modules/users/application/mappers/user.mapper';
 
 @Injectable()
 export class AuthService {
@@ -12,10 +12,7 @@ export class AuthService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async validateUser(
-    username: string,
-    password: string,
-  ): Promise<UserDto | null> {
+  async validateUser(username: string, password: string): Promise<UserDto> {
     const user = await this.userRepository.findOneByUsername(username);
     if (!user) return null;
 
