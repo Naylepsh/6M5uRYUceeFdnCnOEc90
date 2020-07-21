@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../../users/application/services/users.service';
-import { HashingService } from '../../../utils/hashing.service';
 import { JwtService } from '@nestjs/jwt';
 import { AccessTokenDto } from '../dtos/token.auth.dto';
 import { UserDto } from './../../../../src/modules/users/application/dtos/user.dto';
@@ -10,8 +8,6 @@ import { UserMapper } from '../../users/application/mappers/user.mapper';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
-    private readonly hashingService: HashingService,
     private readonly jwtService: JwtService,
     private readonly userRepository: UserRepository,
   ) {}

@@ -2,15 +2,12 @@ import { UserDto } from '../../users/application/dtos/user.dto';
 import { Test } from '@nestjs/testing';
 import { UserRepository } from '../../users/infrastructure/user.repository';
 import { AuthService } from './auth.service';
-import { HashingService } from '../../../utils/hashing.service';
 import { AuthModule } from '../auth.module';
 import { JwtService } from '@nestjs/jwt';
-import { UserDbMapper } from './../../../../src/modules/users/infrastructure/user.mapper';
 import { UserMapper } from './../../../../src/modules/users/application/mappers/user.mapper';
 
 describe('AuthService', () => {
   let authService: AuthService;
-  let hashingService: HashingService;
   let userRepository: UserRepository;
   let jwtService: JwtService;
   const user: UserDto = {
@@ -29,7 +26,6 @@ describe('AuthService', () => {
 
     userRepository = moduleRef.get<UserRepository>(UserRepository);
     authService = moduleRef.get<AuthService>(AuthService);
-    hashingService = moduleRef.get<HashingService>(HashingService);
     jwtService = moduleRef.get<JwtService>(JwtService);
   });
 
