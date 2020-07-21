@@ -1,5 +1,5 @@
 import { ProfileRepository } from './profile.repository';
-import { FakeDatabase } from '../../../database/database.fake';
+import { populateDatabase, cleanDatabase } from '../tests/tests.db.helpers';
 
 describe('Profile Repository integration with database', () => {
   const profileRepository = new ProfileRepository();
@@ -13,27 +13,25 @@ describe('Profile Repository integration with database', () => {
   };
 
   beforeAll(async () => {
-    FakeDatabase.createUser(sampleProfile);
+    populateDatabase([sampleProfile]);
   });
 
   afterAll(async () => {
-    const users = FakeDatabase.findAll();
-    for (const user of users) {
-      FakeDatabase.deleteUser(user.id);
-    }
+    cleanDatabase();
   });
 
   describe('findById', () => {
-    it('should return user if valid id was passed', async () => {
+    it('should return a profile if valid id was passed', async () => {
       const profile = await profileRepository.findById(sampleProfile.id);
 
       expect(profile).toHaveProperty('id', sampleProfile.id);
     });
 
-    it('should return null if user does not exist in database', async () => {
-      const profile = await profileRepository.findById('42');
+    it('should return null if profile does not exist in database', async () => {
+      const id = '42';
+      const profile = await profileRepository.findById(id);
 
-      expect(profile).toBe(null);
+      expect(profile).toBeNull();
     });
   });
 });

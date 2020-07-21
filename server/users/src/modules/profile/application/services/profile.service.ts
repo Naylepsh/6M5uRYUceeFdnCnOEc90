@@ -9,6 +9,7 @@ export class ProfileService {
 
   async findById(id: string): Promise<ProfileDto> {
     const profile = await this.userRepository.findById(id);
+    if (!profile) return null;
     return ProfileMapper.fromProfileToDto(profile);
   }
 }
