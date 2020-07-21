@@ -1,5 +1,8 @@
 import { ProfileRepository } from './profile.repository';
-import { populateDatabase, cleanDatabase } from '../tests/tests.db.helpers';
+import {
+  populateDatabase,
+  cleanDatabase,
+} from '../tests/helpers/tests.db.helpers';
 
 describe('Profile Repository integration with database', () => {
   const profileRepository = new ProfileRepository();

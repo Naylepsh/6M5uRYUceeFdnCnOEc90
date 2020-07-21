@@ -1,4 +1,4 @@
-import { FakeDatabase } from '../../../database/database.fake';
+import { FakeDatabase } from '../../../../database/database.fake';
 
 export function cleanDatabase(): void {
   const profiles = FakeDatabase.findAll();

@@ -1,7 +1,10 @@
 import { ProfileService } from './profile.service';
 import { Test } from '@nestjs/testing';
 import { ProfileRepository } from '../../infrastructure/profile.repository';
-import { populateDatabase, cleanDatabase } from '../../tests/tests.db.helpers';
+import {
+  populateDatabase,
+  cleanDatabase,
+} from '../../tests/helpers/tests.db.helpers';
 
 describe('Profile Service integration with Profile Repository', () => {
   let profileService: ProfileService;
