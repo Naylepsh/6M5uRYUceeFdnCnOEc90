@@ -19,7 +19,7 @@ describe('Profile Service integration with Profile Repository', () => {
 
   beforeAll(async () => {
     await loadDependencies();
-    populateDatabase([sampleProfile]);
+    await populateDatabase([sampleProfile]);
   });
 
   const loadDependencies = async () => {

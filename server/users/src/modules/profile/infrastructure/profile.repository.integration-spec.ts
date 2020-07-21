@@ -16,7 +16,7 @@ describe('Profile Repository integration with database', () => {
   };
 
   beforeAll(async () => {
-    populateDatabase([sampleProfile]);
+    await populateDatabase([sampleProfile]);
   });
 
   afterAll(async () => {

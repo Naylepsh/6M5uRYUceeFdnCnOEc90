@@ -4,7 +4,7 @@ import { ProfileDto } from '../application/dtos/profile.dto';
 import { JwtAuthGuard } from '../../../building-blocks/modules/auth/infrastructure/guards/jwt-auth.guard';
 
 @Controller()
-export class AuthController {
+export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @UseGuards(JwtAuthGuard)

@@ -1,4 +1,5 @@
 import { FakeDatabase } from '../../../../database/database.fake';
+import { hash } from 'bcrypt';
 
 export function cleanDatabase(): void {
   const profiles = FakeDatabase.findAll();
@@ -7,8 +8,10 @@ export function cleanDatabase(): void {
   }
 }
 
-export function populateDatabase(profiles: any[]): void {
+export async function populateDatabase(profiles: any[]): Promise<void> {
+  const salt = 1;
   for (const profile of profiles) {
-    FakeDatabase.createUser(profile);
+    const password = await hash(profile.password, salt);
+    FakeDatabase.createUser({ ...profile, password });
   }
 }
