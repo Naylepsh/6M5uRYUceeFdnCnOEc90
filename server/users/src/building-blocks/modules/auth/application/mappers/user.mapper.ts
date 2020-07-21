@@ -1,4 +1,4 @@
-import { User } from '../domain/user';
+import { User } from '../../domain/user';
 import { UserAuthDto } from '../dtos/user-auth.dto';
 
 export class UserAuthMapper {

@@ -1,7 +1,7 @@
 import { Controller, Request, Post, UseGuards } from '@nestjs/common';
-import { LocalAuthGuard } from '../guards/local-auth.guard';
-import { AuthService } from '../services/auth.service';
-import { AccessTokenDto } from '../dtos/token.auth.dto';
+import { LocalAuthGuard } from '../../infrastructure/guards/local-auth.guard';
+import { AuthService } from '../../application/services/auth.service';
+import { AccessTokenDto } from '../../application/dtos/token.auth.dto';
 
 /*
  * === HOW GUARDS WORK ===

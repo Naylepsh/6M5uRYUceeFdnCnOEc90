@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
-import { AuthModule } from '../auth.module';
+import { AuthModule } from '../../auth.module';
 import { LocalStrategy } from './local.strategy';
 import { UserAuthDto } from '../dtos/user-auth.dto';
 
@@ -23,11 +23,11 @@ describe('Local Strategy', () => {
   });
 
   describe('validate', () => {
-    it('should return user if payload was validated properly', async () => {
+    it('should return user id if payload was validated properly', async () => {
       const id = '1';
-      jest.spyOn(authService, 'validateUser').mockImplementation(async () => {
-        return { id, ...user };
-      });
+      jest
+        .spyOn(authService, 'validateUser')
+        .mockImplementation(async () => id);
 
       const res = await localStrategy.validate(user.username, user.password);
 

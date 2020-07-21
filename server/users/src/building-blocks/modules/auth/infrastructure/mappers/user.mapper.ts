@@ -1,5 +1,5 @@
-import { User } from '../domain/user';
-import { UserPassword } from '../domain/user.password';
+import { User } from '../../domain/user';
+import { UserPassword } from '../../domain/user.password';
 
 export class UserDbMapper {
   public static async fromPersistance(user: any): Promise<User> {

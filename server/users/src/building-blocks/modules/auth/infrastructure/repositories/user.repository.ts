@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '../domain/user';
-import { UserDbMapper } from './user.mapper';
-import { FakeDatabase } from '../../../../database/database.fake';
+import { User } from '../../domain/user';
+import { UserDbMapper } from '../mappers/user.mapper';
+import { FakeDatabase } from '../../../../../database/database.fake';
 
 @Injectable()
 export class UserRepository {

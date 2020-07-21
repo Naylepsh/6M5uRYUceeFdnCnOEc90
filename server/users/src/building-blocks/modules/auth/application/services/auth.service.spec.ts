@@ -1,11 +1,11 @@
 import { Test } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
-import { UserRepository } from '../repositories/user.repository';
+import { UserRepository } from '../../infrastructure/repositories/user.repository';
 import { AuthService } from './auth.service';
-import { AuthModule } from '../auth.module';
-import { UserDbMapper } from '../repositories/user.mapper';
-import { User } from '../domain/user';
-import { UserPassword } from '../domain/user.password';
+import { AuthModule } from '../../auth.module';
+import { UserDbMapper } from '../../infrastructure/mappers/user.mapper';
+import { User } from '../../domain/user';
+import { UserPassword } from '../../domain/user.password';
 
 describe('AuthService', () => {
   let authService: AuthService;
