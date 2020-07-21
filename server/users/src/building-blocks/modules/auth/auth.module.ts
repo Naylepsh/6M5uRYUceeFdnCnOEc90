@@ -4,15 +4,15 @@ import { AuthService } from './services/auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { AuthController } from './controllers/auth.controllers';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants/constants';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { UserRepository } from './repositories/user.repository';
+import { jwtSecret } from './shared/auth.constants';
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: jwtConstants.secret,
+      secret: jwtSecret,
       signOptions: {
         expiresIn: '2 days',
       },
