@@ -2,7 +2,6 @@ import { UsersService } from './users.service';
 import { Test } from '@nestjs/testing';
 import { UserDto } from '../dtos/user.dto';
 import { UserRepository } from '../../infrastructure/user.repository';
-import { HashingService } from '../../../../utils/hashing.service';
 import { UserMapper } from '../mappers/user.mapper';
 import { User } from '../../domain/user';
 
@@ -22,7 +21,7 @@ describe('UserService', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [],
-      providers: [UsersService, HashingService, UserRepository],
+      providers: [UsersService, UserRepository],
     }).compile();
 
     usersService = moduleRef.get<UsersService>(UsersService);

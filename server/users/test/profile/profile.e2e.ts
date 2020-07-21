@@ -1,9 +1,12 @@
-import { populateDatabase, cleanDatabase } from './helpers/tests.db.helpers';
+import {
+  populateDatabase,
+  cleanDatabase,
+} from '../../src/modules/profile/tests/helpers/tests.db.helpers';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
-import { ProfileModule } from '../profile.module';
+import { ProfileModule } from '../../src/modules/profile/profile.module';
 import { INestApplication, HttpStatus } from '@nestjs/common';
-import { AuthModule } from '../../../building-blocks/modules/auth/auth.module';
+import { AuthModule } from '../../src/building-blocks/modules/auth/auth.module';
 
 describe('Profile Controller (e2e)', () => {
   let app: INestApplication;
