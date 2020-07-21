@@ -1,5 +1,5 @@
 import { UserPassword } from './user.password';
-import { Entity } from './../../../../src/core/domain/entity';
+import { Entity } from '../../../building-blocks/domain/entity';
 
 interface UserProps {
   firstName: string;

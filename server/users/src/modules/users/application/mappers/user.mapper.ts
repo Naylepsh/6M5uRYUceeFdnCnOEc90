@@ -5,7 +5,11 @@ import { UserPassword } from '../../domain/user.password';
 export class UserMapper {
   public static fromUserToDto(user: User): UserDto {
     if (user && user.props && user.props.password) {
-      return { ...user.props, password: user.props.password.value };
+      return {
+        id: user.id,
+        ...user.props,
+        password: user.props.password.value,
+      };
     }
   }
 

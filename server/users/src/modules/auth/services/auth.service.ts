@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AccessTokenDto } from '../dtos/token.auth.dto';
 import { UserDto } from './../../../../src/modules/users/application/dtos/user.dto';
 import { UserRepository } from './../../../../src/modules/users/infrastructure/user.repository';
-import { UserMapper } from './../../../../src/modules/users/application/mappers/user.mapper';
+import { UserMapper } from '../../users/application/mappers/user.mapper';
 
 @Injectable()
 export class AuthService {

@@ -1,4 +1,4 @@
-import { ValueObject } from './../../../core/domain/value-object';
+import { ValueObject } from '../../../building-blocks/domain/value-object';
 import { compare, hash } from 'bcrypt';
 
 interface UserPasswordProps {

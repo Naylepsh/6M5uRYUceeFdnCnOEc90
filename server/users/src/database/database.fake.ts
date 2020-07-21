@@ -1,25 +1,32 @@
-import { User } from 'src/modules/users/domain/user';
+interface IUser {
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl: string;
+  password: string;
+}
 
-let users: User[] = [];
+let users: IUser[] = [];
 
 export class FakeDatabase {
-  static findAll(): User[] {
+  static findAll(): IUser[] {
     return [...users];
   }
 
-  static findById(id: string): User {
+  static findById(id: string): IUser {
     return users.find(user => user.id === id);
   }
 
-  static findOneByUsername(username: string): User {
-    return users.find(user => user.props.username === username);
+  static findOneByUsername(username: string): IUser {
+    return users.find(user => user.username === username);
   }
 
-  static createUser(user: User): void {
+  static createUser(user: IUser): void {
     users.push(user);
   }
 
-  static updateUser(updatedUserData: User): void {
+  static updateUser(updatedUserData: IUser): void {
     users = users.map(user => {
       if (user.id === updatedUserData.id) {
         return updatedUserData;

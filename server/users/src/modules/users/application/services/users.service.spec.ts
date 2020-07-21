@@ -11,6 +11,7 @@ describe('UserService', () => {
   let userRepository: UserRepository;
   let repoCall;
   const user: UserDto = {
+    id: '1',
     username: 'username',
     firstName: 'john',
     lastName: 'doe',
@@ -53,7 +54,6 @@ describe('UserService', () => {
     it('should return all users', async () => {
       const res = await usersService.findAll();
 
-      // expect(res).toBe(users);
       const usernames = users.map(user => user.props.username);
       for (const user of res) {
         expect(usernames.includes(user.username)).toBe(true);

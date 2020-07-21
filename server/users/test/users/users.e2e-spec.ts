@@ -4,6 +4,8 @@ import * as request from 'supertest';
 import { UsersModule } from '../../src/modules/users/users.module';
 import { UserDto } from '../../src/modules/users/application/dtos/user.dto';
 import { FakeDatabase } from '../../src/database/database.fake';
+import { UserDbMapper } from '../../src/modules/users/infrastructure/user.mapper';
+import { UserMapper } from '../../src/modules/users/application/mappers/user.mapper';
 
 describe('UsersController (e2e)', () => {
   let app: INestApplication;
@@ -18,8 +20,8 @@ describe('UsersController (e2e)', () => {
     await app.init();
   });
 
-  beforeEach(() => {
-    populateDatabase();
+  beforeEach(async () => {
+    await populateDatabase();
   });
 
   afterAll(async () => {
@@ -30,9 +32,10 @@ describe('UsersController (e2e)', () => {
     cleanDatabase();
   });
 
-  const populateDatabase = () => {
+  const populateDatabase = async () => {
     const users: UserDto[] = [
       {
+        id: '1',
         username: 'username1',
         firstName: 'john',
         lastName: 'doe',
@@ -40,6 +43,7 @@ describe('UsersController (e2e)', () => {
         password: 'password',
       },
       {
+        id: '2',
         username: 'username2',
         firstName: 'john',
         lastName: 'doe',
@@ -49,7 +53,9 @@ describe('UsersController (e2e)', () => {
     ];
 
     for (const user of users) {
-      FakeDatabase.createUser(user);
+      FakeDatabase.createUser(
+        UserDbMapper.toPersistance(await UserMapper.fromDtoToUser(user)),
+      );
     }
   };
 
