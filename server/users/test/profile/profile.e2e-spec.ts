@@ -25,7 +25,7 @@ describe('Profile Controller (e2e)', () => {
   let authToken: string;
 
   beforeAll(async () => {
-    await Promise.all([loadApp(), populateDatabase([sampleProfile])]);
+    await loadApp();
   });
 
   const loadApp = async () => {
@@ -42,9 +42,16 @@ describe('Profile Controller (e2e)', () => {
     return moduleRef;
   };
 
+  beforeEach(async () => {
+    await populateDatabase([sampleProfile]);
+  });
+
   afterAll(async () => {
-    cleanDatabase();
     await app.close();
+  });
+
+  afterEach(() => {
+    cleanDatabase();
   });
 
   describe('/profile (GET)', () => {
@@ -56,6 +63,7 @@ describe('Profile Controller (e2e)', () => {
 
       expect(status).toBe(HttpStatus.OK);
     });
+
     it('should return 401 if invalid token was passed', async () => {
       authToken =
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
@@ -71,6 +79,16 @@ describe('Profile Controller (e2e)', () => {
       const { status } = await getProfile();
 
       expect(status).toBe(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return 404 if valid token was passed but the profile got deleted', async () => {
+      const { body } = await login();
+      authToken = body.accessToken;
+
+      cleanDatabase();
+      const { status } = await getProfile();
+
+      expect(status).toBe(HttpStatus.NOT_FOUND);
     });
   });
 
