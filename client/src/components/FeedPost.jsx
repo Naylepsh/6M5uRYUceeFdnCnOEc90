@@ -2,7 +2,7 @@ import React from "react";
 import useDocWithCache from "./../use-doc-with-cache";
 import { Link, useLocation } from "./../utils/react-router-next";
 import Avatar from "./Avatar";
-import { format as formatDate, formatDistance } from "date-fns";
+import { format as formatDate, distanceInWordsToNow } from "date-fns";
 
 const stopPropagation = (event) => event.stopPropagation();
 
@@ -26,7 +26,7 @@ export default function FeedPost({ post }) {
             {user.displayName}
           </Link>{" "}
           <span className="FeedPost_created_at">
-            {formatDistance(post.createdAt, { addSuffix: true })}
+            {distanceInWordsToNow(post.createdAt, { addSuffix: true })}
           </span>{" "}
         </div>
         <div className="FeedPost_message">{post.message}</div>

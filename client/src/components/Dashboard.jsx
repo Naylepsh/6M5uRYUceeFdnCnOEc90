@@ -201,7 +201,9 @@ function Day({ day, showMonth, onNewPost }) {
     >
       <div className="Day_date">
         {showMonth && (
-          <div className="Day_month">{formatDate(day.date, "MMM")}</div>
+          <div className="Day_month">
+            {translate_months(formatDate(day.date, "MMM"))}
+          </div>
         )}
         <div className="Day_number">{formatDate(day.date, "DD")}</div>
       </div>
@@ -212,4 +214,33 @@ function Day({ day, showMonth, onNewPost }) {
       </div>
     </div>
   );
+}
+
+function translate_months(month) {
+  switch (month) {
+    case "Jan":
+      return "STYCZEŃ";
+    case "Feb":
+      return "LUTY";
+    case "Mar":
+      return "MARZEC";
+    case "Apr":
+      return "KWIECIEŃ";
+    case "May":
+      return "MAJ";
+    case "Jun":
+      return "CZERWIEC";
+    case "Jul":
+      return "LIPIEC";
+    case "Aug":
+      return "SIERPIEŃ";
+    case "Sep":
+      return "WRZESIEŃ";
+    case "Oct":
+      return "PAŹDZIERNIK";
+    case "Nov":
+      return "LISTOPAD";
+    case "Dec":
+      return "GRUDZIEŃ";
+  }
 }
