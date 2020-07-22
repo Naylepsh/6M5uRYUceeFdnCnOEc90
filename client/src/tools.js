@@ -1,4 +1,5 @@
-import { db, auth, mode } from "./fakedb";
+import { db, auth, mode } from "./db.fake.js";
+
 import {
   differenceInDays,
   startOfWeek,
