@@ -313,21 +313,18 @@ async function populateLocalForage(user) {
       uid: user.uid,
       displayName: user.displayName,
       photoURL: "/flex.jpg",
-      goal: 8000,
       started: "2019-01-01",
     },
     ryan: {
       uid: "ryan",
       displayName: "Ryan Florence",
       photoURL: "/ryan.jpg",
-      goal: 8000,
       started: "2019-01-01",
     },
     michael: {
       uid: "michael",
       displayName: "Michael Jackson",
       photoURL: "/michael.jpg",
-      goal: 8000,
       started: "2019-01-01",
     },
   };
@@ -342,7 +339,7 @@ async function populateLocalForage(user) {
             createdAt: timestamp,
             uid,
             date: format(new Date(timestamp), "YYYY-MM-DD"),
-            message: `Old notes, don't care`,
+            message: `Recent post, don't care`,
           };
         })
         .reduce((obj, post) => {
@@ -368,8 +365,7 @@ function fakeStreamedData() {
         createdAt: Date.now(),
         uid: userIds[Math.floor(Math.random() * userIds.length)],
         date: format(Date.now(), "YYYY-MM-DD"),
-        minutes: Math.floor(Math.random() * 25) + 20,
-        message: `FAKE DATA! YEAH! ` + ++count,
+        message: `Some old notes ` + ++count,
       };
       lfData.posts[genId()] = record;
       localforage.setItem(LF_KEY, lfData);

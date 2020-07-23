@@ -25,6 +25,7 @@ body {
 [data-reach-dialog-content] {
   box-shadow: 1px 1px 30px hsla(0, 0%, 0%, 0.15);
   border: solid 2px hsla(240, 6%, 70%);
+  background-color: rgb(245, 245, 245);
   border-radius: 0.8rem;
   width: 800px;
   padding: 2.5rem;

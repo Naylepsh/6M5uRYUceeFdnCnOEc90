@@ -242,5 +242,7 @@ function translate_months(month) {
       return "LISTOPAD";
     case "Dec":
       return "GRUDZIEŃ";
+    default:
+      console.log(`Error, can't figure what ${month} is `);
   }
 }
