@@ -4,7 +4,11 @@ import { FaChevronDown } from "react-icons/fa";
 import usePosts from "./use-posts";
 
 export default function RecentPostsDropdown({ uid, onSelect }) {
-  const posts = usePosts(uid);
+  let posts = usePosts(uid);
+
+  if (posts.length > 18) {
+    posts = posts.slice(posts.length - 18, posts.length);
+  }
 
   //when there's no posts
   if (posts && posts.length === 0) {

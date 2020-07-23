@@ -887,7 +887,8 @@ h2 {
 
 [data-reach-menu-list] {
   box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.15);
-  border: solid 1px hsla(240, 6%, 70%);
+  border: solid 1px rgb(18, 18, 124);
+  background: cornsilk;
 }
 
 [data-reach-menu-item][data-selected] {
