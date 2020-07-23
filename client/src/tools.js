@@ -1,4 +1,4 @@
-import { db, auth, mode } from "./db.fake.js";
+import { db, auth, mode } from "./db.fake";
 
 import {
   differenceInDays,
@@ -61,7 +61,6 @@ export async function signup({
       displayName: displayName,
       uid: user.uid,
       photoURL: photoURL,
-      goal: 8000,
       started: formatDate(startDate, DATE_FORMAT),
     });
   } catch (e) {
@@ -273,9 +272,7 @@ function limitCalls(fn, limit = 20) {
   return (...args) => {
     calls++;
     if (calls > limit) {
-      throw new Error(
-        `You've called "${fn.name}" too many times too quickly.`
-      );
+      throw new Error(`You've called "${fn.name}" too many times too quickly.`);
     } else {
       setTimeout(() => (calls = 0), 3000);
     }
