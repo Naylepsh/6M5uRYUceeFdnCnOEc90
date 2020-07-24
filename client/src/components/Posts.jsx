@@ -6,7 +6,7 @@ import useDocWithCache from "./../use-doc-with-cache";
 import Avatar from "./Avatar";
 import NewPost from "./NewPost";
 import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
-import { deletePost } from "./../tools";
+import { deletePost, translate_months } from "./../tools";
 import usePosts from "./use-posts";
 
 export default function Posts({ params }) {
@@ -38,12 +38,17 @@ export default function Posts({ params }) {
 
   return posts && user ? (
     <div className="Posts">
-      <Avatar uid={user.id} size={100} />
+      <Avatar uid={user.uid} size={100} />
       <div className="Post_content">
         <h1 className="Post_user_name">
           <Link href={`/${user.uid}`}>{user.displayName}</Link>
         </h1>
-        <h2 className="Posts_date">{formatDate(date, "MMM Do, YYYY")}</h2>
+        <h2 className="Posts_date">{`${formatDate(
+          date,
+          "DD"
+        )} ${translate_months(
+          formatDate(date, "MMM")
+        ).toLowerCase()} ${formatDate(date, "YYYY")}`}</h2>
         <div className="Posts_posts">
           {dayPosts.length > 0 ? (
             dayPosts.map((post, index) => (
@@ -71,7 +76,7 @@ export default function Posts({ params }) {
                 onClick={handleAddNew}
               >
                 <FaPlusCircle />{" "}
-                <span>{posts.length > 0 ? "Add another" : "Add one"}</span>
+                <span>{posts.length > 0 ? "Dodaj notatkę" : "Add one"}</span>
               </button>
             </div>
           ))}

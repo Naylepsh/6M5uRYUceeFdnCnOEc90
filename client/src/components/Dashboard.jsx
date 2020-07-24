@@ -19,7 +19,7 @@ import {
 import AnimatedDialog from "./AnimatedDialog";
 import Posts from "./Posts";
 import usePosts from "./use-posts";
-import { DATE_FORMAT, calculateWeeks } from "./../tools";
+import { DATE_FORMAT, calculateWeeks, translate_months } from "./../tools";
 import { useAppState } from "./../states/AppState";
 import NewPost from "./NewPost";
 
@@ -192,16 +192,7 @@ function Weekdays() {
   );
 }
 
-function Day({
-  user,
-  day,
-  showMonth,
-  isOwner,
-  onNewPost,
-  hasNewPost,
-  modalIsOpen,
-  onAnimatedTextRest,
-}) {
+function Day({ user, day, showMonth, isOwner, onNewPost }) {
   const dayIsToday = isToday(day.date);
   const dayIsFuture = isFuture(day.date);
   const { location } = useLocation();
@@ -245,35 +236,4 @@ function Day({
       </div>
     </div>
   );
-}
-
-function translate_months(month) {
-  switch (month) {
-    case "Jan":
-      return "STYCZEŃ";
-    case "Feb":
-      return "LUTY";
-    case "Mar":
-      return "MARZEC";
-    case "Apr":
-      return "KWIECIEŃ";
-    case "May":
-      return "MAJ";
-    case "Jun":
-      return "CZERWIEC";
-    case "Jul":
-      return "LIPIEC";
-    case "Aug":
-      return "SIERPIEŃ";
-    case "Sep":
-      return "WRZESIEŃ";
-    case "Oct":
-      return "PAŹDZIERNIK";
-    case "Nov":
-      return "LISTOPAD";
-    case "Dec":
-      return "GRUDZIEŃ";
-    default:
-      console.log(`Error, can't figure what ${month} is `);
-  }
 }

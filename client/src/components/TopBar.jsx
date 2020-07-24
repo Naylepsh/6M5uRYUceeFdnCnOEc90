@@ -11,7 +11,6 @@ export default function TopBar({ children }) {
     <div className="TopBar">
       <div className="TopBar_inner">
         <GlobalNav />
-        <Search />
         <Account />
       </div>
     </div>

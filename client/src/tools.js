@@ -267,6 +267,37 @@ export function tween(duration, callback) {
   return () => cancelAnimationFrame(frame);
 }
 
+export function translate_months(month) {
+  switch (month) {
+    case "Jan":
+      return "STYCZEŃ";
+    case "Feb":
+      return "LUTY";
+    case "Mar":
+      return "MARZEC";
+    case "Apr":
+      return "KWIECIEŃ";
+    case "May":
+      return "MAJ";
+    case "Jun":
+      return "CZERWIEC";
+    case "Jul":
+      return "LIPIEC";
+    case "Aug":
+      return "SIERPIEŃ";
+    case "Sep":
+      return "WRZESIEŃ";
+    case "Oct":
+      return "PAŹDZIERNIK";
+    case "Nov":
+      return "LISTOPAD";
+    case "Dec":
+      return "GRUDZIEŃ";
+    default:
+      console.log(`Error, can't figure what ${month} is `);
+  }
+}
+
 function limitCalls(fn, limit = 20) {
   let calls = 0;
   return (...args) => {

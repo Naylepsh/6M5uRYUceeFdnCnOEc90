@@ -4,7 +4,7 @@ import { format } from "date-fns";
 window.lf = localforage;
 window.clearFakeData = () => localforage.clear();
 
-fakeStreamedData();
+// fakeStreamedData();
 
 export const mode = "fake";
 
@@ -354,29 +354,29 @@ async function populateLocalForage(user) {
   await localforage.setItem(LF_KEY, { posts, users });
 }
 
-let count = 0;
-function fakeStreamedData() {
-  const userIds = ["ryan", "michael"];
-  Array.from({ length: 1000 }).forEach((_, index) => {
-    setTimeout(async () => {
-      const lfData = await localforage.getItem(LF_KEY);
-      if (!lfData) return;
-      const record = {
-        createdAt: Date.now(),
-        uid: userIds[Math.floor(Math.random() * userIds.length)],
-        date: format(Date.now(), "YYYY-MM-DD"),
-        message: `Some old notes ` + ++count,
-      };
-      lfData.posts[genId()] = record;
-      localforage.setItem(LF_KEY, lfData);
-      notify("collection", "posts", {
-        type: "ADD",
-        lfData,
-        record,
-      });
-    }, 10000 * index);
-  });
-}
+// let count = 0;
+// function fakeStreamedData() {
+//   const userIds = ["ryan", "michael"];
+//   Array.from({ length: 1000 }).forEach((_, index) => {
+//     setTimeout(async () => {
+//       const lfData = await localforage.getItem(LF_KEY);
+//       if (!lfData) return;
+//       const record = {
+//         createdAt: Date.now(),
+//         uid: userIds[Math.floor(Math.random() * userIds.length)],
+//         date: format(Date.now(), "YYYY-MM-DD"),
+//         message: `Some old notes ` + ++count,
+//       };
+//       lfData.posts[genId()] = record;
+//       localforage.setItem(LF_KEY, lfData);
+//       notify("collection", "posts", {
+//         type: "ADD",
+//         lfData,
+//         record,
+//       });
+//     }, 10000 * index);
+//   });
+// }
 
 const genId = () => Math.random().toString(32).substr(2);
 
