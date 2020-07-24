@@ -1,6 +1,11 @@
 import React, { Fragment, useState, useCallback } from "react";
-import { useLocation, useParams } from "./../utils/react-router-next";
-import { FaChevronDown, FaChevronUp, FaPlus } from "react-icons/fa";
+import { useLocation, useParams, Link } from "./../utils/react-router-next";
+import {
+  FaChevronDown,
+  FaChevronUp,
+  FaPlus,
+  FaCheckCircle,
+} from "react-icons/fa";
 import { useTransition, animated } from "react-spring";
 import {
   format as formatDate,
@@ -187,9 +192,22 @@ function Weekdays() {
   );
 }
 
-function Day({ day, showMonth, onNewPost }) {
+function Day({
+  user,
+  day,
+  showMonth,
+  isOwner,
+  onNewPost,
+  hasNewPost,
+  modalIsOpen,
+  onAnimatedTextRest,
+}) {
   const dayIsToday = isToday(day.date);
   const dayIsFuture = isFuture(day.date);
+  const { location } = useLocation();
+  const isAnyPost = day.posts.length === 0 ? 0 : 1;
+
+  console.log("Tutaj dzień: " + day + " a tu posty: " + day.posts);
 
   return (
     <div
@@ -208,9 +226,22 @@ function Day({ day, showMonth, onNewPost }) {
         <div className="Day_number">{formatDate(day.date, "DD")}</div>
       </div>
       <div className="Day_minutes">
-        <button onClick={onNewPost} className="Calendar_add_post_button">
-          <FaPlus />
-        </button>
+        {isAnyPost ? (
+          <Link
+            className="Day_link"
+            href={`/${user.uid}/${formatDate(day.date, DATE_FORMAT)}`}
+            state={{
+              fromCalendar: true,
+              ...location.state,
+            }}
+          >
+            <FaCheckCircle size={32} color="green" />
+          </Link>
+        ) : isOwner ? (
+          <button onClick={onNewPost} className="Calendar_add_post_button">
+            <FaPlus />
+          </button>
+        ) : null}
       </div>
     </div>
   );
