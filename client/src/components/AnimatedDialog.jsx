@@ -19,9 +19,9 @@ export default function AnimatedDialog(props) {
   };
 
   const transitions = useTransition(props.isOpen ? props : false, null, {
-    from: { opacity: 0, y: -410, blur: 0 },
+    from: { opacity: 0, y: -510, blur: 0 },
     enter: { opacity: 1, y: -500, blur: 8 },
-    leave: { opacity: 0, y: 390, blur: 0 },
+    leave: { opacity: 0, y: -510, blur: 0 },
     onFrame: updateRootElement,
   });
 
@@ -35,7 +35,9 @@ export default function AnimatedDialog(props) {
         >
           <animated.DialogContent
             style={{
-              transform: y.interpolate((y) => `translate3d(320px, ${y}px, 0px)`),
+              transform: y.interpolate(
+                (y) => `translate3d(320px, ${y}px, 0px)`
+              ),
             }}
           >
             {item.children}

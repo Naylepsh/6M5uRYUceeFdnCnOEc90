@@ -653,6 +653,7 @@ body {
 }
 
 .Posts {
+  position: relative;
   display: flex;
   background: white;
   padding: 2rem;
@@ -663,6 +664,8 @@ body {
 [data-reach-dialog-content] .Posts {
   padding: 0;
   box-shadow: none;
+  min-height: unset;
+  position: relative;
 }
 
 .Posts .Avatar {

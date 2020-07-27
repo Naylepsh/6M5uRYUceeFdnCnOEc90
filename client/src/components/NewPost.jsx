@@ -6,7 +6,7 @@ import Avatar from "./Avatar";
 import { FaHome } from "react-icons/fa";
 import RecentPostsDropdown from "./RecentPostsDropdown";
 
-const MAX_MESSAGE_LENGTH = 300;
+const MAX_MESSAGE_LENGTH = 100;
 
 export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
   const [{ auth }] = useAppState();
