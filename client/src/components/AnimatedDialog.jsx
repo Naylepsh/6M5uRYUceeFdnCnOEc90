@@ -37,7 +37,7 @@ export default function AnimatedDialog(props) {
             style={{
               transform: y.interpolate(
                 (y) => `translate3d(320px, ${y}px, 0px)`
-              ),
+              )
             }}
           >
             {item.children}
