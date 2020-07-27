@@ -1,5 +1,5 @@
 :root {
-  --gray: hsl(0, 0%, 0%);
+  --black: hsl(0, 0%, 0%);
   --middle-gray: hsl(240, 6%, 92%);
   --light-gray: hsl(300, 7%, 97%);
   --accent: hsl(300, 89%, 35%);
@@ -15,7 +15,7 @@
 }
 
 body {
-  color: var(--gray);
+  color: var(--black);
 }
 
 [data-reach-dialog-overlay] {
@@ -43,7 +43,7 @@ body {
   font-size: 125%;
   display: flex;
   align-items: center;
-  color: var(--gray);
+  color: var(--black);
   border-radius: 50%;
   border: var(--focus-border-inactive);
   padding: 0.5rem;
@@ -69,13 +69,23 @@ body {
   margin-left: 0.25rem;
 }
 
-.Layout {
+/* .Layout {
   min-height: 100vh;
   background-color: #edf4f7;
   background-image: url("./utils/Sun-Tornado.svg");
   background-position: 0;
   background-size: 200%;
   background-repeat: repeat;
+} */
+
+.Layout {
+  min-height: 100vh;
+  background-color: #edf4f7;
+  background-image: url("./utils/Sun-Tornado.svg"),
+    url("./utils/Sun-Tornado.svg"), url("./utils/Sun-Tornado.svg");
+  background-position: vw 0, 25vw -10vw, 50vw -10vw;
+  background-size: 110vw, 110vw, 140vw;
+  background-repeat: no-repeat;
 }
 
 .LoggedOut {
@@ -177,7 +187,7 @@ body {
 
 .GlobalNav a {
   margin: 0 0.125rem;
-  color: var(--gray);
+  color: var(--black);
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -232,7 +242,7 @@ body {
   padding: 0.25rem 0.5rem;
   display: flex;
   align-items: center;
-  color: var(--gray);
+  color: var(--black);
   border: var(--focus-border-inactive);
   min-width: 300px;
 }
@@ -336,7 +346,7 @@ body {
 .Meta_heading {
   font-weight: bold;
   text-transform: uppercase;
-  color: var(--gray);
+  color: var(--black);
   margin-right: 1rem;
 }
 
@@ -395,7 +405,7 @@ body {
 }
 
 .NewPost_char_count {
-  color: var(--gray);
+  color: var(--black);
   text-align: right;
   font-size: 1.2em;
 }
@@ -434,14 +444,14 @@ body {
 .Minutes_label {
   font-size: 150%;
   font-weight: bold;
-  color: var(--gray);
+  color: var(--black);
 }
 
 .Minutes_input {
   border: none;
   outline: none;
   background: var(--light-gray);
-  color: var(--gray);
+  color: var(--black);
   font: inherit;
   font-size: 200%;
   text-align: center;
@@ -487,7 +497,7 @@ body {
 .NewPost_date {
   font-weight: bold;
   text-transform: uppercase;
-  color: var(--gray);
+  color: var(--black);
   flex: 1;
   text-align: center;
 }
@@ -518,7 +528,7 @@ body {
   flex: 1;
   text-align: center;
   font-weight: bold;
-  color: var(--gray);
+  color: var(--black);
   font-size: 85%;
 }
 
@@ -547,7 +557,7 @@ body {
   right: 0;
   display: flex;
   justify-content: space-between;
-  color: var(--gray);
+  color: var(--black);
   font-size: 85%;
   pointer-events: none;
 }
@@ -582,7 +592,7 @@ body {
 }
 
 .Calendar_add_post_button {
-  color: var(--gray);
+  color: var(--black);
   flex: 1;
   height: 100%;
 }
@@ -611,7 +621,11 @@ body {
 }
 
 .Day_is_future {
-  /* opacity: 0.33; */
+  background-color: rgb(196, 184, 184);
+}
+
+.Day_is_today {
+  background-color: rgb(249, 73, 73);
 }
 
 .Dialog_close {
@@ -621,7 +635,7 @@ body {
 }
 
 .Day_link {
-  color: var(--gray);
+  color: var(--black);
   text-decoration: none;
   flex: 1;
   height: 100%;

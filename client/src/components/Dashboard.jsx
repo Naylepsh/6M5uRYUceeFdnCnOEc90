@@ -58,7 +58,7 @@ function Calendar({ user, posts, modalIsOpen }) {
       ? location.state.startDate
       : today;
 
-  const showLater = startDate !== today;
+  const showLater = 1;
 
   const isOwner = auth.uid === user.uid;
   const numWeeks = 5;
