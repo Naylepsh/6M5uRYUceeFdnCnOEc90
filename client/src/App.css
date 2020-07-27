@@ -85,7 +85,7 @@ body {
     url("./utils/Sun-Tornado.svg"), url("./utils/Sun-Tornado.svg");
   background-position: vw 0, 25vw -10vw, 50vw -10vw;
   background-size: 110vw, 110vw, 140vw;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
 }
 
 .LoggedOut {
@@ -542,7 +542,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 5rem;
-  background: white;
+  background: rgb(209, 190, 190);
   margin: 2px;
 }
 
@@ -621,7 +621,7 @@ body {
 }
 
 .Day_is_future {
-  background-color: rgb(196, 184, 184);
+  background-color: rgb(255, 255, 255);
 }
 
 .Day_is_today {
