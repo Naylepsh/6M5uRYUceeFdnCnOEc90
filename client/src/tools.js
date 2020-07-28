@@ -1,35 +1,9 @@
 import { db, auth, mode } from "./db.fake";
 
-import {
-  differenceInDays,
-  startOfWeek,
-  subDays,
-  addDays,
-  format as formatDate,
-} from "date-fns";
-
-// data model is:
-//
-//   users = [{
-//     ...auth,
-//     posts,
-//     progress,
-//     expectedProgress,
-//     goal
-//   }]
-//
-//   post = [{
-//     createdAt, // milliseconds
-//     date, // "YYYY-MM-DD"
-//     minutes, // int
-//     uid,
-//     message
-//   }]
-//
+import { startOfWeek, subDays, addDays, format as formatDate } from "date-fns";
 
 export { auth, db, mode };
 
-export const WORKOUT_DAYS_PER_YEAR = 260;
 export const DATE_FORMAT = "YYYY-MM-DD";
 
 export function login(email, password) {
@@ -162,8 +136,6 @@ export const subscribeToNewFeedPosts = limitCalls(
 
 export { formatDate };
 
-// Thanks!
-// https://stackoverflow.com/questions/1433030/validate-number-of-days-in-a-given-month/1433119#1433119
 export function daysInMonth(m, y) {
   switch (m) {
     case 1:
@@ -182,31 +154,13 @@ export function isValidDate(year, month, day) {
   return month >= 0 && month < 12 && day > 0 && day <= daysInMonth(month, year);
 }
 
-export function calculateTotalMinutes(posts) {
-  return posts.reduce((total, post) => post.minutes + total, 0);
-}
-
-export function calculateMakeup(total, expected, goal) {
-  const minutesPerWorkout = goal / WORKOUT_DAYS_PER_YEAR;
-  const deficit = expected - total;
-  return Math.round(deficit / minutesPerWorkout);
-}
-
-export function calculateExpectedMinutes(user) {
-  const days = differenceInDays(new Date(), user.started);
-  const perDay = user.goal / WORKOUT_DAYS_PER_YEAR;
-  return Math.round(days * perDay);
-}
-
 export function sortByCreatedAtDescending(a, b) {
   return b.createdAt - a.createdAt;
 }
 
 export function calculateWeeks(posts, startDate, numWeeks) {
-  // ends up like [[s, m, t, w, t, f, s], week, week]
   const weeks = [];
 
-  // ends up like: { "2019-03-19": [post, post] }
   const postsByDay = {};
   posts.forEach((post) => {
     if (!postsByDay[post.date]) postsByDay[post.date] = [];
@@ -219,7 +173,7 @@ export function calculateWeeks(posts, startDate, numWeeks) {
     const date = addDays(startDay, index);
     const dayKey = formatDate(date, DATE_FORMAT);
     const posts = postsByDay[dayKey] || [];
-    const dayta /*get it?!*/ = { date, posts };
+    const dayta = { date, posts };
     if (index % 7) {
       weeks[weekCursor].push(dayta);
     } else {
@@ -295,6 +249,27 @@ export function translate_months(month) {
       return "GRUDZIEŃ";
     default:
       console.log(`Error, can't figure what ${month} is `);
+  }
+}
+
+export function translate_weekdays(day) {
+  switch (day) {
+    case "Monday":
+      return "poniedziałek";
+    case "Tuesday":
+      return "wtorek";
+    case "Wednesday":
+      return "środa";
+    case "Thursday":
+      return "czwartek";
+    case "Friday":
+      return "piątek";
+    case "Saturday":
+      return "sobota";
+    case "Sunday":
+      return "niedziela";
+    default:
+      console.log(`Error, can't figure what ${day} is`);
   }
 }
 

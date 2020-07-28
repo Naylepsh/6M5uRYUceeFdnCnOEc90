@@ -3,6 +3,9 @@ import useDocWithCache from "./../use-doc-with-cache";
 import { Link, useLocation } from "./../utils/react-router-next";
 import Avatar from "./Avatar";
 import { format as formatDate, distanceInWordsToNow } from "date-fns";
+import { translate_months, translate_weekdays } from "./../tools";
+
+const plLocale = require("date-fns/locale/pl");
 
 const stopPropagation = (event) => event.stopPropagation();
 
@@ -19,14 +22,20 @@ export default function FeedPost({ post }) {
           className="FeedPost_date"
           href={`/${post.uid}/${post.date}`}
         >
-          {formatDate(post.date, "dddd, MMMM Do")}
+          {`${translate_weekdays(formatDate(post.date, "dddd"))}, ${formatDate(
+            post.date,
+            "DD"
+          )} ${translate_months(formatDate(post.date, "MMM")).toLowerCase()}`}
         </Link>
         <div className="FeedPost_user_name">
           <Link onClick={stopPropagation} href={`/${user.uid}`}>
             {user.displayName}
           </Link>{" "}
           <span className="FeedPost_created_at">
-            {distanceInWordsToNow(post.createdAt, { addSuffix: true })}
+            {distanceInWordsToNow(post.createdAt, {
+              addSuffix: true,
+              locale: plLocale,
+            })}
           </span>{" "}
         </div>
         <div className="FeedPost_message">{post.message}</div>
