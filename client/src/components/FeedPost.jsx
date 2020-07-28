@@ -4,6 +4,7 @@ import { Link, useLocation } from "./../utils/react-router-next";
 import Avatar from "./Avatar";
 import { format as formatDate, distanceInWordsToNow } from "date-fns";
 import { translate_months, translate_weekdays } from "./../tools";
+import "./FeedPost.css";
 
 const plLocale = require("date-fns/locale/pl");
 

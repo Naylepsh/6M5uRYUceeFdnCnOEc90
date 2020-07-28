@@ -1,0 +1,41 @@
+.GlobalNav {
+  display: flex;
+}
+
+.GlobalNav a {
+  margin: 0 0.125rem;
+  color: var(--black);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 9999px;
+  border: var(--focus-border-inactive);
+}
+
+.GlobalNav a:first-child {
+  margin-left: 0;
+}
+
+.GlobalNav a:hover {
+  background: var(--light-gray);
+}
+
+.GlobalNav a:active {
+  background: var(--middle-gray);
+}
+
+.GlobalNav a:focus {
+  outline: none;
+  border: var(--focus-border);
+  box-shadow: var(--focus-shadow);
+}
+
+.GlobalNav a svg {
+  margin-right: 0.25rem;
+  font-size: 125%;
+}
+
+.GlobalNav a[aria-current] {
+  color: var(--accent);
+}

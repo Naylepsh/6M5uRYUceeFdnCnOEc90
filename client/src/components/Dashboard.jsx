@@ -22,6 +22,7 @@ import usePosts from "./use-posts";
 import { DATE_FORMAT, calculateWeeks, translate_months } from "./../tools";
 import { useAppState } from "./../states/AppState";
 import NewPost from "./NewPost";
+import "./Dashboard.css";
 
 export default function Dashboard() {
   const [{ user }] = useAppState();

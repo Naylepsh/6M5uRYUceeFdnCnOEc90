@@ -2,6 +2,7 @@ import React from "react";
 import { Tabs, TabList, Tab, TabPanel, TabPanels } from "@reach/tabs";
 import LoginForm from "./../components/LoginForm";
 import SignupForm from "./../components/SignupForm";
+import "./LoggedOut.css";
 
 export default function LoggedOut() {
   return (

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "./../utils/react-router-next";
 import { FaCalendarAlt, FaHotjar } from "react-icons/fa";
+import "./GlobalNav.css";
 
 export default function GlobalNav() {
   return (

@@ -1,0 +1,71 @@
+.FeedPost {
+  display: flex;
+  padding: 2rem;
+  border-top: 1px solid var(--middle-gray);
+  cursor: pointer;
+  transition: background-color 200ms ease;
+}
+
+.FeedPostShimmer {
+  padding: 2rem;
+  border-top: 1px solid var(--middle-gray);
+  height: 16rem;
+  background: #f6f7f8;
+  background-image: linear-gradient(
+    to right,
+    #f6f7f8 0%,
+    #edeef1 20%,
+    #f6f7f8 40%,
+    #f6f7f8 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 120% 100%;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: shimmer;
+  animation-timing-function: linear;
+}
+
+.FeedPost:hover {
+  background-color: var(--light-gray);
+}
+
+.FeedPost .Avatar {
+  margin-right: 2rem;
+}
+
+.FeedPost_about {
+  flex: 1;
+}
+
+.FeedPost_message {
+  font-size: 125%;
+  margin: 1rem 0;
+}
+
+.FeedPost a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.FeedPost a:hover {
+  text-decoration: underline;
+}
+
+.FeedPost_date {
+  color: inherit;
+  font-size: 150%;
+  font-weight: bold;
+}
+
+.FeedPost_user_name {
+  font-size: 125%;
+  color: blueviolet;
+}
+
+.FeedPost_created_at {
+  font-size: 80%;
+  font-style: italic;
+  color: black;
+}

@@ -1,0 +1,95 @@
+.Posts {
+  position: relative;
+  display: flex;
+  background: white;
+  padding: 2rem;
+  box-shadow: 1px 1px 5px hsla(0, 0%, 0%, 0.25);
+  border-radius: 0.8rem;
+  margin: auto;
+  flex-shrink: 1;
+}
+
+[data-reach-dialog-content] .Posts {
+  padding: 0;
+  box-shadow: none;
+  height: 350px;
+  width: auto;
+  position: relative;
+  margin: auto;
+  flex: 1;
+  flex-wrap: "wrap";
+  flex-shrink: 1;
+  overflow-y: scroll;
+}
+
+.Posts .Avatar {
+  margin-right: 2rem;
+  width: 200px;
+}
+
+.Posts_content {
+  flex: 1;
+}
+
+.Posts_empty {
+  font-size: 200%;
+  font-style: italic;
+}
+
+h1,
+h2 {
+  margin: 0;
+  font: inherit;
+}
+
+.Posts_user_name {
+  font-size: 150%;
+  margin-top: 0.5rem;
+}
+
+.Posts_user_name a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.Posts_user_name a:hover {
+  text-decoration: underline;
+}
+
+.Posts_date {
+  font-size: 200%;
+  font-weight: bold;
+}
+
+.Posts_posts {
+  margin: 2rem 0 0.25rem 0;
+}
+
+.Post {
+  padding: 1rem 0;
+}
+
+.Post_message {
+  font-size: 150%;
+}
+
+.Post_title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Post,
+.Posts_add,
+.Posts_adding {
+  border-top: solid 1px var(--middle-gray);
+}
+
+.Posts_adding {
+  padding-top: 1rem;
+}
+
+.Posts_add_button {
+  margin-top: 0.5rem;
+  margin-left: -0.5rem;
+}

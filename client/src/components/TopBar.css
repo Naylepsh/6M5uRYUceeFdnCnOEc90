@@ -1,0 +1,30 @@
+.TopBar {
+  background: var(--transparent-white);
+  border-bottom: solid 1px var(--middle-gray);
+  padding: 0.25rem 0.75rem;
+}
+
+.TopBar_inner {
+  max-width: var(--max-width);
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Account {
+  display: flex;
+  align-items: center;
+}
+
+.Account > * {
+  margin: 0 0.25rem;
+}
+
+.Account_logout {
+  margin-left: 1rem;
+}
+
+.Account_user_name {
+  font-weight: bold;
+}

@@ -1,0 +1,50 @@
+.LoggedOut {
+  display: flex;
+  justify-content: center;
+  padding-top: 100px;
+}
+
+.LoggedOut input[type="text"],
+.LoggedOut input[type="email"],
+.LoggedOut input[type="password"] {
+  display: block;
+  font-size: 125%;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  width: 94%;
+}
+
+.LoggedOut [data-reach-tabs] {
+  margin: 0 2rem;
+  align-self: center;
+  width: 265px;
+  background: #fff;
+  border-radius: 0.8rem;
+  box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.LoggedOut [data-reach-tab-list] {
+  background: #f6f6f7;
+}
+
+.LoggedOut [data-reach-tab] {
+  padding: 1rem 1.8rem;
+  border: none;
+  flex: 1;
+  text-align: center;
+}
+
+.LoggedOut [data-reach-tab][aria-selected="true"],
+.LoggedOut [data-reach-tab].active {
+  color: var(--accent);
+  background: white;
+}
+
+.LoggedOut [data-reach-tab].disabled {
+  opacity: 0.25;
+}
+
+.LoggedOut [data-reach-tab-panels] {
+  padding: 1.5rem;
+}

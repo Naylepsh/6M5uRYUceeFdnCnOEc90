@@ -1,0 +1,159 @@
+.Calendar_add_post_button {
+  border: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.Weekdays {
+  display: flex;
+  flex: 1;
+  margin: 2px;
+}
+
+.Weekdays > * {
+  text-transform: uppercase;
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+  color: var(--black);
+  font-size: 85%;
+}
+
+.Calendar_week {
+  display: flex;
+}
+
+.Day {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 5rem;
+  background: rgb(209, 190, 190);
+  margin: 2px;
+}
+
+.Day_no_minutes {
+  background: rgb(231, 238, 241);
+}
+
+.Day_date {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  color: var(--black);
+  font-size: 85%;
+  pointer-events: none;
+}
+
+.Day_number {
+  flex: 1;
+  text-align: right;
+  margin: 0.25rem;
+}
+
+.Day_month {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: smaller;
+  margin: 0.1rem;
+  color: var(--red);
+}
+
+.Day_minutes {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Calendar_minutes_text {
+  font-size: 200%;
+  padding: 0.25rem 0.5rem;
+  border-radius: 99999px;
+  /* font-family: Audiowide, sans-serif; */
+  font-variant-numeric: tabular-nums;
+}
+
+.Calendar_add_post_button {
+  color: var(--black);
+  flex: 1;
+  height: 100%;
+}
+
+.Calendar_add_post_button:hover {
+  background: white;
+  cursor: pointer;
+}
+
+.Calendar_add_post_button:focus {
+  outline: none;
+}
+
+.Calendar_add_post_button:hover {
+  background: white;
+}
+
+.Calendar_add_post_button:focus {
+  outline: none;
+  border: var(--focus-border);
+  box-shadow: var(--focus-shadow);
+}
+
+.Calendar_add_post_button:active {
+  color: var(--accent);
+}
+
+.Day_is_future {
+  background-color: rgb(255, 255, 255);
+}
+
+.Day_is_today {
+  background-color: rgb(249, 73, 73);
+}
+
+.Day_link {
+  color: var(--black);
+  text-decoration: none;
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Day_link:hover {
+  color: var(--accent);
+}
+
+.Calendar_earlier:hover,
+.Calendar_later:hover {
+  background: white;
+}
+
+.Calendar_nav {
+  display: flex;
+  margin: 1rem;
+  font-size: 85%;
+}
+
+.Calendar_animation_overflow {
+  overflow: hidden;
+  position: relative;
+  height: calc(25rem + 12px);
+}
+
+.Calendar_animation_wrapper {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}

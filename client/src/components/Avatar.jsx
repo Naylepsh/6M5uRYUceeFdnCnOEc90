@@ -1,6 +1,7 @@
 import React from "react";
 import useDocWithCache from "./../use-doc-with-cache";
 import usePosts from "./use-posts";
+import "./Avatar.css";
 
 export default function Avatar({ uid, size = 50, bg, className, ...rest }) {
   const user = useDocWithCache(`users/${uid}`);

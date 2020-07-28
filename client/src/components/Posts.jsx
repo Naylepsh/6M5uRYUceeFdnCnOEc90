@@ -8,6 +8,7 @@ import NewPost from "./NewPost";
 import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import { deletePost, translate_months } from "./../tools";
 import usePosts from "./use-posts";
+import "./Posts.css";
 
 export default function Posts({ params }) {
   const [{ auth }] = useAppState();

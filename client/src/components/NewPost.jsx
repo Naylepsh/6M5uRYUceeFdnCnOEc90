@@ -5,6 +5,7 @@ import { format as formatDate } from "date-fns";
 import Avatar from "./Avatar";
 import { FaHome } from "react-icons/fa";
 import RecentPostsDropdown from "./RecentPostsDropdown";
+import "./NewPost.css";
 
 const MAX_MESSAGE_LENGTH = 100;
 

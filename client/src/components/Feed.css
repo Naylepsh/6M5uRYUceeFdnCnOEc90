@@ -1,0 +1,24 @@
+.Feed {
+  margin-top: 3rem;
+  background: white;
+  box-shadow: 1px 1px 5px hsla(0, 0%, 0%, 0.25);
+  border-top-right-radius: 0.8rem;
+  border-top-left-radius: 0.8rem;
+  overflow: hidden;
+}
+
+.Feed > *:first-child {
+  margin-top: 0;
+  border-top: none;
+}
+
+.Feed_button_wrapper {
+  padding: 1rem 0;
+  text-align: center;
+}
+
+.Feed_new_posts_button {
+  font-size: 150%;
+  display: inline-block;
+  color: var(--accent);
+}
