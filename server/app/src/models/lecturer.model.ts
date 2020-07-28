@@ -19,9 +19,6 @@ export class Lecturer {
   @Column()
   email: string;
 
-  @Column()
-  groupIds: string[];
-
   @OneToMany(
     type => Group,
     group => group.lecturer,

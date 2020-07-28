@@ -5,7 +5,6 @@ import {
   ManyToOne,
   JoinTable,
   PrimaryGeneratedColumn,
-  JoinColumn,
 } from 'typeorm';
 import { Lecturer } from './lecturer.model';
 import { Student } from './student.model';
@@ -28,10 +27,10 @@ export class Group {
   @Column()
   room: string;
 
-  @Column('datetime')
+  @Column('date')
   startDate: string;
 
-  @Column('datetime')
+  @Column('date')
   endDate: string;
 
   @Column({ nullable: true })
@@ -39,9 +38,8 @@ export class Group {
 
   @ManyToOne(
     type => Lecturer,
-    lecturer => lecturer.groupIds,
+    lecturer => lecturer.groups,
   )
-  @JoinColumn({ name: 'lecturerId' })
   lecturer: Lecturer;
 
   @ManyToMany(type => Student)
