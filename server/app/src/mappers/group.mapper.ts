@@ -4,7 +4,7 @@ import { GroupDto } from '../dtos/groups/group.dto';
 import { LecturerMapper } from './lecturer.mapper';
 import { SaveGroupDto } from '../dtos/groups/save-group.dto';
 
-interface GroupPseudoPersistance {
+export interface GroupPseudoPersistance {
   day: string;
   hour: string;
   address: string;
@@ -29,11 +29,20 @@ export class GroupMapper {
   }
 
   public static toDto(group: Group, lecturers: Lecturer[]): GroupDto {
-    const { id } = group;
+    const { id, day, hour, address, room, startDate, endDate } = group;
     const groups = [];
     const lecturerDtos = lecturers.map(lecturer =>
       LecturerMapper.toDto(lecturer, groups),
     );
-    return { id, lecturers: lecturerDtos };
+    return {
+      id,
+      day,
+      hour,
+      address,
+      room,
+      startDate,
+      endDate,
+      lecturers: lecturerDtos,
+    };
   }
 }

@@ -15,6 +15,7 @@ const dbConfig: ConnectionOptions = {
   uuidExtension: 'uuid-ossp',
   synchronize,
   entities,
+  cache: false,
 };
 
 export default dbConfig;

@@ -4,6 +4,7 @@ import { SaveGroupDto } from '../dtos/groups/save-group.dto';
 import { getConnection } from 'typeorm';
 import { Group } from '../models/group.model';
 import { GroupMapper } from '../mappers/group.mapper';
+import { GroupPseudoPersistance } from './../mappers/group.mapper';
 
 @Injectable()
 export class GroupRepository {
@@ -40,6 +41,25 @@ export class GroupRepository {
 
     const id = group.identifiers[0]['id'];
     return this.findById(id);
+  }
+
+  async update(groupDto: SaveGroupDto): Promise<void> {
+    const id = groupDto.id;
+    const groupToSave = GroupMapper.toPersistance(groupDto);
+    // const group = await this.findById(id);
+    await this.updateGroupFields(id, groupToSave);
+  }
+
+  private async updateGroupFields(
+    id: string,
+    groupToSave: GroupPseudoPersistance,
+  ): Promise<void> {
+    await getConnection()
+      .createQueryBuilder()
+      .update(Group)
+      .set(groupToSave)
+      .where('id = :id', { id })
+      .execute();
   }
 
   async delete(id: string): Promise<void> {

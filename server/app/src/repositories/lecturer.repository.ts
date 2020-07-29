@@ -66,8 +66,8 @@ export class LecturerRepository {
     const id = createLecturerDto.id;
     const lecturerToSave = LecturerMapper.toPersistance(createLecturerDto);
     const lecturer = await this.findById(id);
-    const groupsToRemove = lecturer.groups.map(group => group.id);
     await this.updateLecturerFields(id, lecturerToSave);
+    const groupsToRemove = lecturer.groups.map(group => group.id);
     await this.groupRelationManager.updateRelation(
       id,
       createLecturerDto.groups,

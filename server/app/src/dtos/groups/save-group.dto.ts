@@ -1,4 +1,5 @@
 export class SaveGroupDto {
+  id?: string;
   day: string;
   hour: string;
   address: string;
