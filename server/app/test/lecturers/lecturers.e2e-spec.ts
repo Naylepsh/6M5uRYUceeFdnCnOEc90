@@ -141,7 +141,7 @@ describe('LecturersController (e2e)', () => {
 
         const { status } = await getLecturer();
 
-        expect(status).toBe(HttpStatus.NOT_FOUND);
+        expect(status).toBe(404);
       });
     });
 
@@ -151,9 +151,73 @@ describe('LecturersController (e2e)', () => {
 
         const { status } = await getLecturer();
 
-        expect(status).toBe(HttpStatus.BAD_REQUEST);
+        expect(status).toBe(400);
       });
     });
+  });
+
+  describe(`${apiEndpoint}/:id (DELETE)`, () => {
+    describe('if lecturer exists in database', () => {
+      beforeEach(async () => {
+        await populateDatabase();
+      });
+
+      it('should return 200', async () => {
+        const { status } = await deleteLecturer();
+
+        expect(status).toBe(200);
+      });
+
+      it('should remove lecturer from database', async () => {
+        await deleteLecturer();
+
+        const lecturer = await lecturerRepository.findById(lecturerId);
+        expect(lecturer).toBeNull();
+      });
+
+      it('should remove only the lecturer from database', async () => {
+        const lecturersBeforeDeletion = await lecturerRepository.findAll();
+        await deleteLecturer();
+        const lecturersAfterDeletion = await lecturerRepository.findAll();
+
+        expect(lecturersBeforeDeletion.length).toBe(
+          lecturersAfterDeletion.length + 1,
+        );
+      });
+    });
+
+    describe('if lecturer does not exist in database', () => {
+      it('should return 404', async () => {
+        const { status } = await deleteLecturer();
+
+        expect(status).toBe(404);
+      });
+
+      it('shouldnt remove anything', async () => {
+        const lecturersBeforeDeletion = await lecturerRepository.findAll();
+        await deleteLecturer();
+        const lecturersAfterDeletion = await lecturerRepository.findAll();
+
+        expect(lecturersBeforeDeletion.length).toBe(
+          lecturersAfterDeletion.length,
+        );
+      });
+    });
+
+    describe('if id is not valid', () => {
+      it('should return 400', async () => {
+        lecturerId = '1';
+        const { status } = await deleteLecturer();
+
+        expect(status).toBe(400);
+      });
+    });
+
+    const deleteLecturer = () => {
+      return request(app.getHttpServer()).delete(
+        `${apiEndpoint}/${lecturerId}`,
+      );
+    };
   });
 
   const getLecturer = () => {
@@ -182,8 +246,6 @@ describe('LecturersController (e2e)', () => {
   };
 
   const populateDatabase = async () => {
-    // really dumb way to populate
-    // update it if you find something better pls
     const lecturer = await lecturerRepository.create(sampleLecturer);
     lecturerId = lecturer.id;
   };

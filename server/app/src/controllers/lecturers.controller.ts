@@ -6,6 +6,7 @@ import {
   Body,
   NotFoundException,
   BadRequestException,
+  Delete,
 } from '@nestjs/common';
 import { LecturerRepository } from '../repositories/lecturer.repository';
 import { LecturerDto } from '../dtos/lecturers/lecturer.dto';
@@ -28,13 +29,8 @@ export class LecturersController {
 
   @Get(`${apiEndpoint}/:id`)
   async findById(@Param('id') id: string): Promise<LecturerDto> {
-    if (!validateUuid(id)) {
-      throw new BadRequestException();
-    }
-    const lecturer = await this.lecturerRepository.findById(id);
-    if (!lecturer) {
-      throw new NotFoundException();
-    }
+    ensureUuidIsValid(id);
+    const lecturer = await this.ensureLecturerExistence(id);
     return lecturer;
   }
 
@@ -45,6 +41,28 @@ export class LecturersController {
     const lecturer = await this.lecturerRepository.create(createLecturerDto);
     return lecturer;
   }
+
+  @Delete(`${apiEndpoint}/:id`)
+  async delete(@Param('id') id: string): Promise<void> {
+    ensureUuidIsValid(id);
+    await this.ensureLecturerExistence(id);
+    return this.lecturerRepository.delete(id);
+  }
+
+  private async ensureLecturerExistence(id: string): Promise<LecturerDto> {
+    const lecturer = await this.lecturerRepository.findById(id);
+    if (!lecturer) {
+      throw new NotFoundException();
+    }
+    return lecturer;
+  }
+}
+
+function ensureUuidIsValid(id: string): string {
+  if (!validateUuid(id)) {
+    throw new BadRequestException();
+  }
+  return id;
 }
 
 function validateUuid(id: string): boolean {
