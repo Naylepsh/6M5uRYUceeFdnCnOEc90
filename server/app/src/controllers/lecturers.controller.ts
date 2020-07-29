@@ -7,10 +7,12 @@ import {
   NotFoundException,
   BadRequestException,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { LecturerRepository } from '../repositories/lecturer.repository';
 import { LecturerDto } from '../dtos/lecturers/lecturer.dto';
 import { CreateLecturerDto } from '../dtos/lecturers/create-lecturer.dto';
+import { UpdateLecturerDto } from '../dtos/lecturers/updatelecturer.dto';
 
 const apiEndpoint = '/lecturers';
 
@@ -40,6 +42,16 @@ export class LecturersController {
   ): Promise<LecturerDto> {
     const lecturer = await this.lecturerRepository.create(createLecturerDto);
     return lecturer;
+  }
+
+  @Put(`${apiEndpoint}/:id`)
+  async update(
+    @Param('id') id: string,
+    @Body() createLecturerDto: CreateLecturerDto,
+  ): Promise<void> {
+    ensureUuidIsValid(id);
+    await this.ensureLecturerExistence(id);
+    return this.lecturerRepository.update({ ...createLecturerDto, id });
   }
 
   @Delete(`${apiEndpoint}/:id`)

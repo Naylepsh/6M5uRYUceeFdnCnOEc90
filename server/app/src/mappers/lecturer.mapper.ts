@@ -5,6 +5,7 @@ import { Group } from '../models/group.model';
 import { GroupMapper } from './group.mapper';
 
 export interface LecturerPseudoPersistance {
+  id?: string;
   firstName: string;
   lastName: string;
   phoneNumber: string;

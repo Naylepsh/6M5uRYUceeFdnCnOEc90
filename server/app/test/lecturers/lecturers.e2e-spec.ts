@@ -156,6 +156,79 @@ describe('LecturersController (e2e)', () => {
     });
   });
 
+  describe(`${apiEndpoint}/:id (PUT)`, () => {
+    let lecturerDataToUpdate;
+
+    beforeEach(() => {
+      loadUpdateData();
+    });
+
+    const loadUpdateData = () => {
+      lecturerDataToUpdate = {
+        firstName: 'firstname',
+        lastName: 'lastname',
+        email: 'mail@mail.com',
+        phoneNumber: '123456789',
+        groups: [],
+      };
+    };
+
+    describe('if lectuer exist in database', () => {
+      beforeEach(async () => {
+        await populateDatabase();
+      });
+      it('should return 200', async () => {
+        const { status } = await updateLecturer();
+
+        expect(status).toBe(200);
+      });
+
+      it('should update that lecturer in database', async () => {
+        await updateLecturer();
+
+        const lecturer = await lecturerRepository.findById(lecturerId);
+        expect(lecturer).toHaveProperty(
+          'firstName',
+          lecturerDataToUpdate.firstName,
+        );
+        expect(lecturer).toHaveProperty(
+          'lastName',
+          lecturerDataToUpdate.lastName,
+        );
+        expect(lecturer).toHaveProperty('email', lecturerDataToUpdate.email);
+        expect(lecturer).toHaveProperty(
+          'phoneNumber',
+          lecturerDataToUpdate.phoneNumber,
+        );
+      });
+    });
+
+    describe('if lecturer does not exist in database', () => {
+      it('should return 404', async () => {
+        lecturerId = uuidv4();
+        const { status } = await updateLecturer();
+
+        expect(status).toBe(404);
+      });
+    });
+
+    describe('if invalid id was passed', () => {
+      it('should return 400', async () => {
+        lecturerId = '1';
+
+        const { status } = await updateLecturer();
+
+        expect(status).toBe(400);
+      });
+    });
+
+    const updateLecturer = () => {
+      return request(app.getHttpServer())
+        .put(`${apiEndpoint}/${lecturerId}`)
+        .send(lecturerDataToUpdate);
+    };
+  });
+
   describe(`${apiEndpoint}/:id (DELETE)`, () => {
     describe('if lecturer exists in database', () => {
       beforeEach(async () => {

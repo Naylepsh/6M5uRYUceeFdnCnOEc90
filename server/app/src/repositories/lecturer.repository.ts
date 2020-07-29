@@ -5,6 +5,7 @@ import { CreateLecturerDto } from '../dtos/lecturers/create-lecturer.dto';
 import { LecturerMapper } from '../mappers/lecturer.mapper';
 import { LecturerDto } from '../dtos/lecturers/lecturer.dto';
 import { LecturerPseudoPersistance } from './../mappers/lecturer.mapper';
+import { UpdateLecturerDto } from '../dtos/lecturers/updatelecturer.dto';
 
 @Injectable()
 export class LecturerRepository {
@@ -63,6 +64,45 @@ export class LecturerRepository {
       .relation(Lecturer, relationName)
       .of(lecturerId)
       .add(relationIds);
+  }
+
+  async update(createLecturerDto: CreateLecturerDto): Promise<void> {
+    const id = createLecturerDto.id;
+    const lecturerToSave = LecturerMapper.toPersistance(createLecturerDto);
+    const lecturer = await this.findById(id);
+    const groupsToRemove = lecturer.groups.map(group => group.id);
+    await this.updateLecturerFields(id, lecturerToSave);
+    await this.updateLecturerRelation(
+      id,
+      'groups',
+      createLecturerDto.groups,
+      groupsToRemove,
+    );
+  }
+
+  private async updateLecturerFields(
+    id: string,
+    lecturerToSave: LecturerPseudoPersistance,
+  ): Promise<void> {
+    await getConnection()
+      .createQueryBuilder()
+      .update(Lecturer)
+      .set(lecturerToSave)
+      .where('id = :id', { id })
+      .execute();
+  }
+
+  private async updateLecturerRelation(
+    lecturerId: string,
+    relationName: string,
+    relationIdsToAdd: string[],
+    relationIdsToRemove: string[],
+  ) {
+    await getConnection()
+      .createQueryBuilder()
+      .relation(Lecturer, relationName)
+      .of(lecturerId)
+      .addAndRemove(relationIdsToAdd, relationIdsToRemove);
   }
 
   async delete(id: string): Promise<void> {
