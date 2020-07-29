@@ -4,7 +4,7 @@ import { LecturerDto } from '../dtos/lecturers/lecturer.dto';
 import { Group } from '../models/group.model';
 import { GroupMapper } from './group.mapper';
 
-interface LecturerPseudoPersistance {
+export interface LecturerPseudoPersistance {
   firstName: string;
   lastName: string;
   phoneNumber: string;
