@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Lecturer } from '../models/lecturer.model';
 import { getConnection } from 'typeorm';
-import { SaveLecturerDto } from '../dtos/lecturers/create-lecturer.dto';
+import { SaveLecturerDto } from '../dtos/lecturers/save-lecturer.dto';
 import { LecturerMapper } from '../mappers/lecturer.mapper';
 import { LecturerDto } from '../dtos/lecturers/lecturer.dto';
 import { LecturerPseudoPersistance } from './../mappers/lecturer.mapper';

@@ -1,4 +1,4 @@
-export class CreateGroupDto {
+export class SaveGroupDto {
   day: string;
   hour: string;
   address: string;

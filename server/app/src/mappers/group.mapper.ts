@@ -2,7 +2,7 @@ import { Group } from '../models/group.model';
 import { Lecturer } from '../models/lecturer.model';
 import { GroupDto } from '../dtos/groups/group.dto';
 import { LecturerMapper } from './lecturer.mapper';
-import { CreateGroupDto } from '../dtos/groups/create-group.dto';
+import { SaveGroupDto } from '../dtos/groups/save-group.dto';
 
 interface GroupPseudoPersistance {
   day: string;
@@ -15,7 +15,7 @@ interface GroupPseudoPersistance {
 
 export class GroupMapper {
   public static toPersistance(
-    createGroupDto: CreateGroupDto,
+    createGroupDto: SaveGroupDto,
   ): GroupPseudoPersistance {
     const { day, hour, address, room, startDate, endDate } = createGroupDto;
     return {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { GroupDto } from '../dtos/groups/group.dto';
-import { CreateGroupDto } from '../dtos/groups/create-group.dto';
+import { SaveGroupDto } from '../dtos/groups/save-group.dto';
 import { getConnection } from 'typeorm';
 import { Group } from '../models/group.model';
 import { GroupMapper } from '../mappers/group.mapper';
@@ -17,7 +17,7 @@ export class GroupRepository {
     return GroupMapper.toDto(group, []);
   }
 
-  async create(groupDto: CreateGroupDto): Promise<GroupDto> {
+  async create(groupDto: SaveGroupDto): Promise<GroupDto> {
     const groupToSave = GroupMapper.toPersistance(groupDto);
     const group = await getConnection()
       .createQueryBuilder()

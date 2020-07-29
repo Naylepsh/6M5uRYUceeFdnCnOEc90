@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { LecturerRepository } from '../repositories/lecturer.repository';
 import { LecturerDto } from '../dtos/lecturers/lecturer.dto';
-import { SaveLecturerDto } from '../dtos/lecturers/create-lecturer.dto';
+import { SaveLecturerDto } from '../dtos/lecturers/save-lecturer.dto';
 import { UpdateLecturerDto } from '../dtos/lecturers/updatelecturer.dto';
 
 const apiEndpoint = '/lecturers';
