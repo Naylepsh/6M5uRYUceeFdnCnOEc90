@@ -254,47 +254,42 @@ function makeNotesElements(posts) {
   if (posts === 3) {
     return (
       <Fragment>
-        {" "}
-        <FaSquareFull size={20} color="green" />
-        <FaSquareFull size={20} color="purple" />
-        <FaSquareFull size={20} color="orange" />
+        <div className="firstNote"></div>
+        <div className="secondNote"></div>
+        <div className="thirdNote"></div>
       </Fragment>
     );
   }
   if (posts === 4) {
     return (
       <Fragment>
-        {" "}
-        <FaSquareFull size={17} color="green" />
-        {"                            "}
-        <FaSquareFull size={17} color="purple" />
-        <FaSquareFull size={17} color="orange" />
-        <FaSquareFull size={17} color="red" />
+        <div className="firstNote"></div>
+        <div className="secondNote"></div>
+        <div className="thirdNote"></div>
+        <div className="fourthNote"></div>
       </Fragment>
     );
   }
   if (posts === 5) {
     return (
       <Fragment>
-        {" "}
-        <FaSquareFull size={14} color="green" />
-        <FaSquareFull size={14} color="purple" />
-        <FaSquareFull size={14} color="orange" />
-        <FaSquareFull size={14} color="red" />
-        <FaSquareFull size={14} color="brown" />
+        <div className="firstNote"></div>
+        <div className="secondNote"></div>
+        <div className="thirdNote"></div>
+        <div className="fourthNote"></div>
+        <div className="fifthNote"></div>
       </Fragment>
     );
   }
   if (posts >= 5) {
     return (
       <Fragment>
-        {" "}
-        <FaSquareFull size={14} color="green" />
-        <FaSquareFull size={14} color="purple" />
-        <FaSquareFull size={14} color="orange" />
-        <FaSquareFull size={14} color="red" />
-        <FaSquareFull size={14} color="brown" />
-        <div>...</div>
+        <div className="firstNote"></div>
+        <div className="secondNote"></div>
+        <div className="thirdNote"></div>
+        <div className="fourthNote"></div>
+        <div className="fifthNote"></div>
+        <div className="more">...</div>
       </Fragment>
     );
   }

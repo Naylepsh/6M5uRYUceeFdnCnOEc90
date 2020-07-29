@@ -163,18 +163,55 @@
   position: absolute;
   top: 17px;
   left: 5px;
-  height: 10px;
+  height: 8px;
   min-width: 60px;
   border-radius: 8px;
-  background-color: rgb(24, 145, 13);
+  background-color: rgb(30, 180, 16);
 }
 
 .secondNote {
   position: absolute;
-  top: 30px;
+  top: 28px;
   left: 5px;
-  height: 10px;
+  height: 8px;
   min-width: 60px;
   border-radius: 8px;
-  background-color: rgb(13, 33, 145);
+  background-color: rgb(28, 145, 13);
+}
+
+.thirdNote {
+  position: absolute;
+  top: 38px;
+  left: 5px;
+  height: 8px;
+  min-width: 60px;
+  border-radius: 8px;
+  background-color: rgb(13, 145, 112);
+}
+
+.fourthNote {
+  position: absolute;
+  top: 49px;
+  left: 5px;
+  height: 8px;
+  min-width: 60px;
+  border-radius: 8px;
+  background-color: rgb(13, 97, 145);
+}
+
+.fifthNote {
+  position: absolute;
+  top: 60px;
+  left: 5px;
+  height: 8px;
+  min-width: 60px;
+  border-radius: 8px;
+  background-color: rgb(13, 37, 145);
+}
+
+.more {
+  position: absolute;
+  top: 55px;
+  left: 20px;
+  font-size: large;
 }
