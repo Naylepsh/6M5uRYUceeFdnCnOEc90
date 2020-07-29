@@ -68,10 +68,67 @@ describe('LecturersController (e2e)', () => {
       expect(body.length).toBe(1);
     });
 
-    const getLecturers = async () => {
+    const getLecturers = () => {
       return request(app.getHttpServer()).get(apiEndpoint);
     };
   });
+
+  describe(`${apiEndpoint} (POST)`, () => {
+    describe('if valid data was passed', () => {
+      it('should return 201', async () => {
+        const { status } = await createLecturer();
+
+        expect(status).toBe(HttpStatus.CREATED);
+      });
+
+      it('should return lecturer', async () => {
+        const { body } = await createLecturer();
+
+        expect(body).toHaveProperty('id');
+      });
+    });
+
+    const createLecturer = () => {
+      return request(app.getHttpServer())
+        .post(apiEndpoint)
+        .send(sampleLecturer);
+    };
+  });
+
+  describe(`${apiEndpoint}/:id (GET)`, () => {
+    describe('if lecturer exists in database', () => {
+      beforeEach(async () => {
+        await populateDatabase();
+      });
+
+      it('should return 200', async () => {
+        const { status } = await getLecturer();
+
+        expect(status).toBe(HttpStatus.OK);
+      });
+
+      it('should return lecturer', async () => {
+        const { body } = await getLecturer();
+
+        expect(body).toHaveProperty('id', lecturerId);
+        expect(body).toHaveProperty('firstName', sampleLecturer.firstName);
+        expect(body).toHaveProperty('lastName', sampleLecturer.lastName);
+        expect(body).toHaveProperty('email', sampleLecturer.email);
+        expect(body).toHaveProperty('phoneNumber', sampleLecturer.phoneNumber);
+      });
+    });
+  });
+
+  const getLecturer = () => {
+    return request(app.getHttpServer()).get(`${apiEndpoint}/${lecturerId}`);
+  };
+
+  const createGroup = () => {
+    const group = {};
+    return request(app.getHttpServer())
+      .post('/groups')
+      .send(group);
+  };
 
   const populateDatabase = async () => {
     // really dumb way to populate
