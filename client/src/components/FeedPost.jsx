@@ -3,7 +3,7 @@ import useDocWithCache from "./../use-doc-with-cache";
 import { Link, useLocation } from "./../utils/react-router-next";
 import Avatar from "./Avatar";
 import { format as formatDate, distanceInWordsToNow } from "date-fns";
-import { translate_months, translate_weekdays } from "./../tools";
+import { translateMonths, translateWeekdays } from "./../tools";
 import "./FeedPost.css";
 
 const plLocale = require("date-fns/locale/pl");
@@ -23,10 +23,10 @@ export default function FeedPost({ post }) {
           className="FeedPost_date"
           href={`/${post.uid}/${post.date}`}
         >
-          {`${translate_weekdays(formatDate(post.date, "dddd"))}, ${formatDate(
+          {`${translateWeekdays(formatDate(post.date, "dddd"))}, ${formatDate(
             post.date,
             "DD"
-          )} ${translate_months(formatDate(post.date, "MMM")).toLowerCase()}`}
+          )} ${translateMonths(formatDate(post.date, "MMM")).toLowerCase()}`}
         </Link>
         <div className="FeedPost_user_name">
           <Link onClick={stopPropagation} href={`/${user.uid}`}>

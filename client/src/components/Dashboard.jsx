@@ -4,7 +4,7 @@ import {
   FaChevronDown,
   FaChevronUp,
   FaPlus,
-  FaCheckCircle,
+  FaSquareFull,
 } from "react-icons/fa";
 import { useTransition, animated } from "react-spring";
 import {
@@ -19,7 +19,7 @@ import {
 import AnimatedDialog from "./AnimatedDialog";
 import Posts from "./Posts";
 import usePosts from "./use-posts";
-import { DATE_FORMAT, calculateWeeks, translate_months } from "./../tools";
+import { DATE_FORMAT, calculateWeeks, translateMonths } from "./../tools";
 import { useAppState } from "./../states/AppState";
 import NewPost from "./NewPost";
 import "./Dashboard.css";
@@ -168,11 +168,11 @@ function CalendarNav({ onEarlier, onLater, showLater }) {
   return (
     <div className="Calendar_nav">
       <button className="Calendar_earlier icon_button" onClick={onEarlier}>
-        <FaChevronUp /> <span>W górę</span>
+        <FaChevronUp /> <span>Wcześniej</span>
       </button>
       {showLater && (
         <button className="Calendar_later icon_button" onClick={onLater}>
-          <FaChevronDown /> <span>W dół</span>
+          <FaChevronDown /> <span>Później</span>
         </button>
       )}
     </div>
@@ -212,7 +212,7 @@ function Day({ user, day, showMonth, isOwner, onNewPost }) {
       <div className="Day_date">
         {showMonth && (
           <div className="Day_month">
-            {translate_months(formatDate(day.date, "MMM"))}
+            {translateMonths(formatDate(day.date, "MMM"))}
           </div>
         )}
         <div className="Day_number">{formatDate(day.date, "DD")}</div>
@@ -227,7 +227,7 @@ function Day({ user, day, showMonth, isOwner, onNewPost }) {
               ...location.state,
             }}
           >
-            <FaCheckCircle size={32} color="green" />
+            {makeNotesElements(day.posts.length)}
           </Link>
         ) : isOwner ? (
           <button onClick={onNewPost} className="Calendar_add_post_button">
@@ -237,4 +237,65 @@ function Day({ user, day, showMonth, isOwner, onNewPost }) {
       </div>
     </div>
   );
+}
+
+function makeNotesElements(posts) {
+  if (posts === 1) {
+    return <div className="firstNote"></div>;
+  }
+  if (posts === 2) {
+    return (
+      <Fragment>
+        <div className="firstNote"></div>
+        <div className="secondNote"></div>
+      </Fragment>
+    );
+  }
+  if (posts === 3) {
+    return (
+      <Fragment>
+        {" "}
+        <FaSquareFull size={20} color="green" />
+        <FaSquareFull size={20} color="purple" />
+        <FaSquareFull size={20} color="orange" />
+      </Fragment>
+    );
+  }
+  if (posts === 4) {
+    return (
+      <Fragment>
+        {" "}
+        <FaSquareFull size={17} color="green" />
+        {"                            "}
+        <FaSquareFull size={17} color="purple" />
+        <FaSquareFull size={17} color="orange" />
+        <FaSquareFull size={17} color="red" />
+      </Fragment>
+    );
+  }
+  if (posts === 5) {
+    return (
+      <Fragment>
+        {" "}
+        <FaSquareFull size={14} color="green" />
+        <FaSquareFull size={14} color="purple" />
+        <FaSquareFull size={14} color="orange" />
+        <FaSquareFull size={14} color="red" />
+        <FaSquareFull size={14} color="brown" />
+      </Fragment>
+    );
+  }
+  if (posts >= 5) {
+    return (
+      <Fragment>
+        {" "}
+        <FaSquareFull size={14} color="green" />
+        <FaSquareFull size={14} color="purple" />
+        <FaSquareFull size={14} color="orange" />
+        <FaSquareFull size={14} color="red" />
+        <FaSquareFull size={14} color="brown" />
+        <div>...</div>
+      </Fragment>
+    );
+  }
 }

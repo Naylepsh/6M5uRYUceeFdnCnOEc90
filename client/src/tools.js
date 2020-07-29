@@ -221,7 +221,7 @@ export function tween(duration, callback) {
   return () => cancelAnimationFrame(frame);
 }
 
-export function translate_months(month) {
+export function translateMonths(month) {
   switch (month) {
     case "Jan":
       return "STYCZEŃ";
@@ -252,7 +252,7 @@ export function translate_months(month) {
   }
 }
 
-export function translate_weekdays(day) {
+export function translateWeekdays(day) {
   switch (day) {
     case "Monday":
       return "poniedziałek";
