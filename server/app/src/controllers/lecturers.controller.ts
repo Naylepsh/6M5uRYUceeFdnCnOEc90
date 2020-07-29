@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { LecturerRepository } from '../repositories/lecturer.repository';
 import { LecturerDto } from '../dtos/lecturers/lecturer.dto';
-import { CreateLecturerDto } from '../dtos/lecturers/create-lecturer.dto';
+import { SaveLecturerDto } from '../dtos/lecturers/create-lecturer.dto';
 import { UpdateLecturerDto } from '../dtos/lecturers/updatelecturer.dto';
 
 const apiEndpoint = '/lecturers';
@@ -38,7 +38,7 @@ export class LecturersController {
 
   @Post(apiEndpoint)
   async create(
-    @Body() createLecturerDto: CreateLecturerDto,
+    @Body() createLecturerDto: SaveLecturerDto,
   ): Promise<LecturerDto> {
     const lecturer = await this.lecturerRepository.create(createLecturerDto);
     return lecturer;
@@ -47,7 +47,7 @@ export class LecturersController {
   @Put(`${apiEndpoint}/:id`)
   async update(
     @Param('id') id: string,
-    @Body() createLecturerDto: CreateLecturerDto,
+    @Body() createLecturerDto: SaveLecturerDto,
   ): Promise<void> {
     ensureUuidIsValid(id);
     await this.ensureLecturerExistence(id);

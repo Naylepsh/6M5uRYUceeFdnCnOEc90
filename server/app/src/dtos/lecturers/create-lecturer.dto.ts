@@ -1,4 +1,4 @@
-export class CreateLecturerDto {
+export class SaveLecturerDto {
   id?: string;
   firstName: string;
   lastName: string;

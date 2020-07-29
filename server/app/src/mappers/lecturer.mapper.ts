@@ -1,4 +1,4 @@
-import { CreateLecturerDto } from '../dtos/lecturers/create-lecturer.dto';
+import { SaveLecturerDto } from '../dtos/lecturers/create-lecturer.dto';
 import { Lecturer } from '../models/lecturer.model';
 import { LecturerDto } from '../dtos/lecturers/lecturer.dto';
 import { Group } from '../models/group.model';
@@ -14,7 +14,7 @@ export interface LecturerPseudoPersistance {
 
 export class LecturerMapper {
   public static toPersistance(
-    createLecturerDto: CreateLecturerDto,
+    createLecturerDto: SaveLecturerDto,
   ): LecturerPseudoPersistance {
     const { firstName, lastName, phoneNumber, email } = createLecturerDto;
     return {

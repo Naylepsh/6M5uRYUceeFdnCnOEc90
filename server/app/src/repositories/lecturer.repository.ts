@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Lecturer } from '../models/lecturer.model';
 import { getConnection } from 'typeorm';
-import { CreateLecturerDto } from '../dtos/lecturers/create-lecturer.dto';
+import { SaveLecturerDto } from '../dtos/lecturers/create-lecturer.dto';
 import { LecturerMapper } from '../mappers/lecturer.mapper';
 import { LecturerDto } from '../dtos/lecturers/lecturer.dto';
 import { LecturerPseudoPersistance } from './../mappers/lecturer.mapper';
@@ -33,7 +33,7 @@ export class LecturerRepository {
     return LecturerMapper.toDto(lecturer, lecturer.groups);
   }
 
-  async create(createLecturerDto: CreateLecturerDto): Promise<LecturerDto> {
+  async create(createLecturerDto: SaveLecturerDto): Promise<LecturerDto> {
     const lecturerToSave = LecturerMapper.toPersistance(createLecturerDto);
     const id = await this.insertLecturerFields(lecturerToSave);
     await this.insertLecturerRelation(id, 'groups', createLecturerDto.groups);
@@ -66,7 +66,7 @@ export class LecturerRepository {
       .add(relationIds);
   }
 
-  async update(createLecturerDto: CreateLecturerDto): Promise<void> {
+  async update(createLecturerDto: SaveLecturerDto): Promise<void> {
     const id = createLecturerDto.id;
     const lecturerToSave = LecturerMapper.toPersistance(createLecturerDto);
     const lecturer = await this.findById(id);
