@@ -96,16 +96,15 @@ describe('GroupsController (e2e)', () => {
         expect(body).toHaveProperty('id');
       });
 
-      // it('should allow group creation with lecturers initialized', async () => {
-      //   const group = await createLecturer();
-      //   loadSampleGroup();
-      //   sampleGroup.groups = [group.id];
+      it('should allow group creation with lecturers initialized', async () => {
+        const lecturer = await createLecturer();
+        sampleGroup.lecturers = [lecturer.id];
 
-      //   const { body } = await createGroup();
+        const { body } = await createGroup();
 
-      //   expect(body).toHaveProperty('groups');
-      //   expect(body.groups.length).toBe(1);
-      // });
+        expect(body).toHaveProperty('lecturers');
+        expect(body.lecturers.length).toBe(1);
+      });
     });
 
     const createGroup = () => {

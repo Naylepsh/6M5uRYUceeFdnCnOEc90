@@ -5,9 +5,16 @@ import { getConnection } from 'typeorm';
 import { Group } from '../models/group.model';
 import { GroupMapper } from '../mappers/group.mapper';
 import { GroupPseudoPersistance } from './../mappers/group.mapper';
+import { RelationManager } from './helpers/relation';
 
 @Injectable()
 export class GroupRepository {
+  lecturerRelationManager: RelationManager;
+
+  constructor() {
+    this.lecturerRelationManager = new RelationManager(Group, 'lecturers');
+  }
+
   async findAll(): Promise<GroupDto[]> {
     const groups = await getConnection()
       .createQueryBuilder()
@@ -32,6 +39,14 @@ export class GroupRepository {
 
   async create(groupDto: SaveGroupDto): Promise<GroupDto> {
     const groupToSave = GroupMapper.toPersistance(groupDto);
+    const id = await this.insertGroupFields(groupToSave);
+    await this.lecturerRelationManager.insertRelation(id, groupDto.lecturers);
+    return this.findById(id);
+  }
+
+  private async insertGroupFields(
+    groupToSave: GroupPseudoPersistance,
+  ): Promise<string> {
     const group = await getConnection()
       .createQueryBuilder()
       .insert()
@@ -40,14 +55,20 @@ export class GroupRepository {
       .execute();
 
     const id = group.identifiers[0]['id'];
-    return this.findById(id);
+    return id;
   }
 
   async update(groupDto: SaveGroupDto): Promise<void> {
     const id = groupDto.id;
     const groupToSave = GroupMapper.toPersistance(groupDto);
-    // const group = await this.findById(id);
     await this.updateGroupFields(id, groupToSave);
+    const group = await this.findById(id);
+    const lecturersToRemove = group.lecturers.map(lecturer => lecturer.id);
+    await this.lecturerRelationManager.updateRelation(
+      id,
+      groupDto.lecturers,
+      lecturersToRemove,
+    );
   }
 
   private async updateGroupFields(
