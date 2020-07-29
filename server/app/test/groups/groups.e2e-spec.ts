@@ -207,6 +207,17 @@ describe('GroupsController (e2e)', () => {
         expect(group).toHaveProperty('endDate');
         expectDatesToBeTheSame(group.endDate, groupDataToUpdate.endDate);
       });
+
+      it('should allow to update lecturers', async () => {
+        const lecturer = await createLecturer();
+        groupDataToUpdate.lecturers = [lecturer.id];
+
+        await updateGroup();
+
+        const { body: group } = await getGroup();
+        expect(group).toHaveProperty('lecturers');
+        expect(group.lecturers.length).toBe(1);
+      });
     });
 
     describe('if group does not exist in database', () => {
