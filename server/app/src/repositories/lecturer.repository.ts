@@ -42,4 +42,13 @@ export class LecturerRepository {
     const id = lecturer.identifiers[0]['id'];
     return this.findById(id);
   }
+
+  async delete(id: string): Promise<void> {
+    await getConnection()
+      .createQueryBuilder()
+      .delete()
+      .from(Lecturer)
+      .where('id = :id', { id })
+      .execute();
+  }
 }
