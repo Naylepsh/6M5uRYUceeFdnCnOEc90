@@ -27,6 +27,7 @@ export class LecturerRepository {
       .where('lecturer.id = :id', { id })
       .leftJoinAndSelect('lecturer.groups', 'groups')
       .getOne();
+    if (!lecturer) return null;
     return LecturerMapper.toDto(lecturer, lecturer.groups);
   }
 

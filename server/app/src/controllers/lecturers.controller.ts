@@ -5,6 +5,7 @@ import {
   Post,
   Body,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { LecturerRepository } from '../repositories/lecturer.repository';
 import { LecturerDto } from '../dtos/lecturers/lecturer.dto';
@@ -27,6 +28,9 @@ export class LecturersController {
 
   @Get(`${apiEndpoint}/:id`)
   async findById(@Param('id') id: string): Promise<LecturerDto> {
+    if (!validateUuid(id)) {
+      throw new BadRequestException();
+    }
     const lecturer = await this.lecturerRepository.findById(id);
     if (!lecturer) {
       throw new NotFoundException();
@@ -41,4 +45,10 @@ export class LecturersController {
     const lecturer = await this.lecturerRepository.create(createLecturerDto);
     return lecturer;
   }
+}
+
+function validateUuid(id: string): boolean {
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  const match = id.match(uuidRegex);
+  return !!match;
 }

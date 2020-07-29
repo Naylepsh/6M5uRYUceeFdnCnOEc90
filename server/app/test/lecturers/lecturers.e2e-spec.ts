@@ -3,6 +3,7 @@ import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { LecturerRepository } from '../../src/repositories/lecturer.repository';
+import { v4 as uuidv4 } from 'uuid';
 
 describe('LecturersController (e2e)', () => {
   let app: INestApplication;
@@ -115,6 +116,26 @@ describe('LecturersController (e2e)', () => {
         expect(body).toHaveProperty('lastName', sampleLecturer.lastName);
         expect(body).toHaveProperty('email', sampleLecturer.email);
         expect(body).toHaveProperty('phoneNumber', sampleLecturer.phoneNumber);
+      });
+    });
+
+    describe('if lecturer does not exist in database', () => {
+      it('should return 404', async () => {
+        lecturerId = uuidv4();
+
+        const { status } = await getLecturer();
+
+        expect(status).toBe(HttpStatus.NOT_FOUND);
+      });
+    });
+
+    describe('if id is not valid', () => {
+      it('should return 400', async () => {
+        lecturerId = '1';
+
+        const { status } = await getLecturer();
+
+        expect(status).toBe(HttpStatus.BAD_REQUEST);
       });
     });
   });
