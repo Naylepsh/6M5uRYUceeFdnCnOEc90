@@ -8,6 +8,7 @@ const dev = () => ({
     name: process.env.DEV_DATABASE_NAME,
     username: process.env.DEV_DATABASE_USERNAME,
     password: process.env.DEV_DATABASE_PASSWORD,
+    synchronize: true,
   },
 });
 
@@ -19,6 +20,7 @@ const test = () => ({
     name: process.env.TEST_DATABASE_NAME,
     username: process.env.TEST_DATABASE_USERNAME,
     password: process.env.TEST_DATABASE_PASSWORD,
+    synchronize: true,
   },
 });
 const config = { dev, test };

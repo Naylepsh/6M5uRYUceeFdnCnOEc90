@@ -4,16 +4,20 @@ import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { LecturerRepository } from '../../src/repositories/lecturer.repository';
 import { v4 as uuidv4 } from 'uuid';
+import { GroupRepository } from '../../src/repositories/group.repository';
+import { getConnection } from 'typeorm';
 
 describe('LecturersController (e2e)', () => {
   let app: INestApplication;
   const apiEndpoint = '/lecturers';
   let lecturerRepository: LecturerRepository;
+  let groupRepository: GroupRepository;
   let sampleLecturer;
   let lecturerId: string;
 
   beforeAll(async () => {
     await loadApp();
+    loadRepositories();
   });
 
   const loadApp = async () => {
@@ -23,7 +27,11 @@ describe('LecturersController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
+  };
+
+  const loadRepositories = () => {
     lecturerRepository = new LecturerRepository();
+    groupRepository = new GroupRepository();
   };
 
   beforeEach(async () => {
@@ -41,11 +49,8 @@ describe('LecturersController (e2e)', () => {
     };
   };
 
-  const cleanDatabase = async () => {
-    const lecturers = await lecturerRepository.findAll();
-    for (const lecturer of lecturers) {
-      await lecturerRepository.delete(lecturer.id);
-    }
+  const cleanDatabase = () => {
+    return getConnection().synchronize(true);
   };
 
   afterAll(async () => {
@@ -86,6 +91,17 @@ describe('LecturersController (e2e)', () => {
         const { body } = await createLecturer();
 
         expect(body).toHaveProperty('id');
+      });
+
+      it('should allow lecturer creation with groups initialized', async () => {
+        const group = await createGroup();
+        loadSampleLecturer();
+        sampleLecturer.groups = [group.id];
+
+        const { body } = await createLecturer();
+
+        expect(body).toHaveProperty('groups');
+        expect(body.groups.length).toBe(1);
       });
     });
 
@@ -145,10 +161,24 @@ describe('LecturersController (e2e)', () => {
   };
 
   const createGroup = () => {
-    const group = {};
-    return request(app.getHttpServer())
-      .post('/groups')
-      .send(group);
+    const group = {
+      day: 'monday',
+      hour: '16:00',
+      room: '371',
+      address: 'some st',
+      lecturers: [],
+      students: [],
+      startDate: getCurrentDate(),
+      endDate: getCurrentDate(),
+    };
+    return groupRepository.create(group);
+  };
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    const date = `${today.getFullYear()}-${today.getMonth() +
+      1}-${today.getDate()}`;
+    return date;
   };
 
   const populateDatabase = async () => {

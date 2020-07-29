@@ -9,26 +9,18 @@ interface LecturerPseudoPersistance {
   lastName: string;
   phoneNumber: string;
   email: string;
-  groups: { id: string }[];
 }
 
 export class LecturerMapper {
   public static toPersistance(
     createLecturerDto: CreateLecturerDto,
   ): LecturerPseudoPersistance {
-    const {
-      firstName,
-      lastName,
-      phoneNumber,
-      email,
-      groups,
-    } = createLecturerDto;
+    const { firstName, lastName, phoneNumber, email } = createLecturerDto;
     return {
       firstName,
       lastName,
       phoneNumber,
       email,
-      groups: groups.map(id => ({ id })),
     };
   }
 

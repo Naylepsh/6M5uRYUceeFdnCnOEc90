@@ -2,7 +2,6 @@ import {
   Entity,
   Column,
   ManyToMany,
-  ManyToOne,
   JoinTable,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -33,14 +32,12 @@ export class Group {
   @Column('date')
   endDate: string;
 
-  @Column({ nullable: true })
-  lecturerId: string;
-
-  @ManyToOne(
+  @ManyToMany(
     type => Lecturer,
     lecturer => lecturer.groups,
   )
-  lecturer: Lecturer;
+  @JoinTable()
+  lecturers: Lecturer[];
 
   @ManyToMany(type => Student)
   @JoinTable()

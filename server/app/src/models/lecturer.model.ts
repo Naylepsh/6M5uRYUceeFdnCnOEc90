@@ -1,4 +1,10 @@
-import { Entity, Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 import { Group } from './group.model';
 
 @Entity()
@@ -19,9 +25,10 @@ export class Lecturer {
   @Column()
   email: string;
 
-  @OneToMany(
+  @ManyToMany(
     type => Group,
-    group => group.lecturer,
+    group => group.lecturers,
   )
+  @JoinTable()
   groups: Group[];
 }

@@ -39,8 +39,14 @@ export class LecturerRepository {
       .into(Lecturer)
       .values([lecturerToSave])
       .execute();
-
     const id = lecturer.identifiers[0]['id'];
+
+    const groups = await getConnection()
+      .createQueryBuilder()
+      .relation(Lecturer, 'groups')
+      .of(id)
+      .add(createLecturerDto.groups);
+
     return this.findById(id);
   }
 
