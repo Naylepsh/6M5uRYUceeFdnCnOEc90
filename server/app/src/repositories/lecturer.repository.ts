@@ -5,10 +5,15 @@ import { SaveLecturerDto } from '../dtos/lecturers/save-lecturer.dto';
 import { LecturerMapper } from '../mappers/lecturer.mapper';
 import { LecturerDto } from '../dtos/lecturers/lecturer.dto';
 import { LecturerPseudoPersistance } from './../mappers/lecturer.mapper';
-import { UpdateLecturerDto } from '../dtos/lecturers/updatelecturer.dto';
+import { RelationManager } from './helpers/relation';
 
 @Injectable()
 export class LecturerRepository {
+  groupRelationManager: RelationManager;
+  constructor() {
+    this.groupRelationManager = new RelationManager(Lecturer, 'groups');
+  }
+
   async findAll(): Promise<LecturerDto[]> {
     const lecturers = await getConnection()
       .createQueryBuilder()
@@ -36,7 +41,10 @@ export class LecturerRepository {
   async create(createLecturerDto: SaveLecturerDto): Promise<LecturerDto> {
     const lecturerToSave = LecturerMapper.toPersistance(createLecturerDto);
     const id = await this.insertLecturerFields(lecturerToSave);
-    await this.insertLecturerRelation(id, 'groups', createLecturerDto.groups);
+    await this.groupRelationManager.insertRelation(
+      id,
+      createLecturerDto.groups,
+    );
 
     return this.findById(id);
   }
@@ -54,27 +62,14 @@ export class LecturerRepository {
     return id;
   }
 
-  private async insertLecturerRelation(
-    lecturerId: string,
-    relationName: string,
-    relationIds: string[],
-  ): Promise<void> {
-    await getConnection()
-      .createQueryBuilder()
-      .relation(Lecturer, relationName)
-      .of(lecturerId)
-      .add(relationIds);
-  }
-
   async update(createLecturerDto: SaveLecturerDto): Promise<void> {
     const id = createLecturerDto.id;
     const lecturerToSave = LecturerMapper.toPersistance(createLecturerDto);
     const lecturer = await this.findById(id);
     const groupsToRemove = lecturer.groups.map(group => group.id);
     await this.updateLecturerFields(id, lecturerToSave);
-    await this.updateLecturerRelation(
+    await this.groupRelationManager.updateRelation(
       id,
-      'groups',
       createLecturerDto.groups,
       groupsToRemove,
     );
@@ -90,19 +85,6 @@ export class LecturerRepository {
       .set(lecturerToSave)
       .where('id = :id', { id })
       .execute();
-  }
-
-  private async updateLecturerRelation(
-    lecturerId: string,
-    relationName: string,
-    relationIdsToAdd: string[],
-    relationIdsToRemove: string[],
-  ) {
-    await getConnection()
-      .createQueryBuilder()
-      .relation(Lecturer, relationName)
-      .of(lecturerId)
-      .addAndRemove(relationIdsToAdd, relationIdsToRemove);
   }
 
   async delete(id: string): Promise<void> {
