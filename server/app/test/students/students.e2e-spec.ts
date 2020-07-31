@@ -2,18 +2,18 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
-import { LecturerRepository } from '../../src/repositories/lecturer.repository';
+import { StudentRepository } from '../../src/repositories/student.repository';
 import { v4 as uuidv4 } from 'uuid';
 import { GroupRepository } from '../../src/repositories/group.repository';
 import { getConnection } from 'typeorm';
 
-describe('LecturersController (e2e)', () => {
+describe('StudentsController (e2e)', () => {
   let app: INestApplication;
-  const apiEndpoint = '/lecturers';
-  let lecturerRepository: LecturerRepository;
+  const apiEndpoint = '/students';
+  let studentRepository: StudentRepository;
   let groupRepository: GroupRepository;
-  let sampleLecturer;
-  let lecturerId: string;
+  let sampleStudent;
+  let studentId: string;
 
   beforeAll(async () => {
     await loadApp();
@@ -30,17 +30,17 @@ describe('LecturersController (e2e)', () => {
   };
 
   const loadRepositories = () => {
-    lecturerRepository = new LecturerRepository();
+    studentRepository = new StudentRepository();
     groupRepository = new GroupRepository();
   };
 
   beforeEach(async () => {
     await cleanDatabase();
-    loadSampleLecturer();
+    loadSampleStudent();
   });
 
-  const loadSampleLecturer = () => {
-    sampleLecturer = {
+  const loadSampleStudent = () => {
+    sampleStudent = {
       firstName: 'john',
       lastName: 'doe',
       email: 'example@mail.com',
@@ -63,18 +63,18 @@ describe('LecturersController (e2e)', () => {
     });
 
     it('should return 200', async () => {
-      const { status } = await getLecturers();
+      const { status } = await getStudents();
 
       expect(status).toBe(HttpStatus.OK);
     });
 
-    it('should return all lecturers', async () => {
-      const { body } = await getLecturers();
+    it('should return all students', async () => {
+      const { body } = await getStudents();
 
       expect(body.length).toBe(1);
     });
 
-    const getLecturers = () => {
+    const getStudents = () => {
       return request(app.getHttpServer()).get(apiEndpoint);
     };
   });
@@ -82,64 +82,62 @@ describe('LecturersController (e2e)', () => {
   describe(`${apiEndpoint} (POST)`, () => {
     describe('if valid data was passed', () => {
       it('should return 201', async () => {
-        const { status } = await createLecturer();
+        const { status } = await createStudent();
 
         expect(status).toBe(HttpStatus.CREATED);
       });
 
-      it('should return lecturer', async () => {
-        const { body } = await createLecturer();
+      it('should return student', async () => {
+        const { body } = await createStudent();
 
         expect(body).toHaveProperty('id');
       });
 
-      it('should allow lecturer creation with groups initialized', async () => {
+      it('should allow student creation with groups initialized', async () => {
         const group = await createGroup();
-        loadSampleLecturer();
-        sampleLecturer.groups = [group.id];
+        loadSampleStudent();
+        sampleStudent.groups = [group.id];
 
-        const { body } = await createLecturer();
+        const { body } = await createStudent();
 
         expect(body).toHaveProperty('groups');
         expect(body.groups.length).toBe(1);
       });
     });
 
-    const createLecturer = () => {
+    const createStudent = () => {
       return request(app.getHttpServer())
         .post(apiEndpoint)
-        .send(sampleLecturer);
+        .send(sampleStudent);
     };
   });
 
   describe(`${apiEndpoint}/:id (GET)`, () => {
-    describe('if lecturer exists in database', () => {
+    describe('if student exists in database', () => {
       beforeEach(async () => {
         await populateDatabase();
       });
 
       it('should return 200', async () => {
-        const { status } = await getLecturer();
+        const { status } = await getStudent();
 
         expect(status).toBe(HttpStatus.OK);
       });
 
-      it('should return lecturer', async () => {
-        const { body } = await getLecturer();
+      it('should return student', async () => {
+        const { body } = await getStudent();
 
-        expect(body).toHaveProperty('id', lecturerId);
-        expect(body).toHaveProperty('firstName', sampleLecturer.firstName);
-        expect(body).toHaveProperty('lastName', sampleLecturer.lastName);
-        expect(body).toHaveProperty('email', sampleLecturer.email);
-        expect(body).toHaveProperty('phoneNumber', sampleLecturer.phoneNumber);
+        expect(body).toHaveProperty('id', studentId);
+        expect(body).toHaveProperty('firstName', sampleStudent.firstName);
+        expect(body).toHaveProperty('lastName', sampleStudent.lastName);
       });
     });
 
-    describe('if lecturer does not exist in database', () => {
+    describe('if student does not exist in database', () => {
       it('should return 404', async () => {
-        lecturerId = uuidv4();
+        studentId = uuidv4();
 
-        const { status } = await getLecturer();
+        const { status } = await getStudent();
 
         expect(status).toBe(404);
       });
@@ -147,9 +145,9 @@ describe('LecturersController (e2e)', () => {
 
     describe('if id is not valid', () => {
       it('should return 400', async () => {
-        lecturerId = '1';
+        studentId = '1';
 
-        const { status } = await getLecturer();
+        const { status } = await getStudent();
 
         expect(status).toBe(400);
       });
@@ -157,14 +155,14 @@ describe('LecturersController (e2e)', () => {
   });
 
   describe(`${apiEndpoint}/:id (PUT)`, () => {
-    let lecturerDataToUpdate;
+    let studentDataToUpdate;
 
     beforeEach(() => {
       loadUpdateData();
     });
 
     const loadUpdateData = () => {
-      lecturerDataToUpdate = {
+      studentDataToUpdate = {
         firstName: 'firstname',
         lastName: 'lastname',
         email: 'mail@mail.com',
@@ -173,40 +171,35 @@ describe('LecturersController (e2e)', () => {
       };
     };
 
-    describe('if lecturer exist in database', () => {
+    describe('if student exist in database', () => {
       beforeEach(async () => {
         await populateDatabase();
       });
       it('should return 200', async () => {
-        const { status } = await updateLecturer();
+        const { status } = await updateStudent();
 
         expect(status).toBe(200);
       });
 
-      it('should update that lecturer in database', async () => {
-        await updateLecturer();
+      it('should update that student in database', async () => {
+        await updateStudent();
 
-        const lecturer = await lecturerRepository.findById(lecturerId);
-        expect(lecturer).toHaveProperty(
+        const student = await studentRepository.findById(studentId);
+        expect(student).toHaveProperty(
           'firstName',
-          lecturerDataToUpdate.firstName,
+          studentDataToUpdate.firstName,
         );
-        expect(lecturer).toHaveProperty(
+        expect(student).toHaveProperty(
           'lastName',
-          lecturerDataToUpdate.lastName,
-        );
-        expect(lecturer).toHaveProperty('email', lecturerDataToUpdate.email);
-        expect(lecturer).toHaveProperty(
-          'phoneNumber',
-          lecturerDataToUpdate.phoneNumber,
+          studentDataToUpdate.lastName,
         );
       });
     });
 
-    describe('if lecturer does not exist in database', () => {
+    describe('if student does not exist in database', () => {
       it('should return 404', async () => {
-        lecturerId = uuidv4();
-        const { status } = await updateLecturer();
+        studentId = uuidv4();
+        const { status } = await updateStudent();
 
         expect(status).toBe(404);
       });
@@ -214,87 +207,85 @@ describe('LecturersController (e2e)', () => {
 
     describe('if invalid id was passed', () => {
       it('should return 400', async () => {
-        lecturerId = '1';
+        studentId = '1';
 
-        const { status } = await updateLecturer();
+        const { status } = await updateStudent();
 
         expect(status).toBe(400);
       });
     });
 
-    const updateLecturer = () => {
+    const updateStudent = () => {
       return request(app.getHttpServer())
-        .put(`${apiEndpoint}/${lecturerId}`)
-        .send(lecturerDataToUpdate);
+        .put(`${apiEndpoint}/${studentId}`)
+        .send(studentDataToUpdate);
     };
   });
 
   describe(`${apiEndpoint}/:id (DELETE)`, () => {
-    describe('if lecturer exists in database', () => {
+    describe('if student exists in database', () => {
       beforeEach(async () => {
         await populateDatabase();
       });
 
       it('should return 200', async () => {
-        const { status } = await deleteLecturer();
+        const { status } = await deleteStudent();
 
         expect(status).toBe(200);
       });
 
-      it('should remove lecturer from database', async () => {
-        await deleteLecturer();
+      it('should remove student from database', async () => {
+        await deleteStudent();
 
-        const lecturer = await lecturerRepository.findById(lecturerId);
-        expect(lecturer).toBeNull();
+        const student = await studentRepository.findById(studentId);
+        expect(student).toBeNull();
       });
 
-      it('should remove only the lecturer from database', async () => {
-        const lecturersBeforeDeletion = await lecturerRepository.findAll();
-        await deleteLecturer();
-        const lecturersAfterDeletion = await lecturerRepository.findAll();
+      it('should remove only the student from database', async () => {
+        const studentsBeforeDeletion = await studentRepository.findAll();
+        await deleteStudent();
+        const studentsAfterDeletion = await studentRepository.findAll();
 
-        expect(lecturersBeforeDeletion.length).toBe(
-          lecturersAfterDeletion.length + 1,
+        expect(studentsBeforeDeletion.length).toBe(
+          studentsAfterDeletion.length + 1,
         );
       });
     });
 
-    describe('if lecturer does not exist in database', () => {
+    describe('if student does not exist in database', () => {
       it('should return 404', async () => {
-        const { status } = await deleteLecturer();
+        const { status } = await deleteStudent();
 
         expect(status).toBe(404);
       });
 
       it('shouldnt remove anything', async () => {
-        const lecturersBeforeDeletion = await lecturerRepository.findAll();
-        await deleteLecturer();
-        const lecturersAfterDeletion = await lecturerRepository.findAll();
+        const studentsBeforeDeletion = await studentRepository.findAll();
+        await deleteStudent();
+        const studentsAfterDeletion = await studentRepository.findAll();
 
-        expect(lecturersBeforeDeletion.length).toBe(
-          lecturersAfterDeletion.length,
+        expect(studentsBeforeDeletion.length).toBe(
+          studentsAfterDeletion.length,
         );
       });
     });
 
     describe('if id is not valid', () => {
       it('should return 400', async () => {
-        lecturerId = '1';
-        const { status } = await deleteLecturer();
+        studentId = '1';
+        const { status } = await deleteStudent();
 
         expect(status).toBe(400);
       });
     });
 
-    const deleteLecturer = () => {
-      return request(app.getHttpServer()).delete(
-        `${apiEndpoint}/${lecturerId}`,
-      );
+    const deleteStudent = () => {
+      return request(app.getHttpServer()).delete(`${apiEndpoint}/${studentId}`);
     };
   });
 
-  const getLecturer = () => {
-    return request(app.getHttpServer()).get(`${apiEndpoint}/${lecturerId}`);
+  const getStudent = () => {
+    return request(app.getHttpServer()).get(`${apiEndpoint}/${studentId}`);
   };
 
   const createGroup = () => {
@@ -303,8 +294,8 @@ describe('LecturersController (e2e)', () => {
       hour: '16:00',
       room: '371',
       address: 'some st',
-      lecturers: [],
       students: [],
+      lecturers: [],
       startDate: getCurrentDate(),
       endDate: getCurrentDate(),
     };
@@ -319,7 +310,7 @@ describe('LecturersController (e2e)', () => {
   };
 
   const populateDatabase = async () => {
-    const lecturer = await lecturerRepository.create(sampleLecturer);
-    lecturerId = lecturer.id;
+    const student = await studentRepository.create(sampleStudent);
+    studentId = student.id;
   };
 });
