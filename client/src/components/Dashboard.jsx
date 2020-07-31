@@ -199,7 +199,7 @@ function Day({ user, day, showMonth, isOwner, onNewPost }) {
   const { location } = useLocation();
   const isAnyPost = day.posts.length === 0 ? 0 : 1;
 
-  console.log("Tutaj dzień: " + day + " a tu posty: " + day.posts);
+  // console.log("Tutaj dzień: " + day + " a tu posty: " + day.posts);
 
   return (
     <div

@@ -40,6 +40,10 @@
   margin: 2px;
 }
 
+.Day:hover {
+  background: rgb(248, 248, 248);
+}
+
 .Day_no_minutes {
   background: rgb(231, 238, 241);
 }
@@ -92,7 +96,7 @@
 }
 
 .Calendar_add_post_button:hover {
-  background: white;
+  background: rgb(248, 248, 248);
   cursor: pointer;
 }
 
@@ -101,7 +105,7 @@
 }
 
 .Calendar_add_post_button:hover {
-  background: white;
+  background: rgb(248, 248, 248);
 }
 
 .Calendar_add_post_button:focus {
