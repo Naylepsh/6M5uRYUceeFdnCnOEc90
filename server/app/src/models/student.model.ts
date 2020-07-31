@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { Group } from './group.model';
 import { Parent } from './parent.model';
+import { Consultation } from './consultation.model';
 
 @Entity()
 export class Student {
@@ -29,4 +30,7 @@ export class Student {
   )
   @JoinTable()
   parents: Parent[];
+
+  @ManyToMany(type => Consultation)
+  consultations: Consultation[];
 }

@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 import { Group } from './group.model';
+import { Consultation } from './consultation.model';
 
 @Entity()
 export class Lecturer {
@@ -24,4 +25,7 @@ export class Lecturer {
     group => group.lecturers,
   )
   groups: Group[];
+
+  @ManyToMany(type => Consultation)
+  consultations: Consultation[];
 }
