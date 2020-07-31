@@ -7,6 +7,11 @@ import { AppModule } from '../../src/app.module';
 import { StudentRepository } from '../../src/repositories/student.repository';
 import { GroupRepository } from '../../src/repositories/group.repository';
 import { ParentRepository } from '../../src/repositories/parent.repository';
+import {
+  createSampleParent,
+  createSampleGroup,
+  createSampleStudent,
+} from '../helpers/models.helpers';
 
 describe('StudentsController (e2e)', () => {
   let app: INestApplication;
@@ -43,12 +48,7 @@ describe('StudentsController (e2e)', () => {
   });
 
   const loadSampleStudent = () => {
-    sampleStudent = {
-      firstName: 'john',
-      lastName: 'doe',
-      groups: [],
-      parents: [],
-    };
+    sampleStudent = createSampleStudent();
   };
 
   const cleanDatabase = () => {
@@ -167,14 +167,7 @@ describe('StudentsController (e2e)', () => {
     });
 
     const loadUpdateData = () => {
-      studentDataToUpdate = {
-        firstName: 'firstname',
-        lastName: 'lastname',
-        email: 'mail@mail.com',
-        phoneNumber: '123456789',
-        groups: [],
-        parents: [],
-      };
+      studentDataToUpdate = createSampleStudent();
     };
 
     describe('if student exist in database', () => {
@@ -310,35 +303,13 @@ describe('StudentsController (e2e)', () => {
   };
 
   const createGroup = () => {
-    const group = {
-      day: 'monday',
-      hour: '16:00',
-      room: '371',
-      address: 'some st',
-      students: [],
-      lecturers: [],
-      startDate: getCurrentDate(),
-      endDate: getCurrentDate(),
-    };
+    const group = createSampleGroup();
     return groupRepository.create(group);
   };
 
   const createParent = () => {
-    const parent = {
-      firstName: 'john',
-      lastName: 'doe',
-      email: 'example@mail.com',
-      phoneNumber: '123456789',
-      children: [],
-    };
+    const parent = createSampleParent();
     return parentRepository.create(parent);
-  };
-
-  const getCurrentDate = () => {
-    const today = new Date();
-    const date = `${today.getFullYear()}-${today.getMonth() +
-      1}-${today.getDate()}`;
-    return date;
   };
 
   const populateDatabase = async () => {

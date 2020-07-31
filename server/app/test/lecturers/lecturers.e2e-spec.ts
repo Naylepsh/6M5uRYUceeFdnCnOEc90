@@ -6,6 +6,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { AppModule } from '../../src/app.module';
 import { LecturerRepository } from '../../src/repositories/lecturer.repository';
 import { GroupRepository } from '../../src/repositories/group.repository';
+import {
+  createSampleLecturer,
+  createSampleGroup,
+} from '../helpers/models.helpers';
 
 describe('LecturersController (e2e)', () => {
   let app: INestApplication;
@@ -40,13 +44,7 @@ describe('LecturersController (e2e)', () => {
   });
 
   const loadSampleLecturer = () => {
-    sampleLecturer = {
-      firstName: 'john',
-      lastName: 'doe',
-      email: 'example@mail.com',
-      phoneNumber: '123456789',
-      groups: [],
-    };
+    sampleLecturer = createSampleLecturer();
   };
 
   const cleanDatabase = () => {
@@ -164,13 +162,7 @@ describe('LecturersController (e2e)', () => {
     });
 
     const loadUpdateData = () => {
-      lecturerDataToUpdate = {
-        firstName: 'firstname',
-        lastName: 'lastname',
-        email: 'mail@mail.com',
-        phoneNumber: '123456789',
-        groups: [],
-      };
+      lecturerDataToUpdate = createSampleLecturer();
     };
 
     describe('if lecturer exist in database', () => {
@@ -310,24 +302,8 @@ describe('LecturersController (e2e)', () => {
   };
 
   const createGroup = () => {
-    const group = {
-      day: 'monday',
-      hour: '16:00',
-      room: '371',
-      address: 'some st',
-      lecturers: [],
-      students: [],
-      startDate: getCurrentDate(),
-      endDate: getCurrentDate(),
-    };
+    const group = createSampleGroup();
     return groupRepository.create(group);
-  };
-
-  const getCurrentDate = () => {
-    const today = new Date();
-    const date = `${today.getFullYear()}-${today.getMonth() +
-      1}-${today.getDate()}`;
-    return date;
   };
 
   const populateDatabase = async () => {

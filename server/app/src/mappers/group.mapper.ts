@@ -5,6 +5,7 @@ import { LecturerMapper } from './lecturer.mapper';
 import { SaveGroupDto } from '../dtos/groups/save-group.dto';
 import { Student } from '../models/student.model';
 import { StudentMapper } from './student.mapper';
+import { stringify } from 'querystring';
 
 export interface GroupPseudoPersistance {
   day: string;
@@ -46,8 +47,8 @@ export class GroupMapper {
       hour,
       address,
       room,
-      startDate,
-      endDate,
+      startDate: startDate,
+      endDate: endDate,
       lecturers: lecturerDtos,
       students: studentDtos,
     };

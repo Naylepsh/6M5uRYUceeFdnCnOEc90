@@ -7,6 +7,11 @@ import { AppModule } from '../../src/app.module';
 import { LecturerRepository } from '../../src/repositories/lecturer.repository';
 import { ConsultationRepository } from '../../src/repositories/consultation.repository';
 import { StudentRepository } from '../../src/repositories/student.repository';
+import {
+  createSampleStudent,
+  createSampleConsultation,
+} from '../helpers/models.helpers';
+import { expectDatetimesToBeTheSame } from '../helpers/date.helper';
 
 describe('ConsultationsController (e2e)', () => {
   let app: INestApplication;
@@ -43,13 +48,7 @@ describe('ConsultationsController (e2e)', () => {
   });
 
   const loadSampleConsultation = () => {
-    sampleConsultation = {
-      datetime: getCurrentDate(),
-      room: '371',
-      address: 'some st',
-      lecturers: [],
-      students: [],
-    };
+    sampleConsultation = createSampleConsultation();
   };
 
   const cleanDatabase = () => {
@@ -139,7 +138,7 @@ describe('ConsultationsController (e2e)', () => {
         expect(body).toHaveProperty('address', sampleConsultation.address);
         expect(body).toHaveProperty('room', sampleConsultation.room);
         expect(body).toHaveProperty('datetime');
-        expectDatesToBeTheSame(body.datetime, sampleConsultation.datetime);
+        expectDatetimesToBeTheSame(body.datetime, sampleConsultation.datetime);
       });
     });
 
@@ -172,13 +171,7 @@ describe('ConsultationsController (e2e)', () => {
     });
 
     const loadUpdateData = () => {
-      consultationDataToUpdate = {
-        datetime: getCurrentDate(),
-        room: '372',
-        address: 'some other st',
-        lecturers: [],
-        students: [],
-      };
+      consultationDataToUpdate = createSampleConsultation();
     };
 
     describe('if consultation exist in database', () => {
@@ -213,7 +206,7 @@ describe('ConsultationsController (e2e)', () => {
           'room',
           consultationDataToUpdate.room,
         );
-        expectDatesToBeTheSame(
+        expectDatetimesToBeTheSame(
           consultation.datetime,
           consultationDataToUpdate.datetime,
         );
@@ -342,13 +335,7 @@ describe('ConsultationsController (e2e)', () => {
   };
 
   const createStudent = () => {
-    const student = {
-      firstName: 'john',
-      lastName: 'doe',
-      consultations: [],
-      groups: [],
-      parents: [],
-    };
+    const student = createSampleStudent();
     return studentRepository.create(student);
   };
 
@@ -364,9 +351,5 @@ describe('ConsultationsController (e2e)', () => {
       sampleConsultation,
     );
     consultationId = consultation.id;
-  };
-
-  const expectDatesToBeTheSame = (date1: string, date2: string) => {
-    expect(Date.parse(date1)).toBe(Date.parse(date2));
   };
 });

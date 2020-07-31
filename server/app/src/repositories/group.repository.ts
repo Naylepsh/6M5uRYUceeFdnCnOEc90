@@ -48,7 +48,8 @@ export class GroupRepository {
     const id = await this.insertGroupFields(groupToSave);
     await this.lecturerRelationManager.insertRelation(id, groupDto.lecturers);
     await this.studentsRelationManager.insertRelation(id, groupDto.students);
-    return this.findById(id);
+    const res = await this.findById(id);
+    return res;
   }
 
   private async insertGroupFields(

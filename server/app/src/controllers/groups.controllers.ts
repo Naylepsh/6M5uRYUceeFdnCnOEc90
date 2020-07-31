@@ -48,7 +48,8 @@ export class GroupsController {
   ): Promise<void> {
     ensureUuidIsValid(id);
     await this.ensureGroupExistence(id);
-    return this.groupRepository.update({ ...createGroupDto, id });
+    const foo = { ...createGroupDto, id };
+    return this.groupRepository.update(foo);
   }
 
   @Delete(`${apiEndpoint}/:id`)

@@ -7,6 +7,8 @@ import { AppModule } from '../../src/app.module';
 import { LecturerRepository } from '../../src/repositories/lecturer.repository';
 import { GroupRepository } from '../../src/repositories/group.repository';
 import { StudentRepository } from '../../src/repositories/student.repository';
+import { expectDatesToBeTheSame } from '../helpers/date.helper';
+import { createSampleGroup } from '../helpers/models.helpers';
 
 describe('GroupsController (e2e)', () => {
   let app: INestApplication;
@@ -43,16 +45,7 @@ describe('GroupsController (e2e)', () => {
   });
 
   const loadSampleGroup = () => {
-    sampleGroup = {
-      day: 'monday',
-      hour: '16:00',
-      room: '371',
-      address: 'some st',
-      lecturers: [],
-      students: [],
-      startDate: getCurrentDate(),
-      endDate: getCurrentDate(),
-    };
+    sampleGroup = createSampleGroup();
   };
 
   const cleanDatabase = () => {
@@ -177,16 +170,7 @@ describe('GroupsController (e2e)', () => {
     });
 
     const loadUpdateData = () => {
-      groupDataToUpdate = {
-        day: 'tuesday',
-        hour: '17:00',
-        room: '372',
-        address: 'some other st',
-        lecturers: [],
-        students: [],
-        startDate: getCurrentDate(),
-        endDate: getCurrentDate(),
-      };
+      groupDataToUpdate = createSampleGroup();
     };
 
     describe('if group exist in database', () => {
@@ -342,22 +326,8 @@ describe('GroupsController (e2e)', () => {
     return studentRepository.create(student);
   };
 
-  const getCurrentDate = () => {
-    const today = new Date();
-    const date = `${today.getFullYear()}-${today.getMonth() +
-      1}-${today.getDate()}`;
-    return date;
-  };
-
   const populateDatabase = async () => {
     const group = await groupRepository.create(sampleGroup);
     groupId = group.id;
-  };
-
-  const expectDatesToBeTheSame = (date1: string, date2: string) => {
-    function intoNumDate(date: string): number[] {
-      return date.split('-').map(x => +x);
-    }
-    expect(intoNumDate(date1)).toStrictEqual(intoNumDate(date2));
   };
 });
