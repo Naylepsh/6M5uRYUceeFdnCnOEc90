@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
+import { getConnection } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { AppModule } from '../../src/app.module';
 import { LecturerRepository } from '../../src/repositories/lecturer.repository';
-import { v4 as uuidv4 } from 'uuid';
 import { GroupRepository } from '../../src/repositories/group.repository';
-import { getConnection } from 'typeorm';
 
 describe('LecturersController (e2e)', () => {
   let app: INestApplication;
@@ -177,6 +177,7 @@ describe('LecturersController (e2e)', () => {
       beforeEach(async () => {
         await populateDatabase();
       });
+
       it('should return 200', async () => {
         const { status } = await updateLecturer();
 
@@ -200,6 +201,17 @@ describe('LecturersController (e2e)', () => {
           'phoneNumber',
           lecturerDataToUpdate.phoneNumber,
         );
+      });
+
+      it('should allow to update lecturer with relations initialized', async () => {
+        const group = await createGroup();
+        lecturerDataToUpdate.groups = [group.id];
+
+        await updateLecturer();
+        const { body } = await getLecturer();
+
+        expect(body).toHaveProperty('groups');
+        expect(body.groups.length).toBe(1);
       });
     });
 

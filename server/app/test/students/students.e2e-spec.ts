@@ -1,17 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
+import { getConnection } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { AppModule } from '../../src/app.module';
 import { StudentRepository } from '../../src/repositories/student.repository';
-import { v4 as uuidv4 } from 'uuid';
 import { GroupRepository } from '../../src/repositories/group.repository';
-import { getConnection } from 'typeorm';
+import { ParentRepository } from '../../src/repositories/parent.repository';
 
 describe('StudentsController (e2e)', () => {
   let app: INestApplication;
   const apiEndpoint = '/students';
   let studentRepository: StudentRepository;
   let groupRepository: GroupRepository;
+  let parentRepository: ParentRepository;
   let sampleStudent;
   let studentId: string;
 
@@ -32,6 +34,7 @@ describe('StudentsController (e2e)', () => {
   const loadRepositories = () => {
     studentRepository = new StudentRepository();
     groupRepository = new GroupRepository();
+    parentRepository = new ParentRepository();
   };
 
   beforeEach(async () => {
@@ -44,6 +47,7 @@ describe('StudentsController (e2e)', () => {
       firstName: 'john',
       lastName: 'doe',
       groups: [],
+      parents: [],
     };
   };
 
@@ -91,15 +95,18 @@ describe('StudentsController (e2e)', () => {
         expect(body).toHaveProperty('id');
       });
 
-      it('should allow student creation with groups initialized', async () => {
+      it('should allow student creation with relations initialized', async () => {
         const group = await createGroup();
-        loadSampleStudent();
         sampleStudent.groups = [group.id];
+        const parent = await createParent();
+        sampleStudent.parents = [parent.id];
 
         const { body } = await createStudent();
 
         expect(body).toHaveProperty('groups');
         expect(body.groups.length).toBe(1);
+        expect(body).toHaveProperty('parents');
+        expect(body.parents.length).toBe(1);
       });
     });
 
@@ -166,6 +173,7 @@ describe('StudentsController (e2e)', () => {
         email: 'mail@mail.com',
         phoneNumber: '123456789',
         groups: [],
+        parents: [],
       };
     };
 
@@ -191,6 +199,21 @@ describe('StudentsController (e2e)', () => {
           'lastName',
           studentDataToUpdate.lastName,
         );
+      });
+
+      it('should allow to update relations', async () => {
+        const group = await createGroup();
+        studentDataToUpdate.groups = [group.id];
+        const parent = await createParent();
+        studentDataToUpdate.parents = [parent.id];
+
+        await updateStudent();
+        const { body } = await getStudent();
+
+        expect(body).toHaveProperty('groups');
+        expect(body.groups.length).toBe(1);
+        expect(body).toHaveProperty('parents');
+        expect(body.parents.length).toBe(1);
       });
     });
 
@@ -298,6 +321,17 @@ describe('StudentsController (e2e)', () => {
       endDate: getCurrentDate(),
     };
     return groupRepository.create(group);
+  };
+
+  const createParent = () => {
+    const parent = {
+      firstName: 'john',
+      lastName: 'doe',
+      email: 'example@mail.com',
+      phoneNumber: '123456789',
+      children: [],
+    };
+    return parentRepository.create(parent);
   };
 
   const getCurrentDate = () => {

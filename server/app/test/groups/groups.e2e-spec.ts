@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
+import { getConnection } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { AppModule } from '../../src/app.module';
 import { LecturerRepository } from '../../src/repositories/lecturer.repository';
-import { v4 as uuidv4 } from 'uuid';
 import { GroupRepository } from '../../src/repositories/group.repository';
-import { getConnection } from 'typeorm';
 import { StudentRepository } from '../../src/repositories/student.repository';
 
 describe('GroupsController (e2e)', () => {
@@ -337,6 +337,7 @@ describe('GroupsController (e2e)', () => {
       firstName: 'john',
       lastName: 'doe',
       groups: [],
+      parents: [],
     };
     return studentRepository.create(student);
   };

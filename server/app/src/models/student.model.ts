@@ -23,7 +23,10 @@ export class Student {
   @JoinTable()
   groups: Group[];
 
-  @ManyToMany(type => Parent)
+  @ManyToMany(
+    type => Parent,
+    parent => parent.children,
+  )
   @JoinTable()
   parents: Parent[];
 }

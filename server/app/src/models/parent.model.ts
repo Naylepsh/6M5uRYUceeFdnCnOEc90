@@ -1,10 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToMany,
-  JoinTable,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 import { Student } from './student.model';
 
 @Entity()
@@ -24,7 +18,9 @@ export class Parent {
   @Column()
   email: string;
 
-  @ManyToMany(type => Student)
-  @JoinTable()
+  @ManyToMany(
+    type => Student,
+    student => student.parents,
+  )
   children: Student[];
 }

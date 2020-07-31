@@ -3,4 +3,5 @@ export class SaveStudentDto {
   firstName: string;
   lastName: string;
   groups: string[];
+  parents: string[];
 }

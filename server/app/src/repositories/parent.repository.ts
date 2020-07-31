@@ -6,6 +6,7 @@ import { ParentMapper } from '../mappers/parent.mapper';
 import { ParentDto } from '../dtos/parents/parent.dto';
 import { ParentPseudoPersistance } from './../mappers/parent.mapper';
 import { RelationManager } from './helpers/relation';
+import { Student } from '../models/student.model';
 
 @Injectable()
 export class ParentRepository {

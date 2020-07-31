@@ -14,9 +14,9 @@ export interface ParentPseudoPersistance {
 
 export class ParentMapper {
   public static toPersistance(
-    createParentDto: SaveParentDto,
+    saveParentDto: SaveParentDto,
   ): ParentPseudoPersistance {
-    const { firstName, lastName, phoneNumber, email } = createParentDto;
+    const { firstName, lastName, phoneNumber, email } = saveParentDto;
     return {
       firstName,
       lastName,

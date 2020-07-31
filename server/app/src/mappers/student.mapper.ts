@@ -3,6 +3,8 @@ import { Student } from '../models/student.model';
 import { StudentDto } from '../dtos/students/student.dto';
 import { Group } from '../models/group.model';
 import { GroupMapper } from './group.mapper';
+import { Parent } from '../models/parent.model';
+import { ParentMapper } from './parent.mapper';
 
 export interface StudentPseudoPersistance {
   id?: string;
@@ -21,9 +23,14 @@ export class StudentMapper {
     };
   }
 
-  public static toDto(student: Student, groups: Group[] = []): StudentDto {
+  public static toDto(
+    student: Student,
+    groups: Group[] = [],
+    parents: Parent[] = [],
+  ): StudentDto {
     const { id, firstName, lastName } = student;
     const groupDtos = groups.map(group => GroupMapper.toDto(group));
-    return { id, firstName, lastName, groups: groupDtos };
+    const parentDtos = parents.map(parent => ParentMapper.toDto(parent));
+    return { id, firstName, lastName, groups: groupDtos, parents: parentDtos };
   }
 }
