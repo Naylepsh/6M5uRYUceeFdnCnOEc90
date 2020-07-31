@@ -4,7 +4,6 @@ import {
   FaChevronDown,
   FaChevronUp,
   FaPlus,
-  FaSquareFull,
 } from "react-icons/fa";
 import { useTransition, animated } from "react-spring";
 import {
