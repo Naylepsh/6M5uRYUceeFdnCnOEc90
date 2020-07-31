@@ -21,10 +21,9 @@ export class StudentMapper {
     };
   }
 
-  public static toDto(student: Student, groups: Group[]): StudentDto {
+  public static toDto(student: Student, groups: Group[] = []): StudentDto {
     const { id, firstName, lastName } = student;
-    const students = [];
-    const groupDtos = groups.map(group => GroupMapper.toDto(group, students));
+    const groupDtos = groups.map(group => GroupMapper.toDto(group));
     return { id, firstName, lastName, groups: groupDtos };
   }
 }

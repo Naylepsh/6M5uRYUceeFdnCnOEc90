@@ -10,9 +10,11 @@ import { RelationManager } from './helpers/relation';
 @Injectable()
 export class GroupRepository {
   lecturerRelationManager: RelationManager;
+  studentsRelationManager: RelationManager;
 
   constructor() {
     this.lecturerRelationManager = new RelationManager(Group, 'lecturers');
+    this.studentsRelationManager = new RelationManager(Group, 'students');
   }
 
   async findAll(): Promise<GroupDto[]> {
@@ -21,8 +23,11 @@ export class GroupRepository {
       .select('group')
       .from(Group, 'group')
       .leftJoinAndSelect('group.lecturers', 'lecturers')
+      .leftJoinAndSelect('group.students', 'students')
       .getMany();
-    return groups.map(group => GroupMapper.toDto(group, group.lecturers));
+    return groups.map(group =>
+      GroupMapper.toDto(group, group.lecturers, group.students),
+    );
   }
 
   async findById(id: string): Promise<GroupDto> {
@@ -32,15 +37,17 @@ export class GroupRepository {
       .from(Group, 'group')
       .where('group.id = :id', { id })
       .leftJoinAndSelect('group.lecturers', 'lecturers')
+      .leftJoinAndSelect('group.students', 'students')
       .getOne();
     if (!group) return null;
-    return GroupMapper.toDto(group, group.lecturers);
+    return GroupMapper.toDto(group, group.lecturers, group.students);
   }
 
   async create(groupDto: SaveGroupDto): Promise<GroupDto> {
     const groupToSave = GroupMapper.toPersistance(groupDto);
     const id = await this.insertGroupFields(groupToSave);
     await this.lecturerRelationManager.insertRelation(id, groupDto.lecturers);
+    await this.studentsRelationManager.insertRelation(id, groupDto.students);
     return this.findById(id);
   }
 
@@ -68,6 +75,12 @@ export class GroupRepository {
       id,
       groupDto.lecturers,
       lecturersToRemove,
+    );
+    const studentsToRemove = group.students.map(student => student.id);
+    await this.studentsRelationManager.updateRelation(
+      id,
+      groupDto.students,
+      studentsToRemove,
     );
   }
 

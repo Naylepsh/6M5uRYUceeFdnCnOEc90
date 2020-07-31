@@ -1,4 +1,5 @@
 import { LecturerDto } from '../lecturers/lecturer.dto';
+import { StudentDto } from '../students/student.dto';
 
 export class GroupDto {
   id?: string;
@@ -8,6 +9,6 @@ export class GroupDto {
   room: string;
   startDate: string;
   endDate: string;
-  // students: string[];
+  students: StudentDto[];
   lecturers: LecturerDto[];
 }

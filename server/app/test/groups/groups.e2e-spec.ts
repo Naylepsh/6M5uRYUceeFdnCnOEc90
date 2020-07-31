@@ -6,11 +6,13 @@ import { LecturerRepository } from '../../src/repositories/lecturer.repository';
 import { v4 as uuidv4 } from 'uuid';
 import { GroupRepository } from '../../src/repositories/group.repository';
 import { getConnection } from 'typeorm';
+import { StudentRepository } from '../../src/repositories/student.repository';
 
 describe('GroupsController (e2e)', () => {
   let app: INestApplication;
   const apiEndpoint = '/groups';
   let lecturerRepository: LecturerRepository;
+  let studentRepository: StudentRepository;
   let groupRepository: GroupRepository;
   let sampleGroup;
   let groupId: string;
@@ -31,6 +33,7 @@ describe('GroupsController (e2e)', () => {
 
   const loadRepositories = () => {
     lecturerRepository = new LecturerRepository();
+    studentRepository = new StudentRepository();
     groupRepository = new GroupRepository();
   };
 
@@ -96,14 +99,18 @@ describe('GroupsController (e2e)', () => {
         expect(body).toHaveProperty('id');
       });
 
-      it('should allow group creation with lecturers initialized', async () => {
+      it('should allow group creation with relations initialized', async () => {
         const lecturer = await createLecturer();
+        const student = await createStudent();
         sampleGroup.lecturers = [lecturer.id];
+        sampleGroup.students = [student.id];
 
         const { body } = await createGroup();
 
         expect(body).toHaveProperty('lecturers');
         expect(body.lecturers.length).toBe(1);
+        expect(body).toHaveProperty('students');
+        expect(body.students.length).toBe(1);
       });
     });
 
@@ -208,15 +215,19 @@ describe('GroupsController (e2e)', () => {
         expectDatesToBeTheSame(group.endDate, groupDataToUpdate.endDate);
       });
 
-      it('should allow to update lecturers', async () => {
+      it('should allow to update relations', async () => {
         const lecturer = await createLecturer();
+        const student = await createStudent();
         groupDataToUpdate.lecturers = [lecturer.id];
+        groupDataToUpdate.students = [student.id];
 
         await updateGroup();
 
         const { body: group } = await getGroup();
         expect(group).toHaveProperty('lecturers');
         expect(group.lecturers.length).toBe(1);
+        expect(group).toHaveProperty('students');
+        expect(group.students.length).toBe(1);
       });
     });
 
@@ -319,6 +330,15 @@ describe('GroupsController (e2e)', () => {
       groups: [],
     };
     return lecturerRepository.create(lecturer);
+  };
+
+  const createStudent = () => {
+    const student = {
+      firstName: 'john',
+      lastName: 'doe',
+      groups: [],
+    };
+    return studentRepository.create(student);
   };
 
   const getCurrentDate = () => {

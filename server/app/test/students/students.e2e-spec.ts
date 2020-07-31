@@ -43,8 +43,6 @@ describe('StudentsController (e2e)', () => {
     sampleStudent = {
       firstName: 'john',
       lastName: 'doe',
-      email: 'example@mail.com',
-      phoneNumber: '123456789',
       groups: [],
     };
   };
