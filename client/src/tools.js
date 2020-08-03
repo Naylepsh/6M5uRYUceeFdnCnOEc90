@@ -18,6 +18,9 @@ export function onAuthStateChanged(callback) {
   return auth().onAuthStateChanged(callback);
 }
 
+//Function to create user profiles
+//with some default informations
+
 export async function signup({
   email,
   password,
@@ -41,6 +44,10 @@ export async function signup({
     throw e;
   }
 }
+
+//Some functions for getting
+//data from database and providing
+//integration between UI and db
 
 export const fetchUser = limitCalls(async function fetchUser(uid) {
   return fetchDoc(`users/${uid}`);
@@ -159,6 +166,7 @@ export function sortByCreatedAtDescending(a, b) {
 }
 
 export function calculateWeeks(posts, startDate, numWeeks) {
+  //provides data for Calendar component
   const weeks = [];
 
   const postsByDay = {};
@@ -200,6 +208,7 @@ function getDocsFromSnapshot(snapshot) {
 const easeOut = (progress) => Math.pow(progress - 1, 5) + 1;
 
 export function tween(duration, callback) {
+  //necessary in animation components
   let start = performance.now();
   let elapsed = 0;
   let frame;
@@ -220,6 +229,8 @@ export function tween(duration, callback) {
 
   return () => cancelAnimationFrame(frame);
 }
+
+//Provides polish translations of dates
 
 export function translateMonths(month) {
   switch (month) {

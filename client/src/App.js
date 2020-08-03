@@ -6,6 +6,10 @@ import appReducer, { initialState } from "./states/app-reducer";
 import useAuth from "./states/use-auth";
 import "./App.css";
 
+// Main App component
+// depending on auth state calls LoggedIn
+// or LoggedOut component
+
 function App() {
   const { authAttempted, auth } = useAuth();
   if (!authAttempted) return null;

@@ -10,6 +10,8 @@ const plLocale = require("date-fns/locale/pl");
 
 const stopPropagation = (event) => event.stopPropagation();
 
+//Provides feed of recently created/editet posts
+
 export default function FeedPost({ post }) {
   const user = useDocWithCache(`users/${post.uid}`);
   const ariaLink = useAriaLink(`/${post.uid}/${post.date}`);

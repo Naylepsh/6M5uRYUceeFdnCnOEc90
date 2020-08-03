@@ -6,6 +6,8 @@ import "./Feed.css";
 const PER_PAGE = 3;
 let feedState = null;
 
+//Provides all features of feed
+
 export default function Feed() {
   const [state, dispatch] = useReducer(
     (state, action) => {
@@ -41,7 +43,7 @@ export default function Feed() {
 
   const { createdBefore, viewedAll, limit, posts, newPosts } = state;
 
-  // helps us know when we've viewed all
+  //helps to know when we've viewed all
   const lastPostIdRef = useRef();
 
   useEffect(() => {

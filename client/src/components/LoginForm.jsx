@@ -4,10 +4,13 @@ import VisuallyHidden from "@reach/visually-hidden";
 import { FaSignInAlt } from "react-icons/fa";
 import TabsButton from "./TabsButton";
 
+// Simple component for user login
+// uses async calls to handle errors
+
 export default function LoginForm() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); //this state hook contain information about showing the password
   const emailRef = useRef();
   const passwordRef = useRef();
 
@@ -64,7 +67,7 @@ export default function LoginForm() {
         <div>
           <label>
             <input
-              className="passwordCheckbox"
+              className="passwordCheckbox" //here in that checkbox user can change state of password show
               type="checkbox"
               onChange={handleShowPassword}
               defaultChecked={showPassword}

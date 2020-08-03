@@ -10,6 +10,10 @@ import { deletePost, translateMonths } from "./../tools";
 import usePosts from "./use-posts";
 import "./Posts.css";
 
+//This component is called when Day
+//is clicked. Provides list of posts
+//its content, author and titles
+
 export default function Posts({ params }) {
   const [{ auth }] = useAppState();
   const { uid, date } = params;
@@ -86,7 +90,10 @@ export default function Posts({ params }) {
   ) : null;
 }
 
-function Post({ post, isNew }) {
+//Provides contents of post, and some informations
+//about it + option to delete a post.
+
+function Post({ post }) {
   const [{ auth }] = useAppState();
   const canDelete = auth.uid === post.uid;
   const handleDelete = () => deletePost(post.id);

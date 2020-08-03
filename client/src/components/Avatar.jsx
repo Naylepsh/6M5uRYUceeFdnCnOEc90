@@ -3,6 +3,8 @@ import useDocWithCache from "./../use-doc-with-cache";
 import usePosts from "./use-posts";
 import "./Avatar.css";
 
+//Provides all features of user avatar
+
 export default function Avatar({ uid, size = 50, bg, className, ...rest }) {
   const user = useDocWithCache(`users/${uid}`);
   const posts = usePosts(uid);

@@ -4,7 +4,6 @@ import { signup } from "./../tools";
 import TabsButton from "./TabsButton";
 import { FaRegSmileBeam } from "react-icons/fa";
 
-
 function TextInput({ id, label, type = "text" }) {
   return (
     <Fragment>
@@ -16,10 +15,13 @@ function TextInput({ id, label, type = "text" }) {
   );
 }
 
+// Simple component for user signup
+// to awoid errors uses async calls
+
 export default function SignupForm() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [startDate, setStartDate] = useState(new Date("March 1, 2019"));
+  const startDate = new Date("March 1, 2019");
 
   const handleSignup = async (event) => {
     event.preventDefault();

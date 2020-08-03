@@ -7,6 +7,8 @@ import "./RecentPostsDropdown.css";
 export default function RecentPostsDropdown({ uid, onSelect }) {
   let posts = usePosts(uid);
 
+  //takes only 18 recent posts to prevent big lists appearing on the screen
+
   if (posts.length > 18) {
     posts = posts.slice(posts.length - 18, posts.length);
   }

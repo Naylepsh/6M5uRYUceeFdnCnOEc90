@@ -1,10 +1,6 @@
 import React, { Fragment, useState, useCallback } from "react";
 import { useLocation, useParams, Link } from "./../utils/react-router-next";
-import {
-  FaChevronDown,
-  FaChevronUp,
-  FaPlus,
-} from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaPlus } from "react-icons/fa";
 import { useTransition, animated } from "react-spring";
 import {
   format as formatDate,
@@ -22,6 +18,11 @@ import { DATE_FORMAT, calculateWeeks, translateMonths } from "./../tools";
 import { useAppState } from "./../states/AppState";
 import NewPost from "./NewPost";
 import "./Dashboard.css";
+
+//This component is responsible for
+//main page of aplication
+//it calls Calendar component with
+//actual date calculations
 
 export default function Dashboard() {
   const [{ user }] = useAppState();
@@ -72,6 +73,7 @@ function Calendar({ user, posts, modalIsOpen }) {
   }
 
   const transitions = useTransition(
+    //gives informations for swiping calendar up/down
     { weeks, startDate },
     (item) => item.startDate,
     {
@@ -83,6 +85,7 @@ function Calendar({ user, posts, modalIsOpen }) {
   );
 
   const handleNav = (addOrSubDays, direction) => {
+    //counts days after swiping
     const date = formatDate(addOrSubDays(startDate, 7 * numWeeks), DATE_FORMAT);
     navigate(".", { state: { startDate: date, direction } });
   };
@@ -163,6 +166,8 @@ function Calendar({ user, posts, modalIsOpen }) {
   );
 }
 
+//Provides buttons for swiping calendar up/down
+
 function CalendarNav({ onEarlier, onLater, showLater }) {
   return (
     <div className="Calendar_nav">
@@ -178,6 +183,8 @@ function CalendarNav({ onEarlier, onLater, showLater }) {
   );
 }
 
+//Simpy static elements with polish day names
+
 function Weekdays() {
   return (
     <div className="Weekdays">
@@ -191,6 +198,8 @@ function Weekdays() {
     </div>
   );
 }
+
+//Provides "boxes" with days
 
 function Day({ user, day, showMonth, isOwner, onNewPost }) {
   const dayIsToday = isToday(day.date);
@@ -209,6 +218,8 @@ function Day({ user, day, showMonth, isOwner, onNewPost }) {
       }
     >
       <div className="Day_date">
+        {/*First day of each month,
+      or first day on the screen has information about month */}
         {showMonth && (
           <div className="Day_month">
             {translateMonths(formatDate(day.date, "MMM"))}
@@ -217,6 +228,8 @@ function Day({ user, day, showMonth, isOwner, onNewPost }) {
         <div className="Day_number">{formatDate(day.date, "DD")}</div>
       </div>
       <div className="Day_minutes">
+        {/*If day contains posts, it shows proper amount
+        of "notes" elems, otherwise, it shows "+" button*/}
         {isAnyPost ? (
           <Link
             className="Day_link"
@@ -239,6 +252,7 @@ function Day({ user, day, showMonth, isOwner, onNewPost }) {
 }
 
 function makeNotesElements(posts) {
+  //depending of amount of posts, function returns some divs representing number of notes
   if (posts === 1) {
     return <div className="firstNote"></div>;
   }

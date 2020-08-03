@@ -19,6 +19,7 @@ export default function AnimatedDialog(props) {
   };
 
   const transitions = useTransition(props.isOpen ? props : false, null, {
+    //makes animation of new post appearance
     from: { opacity: 0, y: -510, blur: 0 },
     enter: { opacity: 1, y: -500, blur: 8 },
     leave: { opacity: 0, y: -510, blur: 0 },
@@ -37,7 +38,7 @@ export default function AnimatedDialog(props) {
             style={{
               transform: y.interpolate(
                 (y) => `translate3d(320px, ${y}px, 0px)`
-              )
+              ),
             }}
           >
             {item.children}

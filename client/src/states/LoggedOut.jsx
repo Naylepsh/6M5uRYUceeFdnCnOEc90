@@ -4,6 +4,10 @@ import LoginForm from "./../components/LoginForm";
 import SignupForm from "./../components/SignupForm";
 import "./LoggedOut.css";
 
+// Main component for login/signup screen
+// depending on clicked tab
+// calls LoginForm or SignupForm
+
 export default function LoggedOut() {
   return (
     <div className="LoggedOut">
