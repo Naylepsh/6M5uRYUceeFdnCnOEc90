@@ -63,6 +63,9 @@ describe('ConsultationsController (e2e)', () => {
     let query: string;
 
     beforeEach(async () => {
+      sampleConsultation.datetime = new Date(
+        'Sat Apr 17 2021 02:00:41 GMT+0200 (Central European Summer Time)',
+      );
       await populateDatabase();
       query = '';
     });
@@ -81,9 +84,8 @@ describe('ConsultationsController (e2e)', () => {
 
     describe('if "between" query was passed', () => {
       it('should return all consultations between two dates if query param was passed', async () => {
-        query = `?between[]=${sampleConsultation.datetime.addHours(
-          -1,
-        )}&between[]=${sampleConsultation.datetime.addHours(1)}`;
+        query =
+          '?between[]="Sat Apr 17 2021 01:00:41 GMT+0200 (Central European Summer Time)"&between[]="Sat Apr 17 2021 03:00:41 GMT+0200 (Central European Summer Time)"';
 
         const { body } = await getConsultations();
 
@@ -91,9 +93,8 @@ describe('ConsultationsController (e2e)', () => {
       });
 
       it('should return empty array if there are no consultations between args passed', async () => {
-        query = `?between[]=${sampleConsultation.datetime.addHours(
-          1,
-        )}&between[]=${sampleConsultation.datetime.addHours(1)}`;
+        query =
+          '?between[]="Sat Apr 17 2021 03:00:41 GMT+0200 (Central European Summer Time)"&between[]="Sat Apr 17 2021 03:00:41 GMT+0200 (Central European Summer Time)"';
 
         const { body } = await getConsultations();
 
