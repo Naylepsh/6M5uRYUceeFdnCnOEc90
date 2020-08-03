@@ -33,7 +33,9 @@ export class ConsultationMapper {
     const lecturerDtos = lecturers.map(lecturer =>
       LecturerMapper.toDto(lecturer),
     );
-    const studentDtos = students.map(student => StudentMapper.toDto(student));
+    const studentDtos = students.map(student =>
+      StudentMapper.toDto(student, [], student.parents),
+    );
     return {
       id,
       datetime,

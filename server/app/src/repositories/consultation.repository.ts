@@ -30,6 +30,7 @@ export class ConsultationRepository {
       .from(Consultation, 'consultation')
       .leftJoinAndSelect('consultation.lecturers', 'lecturers')
       .leftJoinAndSelect('consultation.students', 'students')
+      .leftJoinAndSelect('students.parents', 'parents')
       .getMany();
     return consultations.map(consultation =>
       ConsultationMapper.toDto(
