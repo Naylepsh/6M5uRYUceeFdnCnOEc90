@@ -1,29 +1,20 @@
 import axios from 'axios';
 import { EmailService } from '../email/email.service';
+import {
+  TimeInverval,
+  TimeFrame,
+  Consultation,
+  Parent,
+  Student,
+} from './consultation-mail-notifier.interfaces';
 
-interface TimeFrame {
-  startDatetime: Date;
-  endDatetime: Date;
-}
-
-interface TimeInverval {
-  shouldStartAfterNMinutes: number;
-  shouldEndBeforeNMinutes: number;
-}
-
-interface Consultation {
-  datetime: Date;
-}
-
-interface Student {
-  firstName: string;
-}
-
-interface Parent {
-  email: string;
-}
+// IMPORTANT
+// The endpoint that consultations are gathered from is kinda hardcoded (with query: ?between[]...)
+// if API ever changes so has to ConsultationNotifier
 
 export class ConsultationNotifier {
+  notificationsSentInPreviousRound = new Map();
+
   constructor(
     private readonly emailService: EmailService,
     private readonly timeIntervalInMinutes: TimeInverval,
@@ -36,7 +27,6 @@ export class ConsultationNotifier {
       timeFrame,
     );
     this.sendNotifications(upcommingConsultations);
-    this.emailService.sendMail('', [], '', '');
   }
 
   private createTimeFrame(): TimeFrame {
@@ -64,11 +54,16 @@ export class ConsultationNotifier {
   }
 
   private sendNotifications(upcommingConsultations: any): void {
+    const notificationsSentInCurrentRound = new Map();
     for (const consultation of upcommingConsultations) {
       for (const student of consultation.students) {
-        this.sendMail(consultation, student, student.parents);
+        const key = consultation.id + student.id;
+        if (!this.notificationsSentInPreviousRound.has(key))
+          this.sendMail(consultation, student, student.parents);
+        notificationsSentInCurrentRound.set(key, true);
       }
     }
+    this.notificationsSentInPreviousRound = notificationsSentInCurrentRound;
   }
 
   private sendMail(

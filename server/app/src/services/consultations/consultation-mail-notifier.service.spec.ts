@@ -55,4 +55,11 @@ describe('ConsultationNotifier', () => {
 
     expect(emailService.sendMail).toHaveBeenCalled();
   });
+
+  it('should notify only once per unique (consultation, student, parent)', async () => {
+    await notifier.notifyParentsAboutTheirChildrenConsultations();
+    await notifier.notifyParentsAboutTheirChildrenConsultations();
+
+    expect(emailService.sendMail).toHaveBeenCalledTimes(1);
+  });
 });
