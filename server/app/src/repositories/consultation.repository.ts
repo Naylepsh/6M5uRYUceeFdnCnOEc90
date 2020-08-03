@@ -41,6 +41,32 @@ export class ConsultationRepository {
     );
   }
 
+  async findAllBetween(
+    startDatetime: string,
+    endDatetime: string,
+  ): Promise<ConsultationDto[]> {
+    console.log(startDatetime, endDatetime);
+    const consultations = await getConnection()
+      .createQueryBuilder()
+      .select('consultation')
+      .from(Consultation, 'consultation')
+      .where('consultation.datetime BETWEEN :startDatetime AND :endDatetime', {
+        startDatetime,
+        endDatetime,
+      })
+      .leftJoinAndSelect('consultation.lecturers', 'lecturers')
+      .leftJoinAndSelect('consultation.students', 'students')
+      .leftJoinAndSelect('students.parents', 'parents')
+      .getMany();
+    return consultations.map(consultation =>
+      ConsultationMapper.toDto(
+        consultation,
+        consultation.lecturers,
+        consultation.students,
+      ),
+    );
+  }
+
   async findById(id: string): Promise<ConsultationDto> {
     const consultation = await getConnection()
       .createQueryBuilder()

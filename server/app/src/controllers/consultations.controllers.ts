@@ -8,6 +8,7 @@ import {
   BadRequestException,
   Delete,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ConsultationRepository } from '../repositories/consultation.repository';
 import { ConsultationDto } from '../dtos/consultations/consultation.dto';
@@ -23,8 +24,16 @@ export class ConsultationsController {
   }
 
   @Get(apiEndpoint)
-  async findAll(): Promise<ConsultationDto[]> {
-    const consultations = await this.consultationRepository.findAll();
+  async findAll(
+    @Query('between') between: [string, string],
+  ): Promise<ConsultationDto[]> {
+    // quick temporary solution to 'between' query operator
+    let consultations: Promise<ConsultationDto[]>;
+    if (!between) {
+      consultations = this.consultationRepository.findAll();
+    } else {
+      consultations = this.consultationRepository.findAllBetween(...between);
+    }
     return consultations;
   }
 

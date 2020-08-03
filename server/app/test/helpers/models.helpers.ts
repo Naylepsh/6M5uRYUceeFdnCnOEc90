@@ -61,7 +61,7 @@ export function createSampleGroup(): IGroup {
     day: faker.date.weekday(),
     hour: randomTime(),
     address: faker.address.streetName(),
-    room: faker.random.number + '',
+    room: faker.random.number() + '',
     startDate: formatDate(startDate),
     endDate: formatDate(endDate),
     lecturers: [],
