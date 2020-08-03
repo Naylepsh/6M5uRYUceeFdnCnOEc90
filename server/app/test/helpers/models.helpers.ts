@@ -1,5 +1,5 @@
 import * as faker from 'faker';
-import './date.extentions';
+import '../../src/utils/extensions/date.extentions';
 
 interface IStudent {
   firstName: string;

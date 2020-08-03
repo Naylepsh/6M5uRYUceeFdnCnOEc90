@@ -9,7 +9,7 @@ interface IAuth {
   pass: string;
 }
 
-export default async function accountPromise(): Promise<SMTPTransport.Options> {
+export default async function getAccount(): Promise<SMTPTransport.Options> {
   const env = process.env.NODE_ENV || 'dev';
   let auth: IAuth;
   if (env == 'test' || env == 'dev') {
