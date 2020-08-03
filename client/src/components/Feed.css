@@ -21,4 +21,5 @@
   font-size: 150%;
   display: inline-block;
   color: var(--accent);
+  position: relative;
 }
