@@ -49,6 +49,7 @@ export class ConsultationRepository {
       .where('consultation.id = :id', { id })
       .leftJoinAndSelect('consultation.lecturers', 'lecturers')
       .leftJoinAndSelect('consultation.students', 'students')
+      .leftJoinAndSelect('students.parents', 'parents')
       .getOne();
     if (!consultation) return null;
     return ConsultationMapper.toDto(
