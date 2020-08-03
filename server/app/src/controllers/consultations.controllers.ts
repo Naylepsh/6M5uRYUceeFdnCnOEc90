@@ -25,14 +25,18 @@ export class ConsultationsController {
 
   @Get(apiEndpoint)
   async findAll(
-    @Query('between') between: [string, string],
+    @Query('between') between: [Date, Date],
   ): Promise<ConsultationDto[]> {
     // quick temporary solution to 'between' query operator
     let consultations: Promise<ConsultationDto[]>;
     if (!between) {
       consultations = this.consultationRepository.findAll();
     } else {
-      consultations = this.consultationRepository.findAllBetween(...between);
+      const dates = between.map(date => new Date(date).toISOString());
+      consultations = this.consultationRepository.findAllBetween(
+        dates[0],
+        dates[1],
+      );
     }
     return consultations;
   }

@@ -45,7 +45,6 @@ export class ConsultationRepository {
     startDatetime: string,
     endDatetime: string,
   ): Promise<ConsultationDto[]> {
-    console.log(startDatetime, endDatetime);
     const consultations = await getConnection()
       .createQueryBuilder()
       .select('consultation')

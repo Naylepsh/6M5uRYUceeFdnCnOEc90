@@ -60,8 +60,11 @@ describe('ConsultationsController (e2e)', () => {
   });
 
   describe(`${apiEndpoint} (GET)`, () => {
+    let query: string;
+
     beforeEach(async () => {
       await populateDatabase();
+      query = '';
     });
 
     it('should return 200', async () => {
@@ -76,8 +79,30 @@ describe('ConsultationsController (e2e)', () => {
       expect(body.length).toBe(1);
     });
 
+    describe('if "between" query was passed', () => {
+      it('should return all consultations between two dates if query param was passed', async () => {
+        query = `?between[]=${sampleConsultation.datetime.addHours(
+          -1,
+        )}&between[]=${sampleConsultation.datetime.addHours(1)}`;
+
+        const { body } = await getConsultations();
+
+        expect(body.length).toBe(1);
+      });
+
+      it('should return empty array if there are no consultations between args passed', async () => {
+        query = `?between[]=${sampleConsultation.datetime.addHours(
+          1,
+        )}&between[]=${sampleConsultation.datetime.addHours(1)}`;
+
+        const { body } = await getConsultations();
+
+        expect(body.length).toBe(0);
+      });
+    });
+
     const getConsultations = () => {
-      return request(app.getHttpServer()).get(apiEndpoint);
+      return request(app.getHttpServer()).get(apiEndpoint + query);
     };
   });
 
@@ -337,13 +362,6 @@ describe('ConsultationsController (e2e)', () => {
   const createStudent = () => {
     const student = createSampleStudent();
     return studentRepository.create(student);
-  };
-
-  const getCurrentDate = () => {
-    const today = new Date();
-    const date = `${today.getFullYear()}-${today.getMonth() +
-      1}-${today.getDate()}`;
-    return date;
   };
 
   const populateDatabase = async () => {
