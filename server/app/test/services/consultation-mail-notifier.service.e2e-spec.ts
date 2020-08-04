@@ -26,7 +26,6 @@ describe('Consultation Notifier', () => {
   let studentRepository: StudentRepository;
   let consultationRepository: ConsultationRepository;
   let emailService: EmailService;
-  let appUrl: string;
   let notifier: ConsultationNotifier;
   const timeInterval: TimeInverval = {
     shouldStartAfterMinutes: 60,
@@ -46,7 +45,6 @@ describe('Consultation Notifier', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-    appUrl = `localhost/consultations`;
   };
 
   const loadRepositories = () => {
@@ -59,7 +57,7 @@ describe('Consultation Notifier', () => {
     const account = await getAccount();
     emailService = new EmailService(account);
     jest.spyOn(emailService, 'sendMail');
-    notifier = new ConsultationNotifier(emailService, timeInterval, appUrl);
+    notifier = new ConsultationNotifier(emailService, timeInterval);
   };
 
   beforeEach(async () => {

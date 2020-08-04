@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { EmailService } from '../email/email.service';
 import {
   TimeInverval,
@@ -9,17 +8,12 @@ import {
 } from './consultation-mail-notifier.interfaces';
 import { ConsultationRepository } from '../../repositories/consultation.repository';
 
-// IMPORTANT
-// The endpoint that consultations are gathered from is kinda hardcoded (with query: ?between[]...)
-// if API ever changes so has to ConsultationNotifier
-
 export class ConsultationNotifier {
   notificationsSentInPreviousRound = new Map();
 
   constructor(
     private readonly emailService: EmailService,
     private readonly timeIntervalInMinutes: TimeInverval,
-    private readonly appUrl: string,
   ) {}
 
   public async notifyParentsAboutTheirChildrenConsultations(): Promise<void> {
