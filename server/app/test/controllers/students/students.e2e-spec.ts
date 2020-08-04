@@ -3,15 +3,15 @@ import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { AppModule } from '../../src/app.module';
-import { StudentRepository } from '../../src/repositories/student.repository';
-import { GroupRepository } from '../../src/repositories/group.repository';
-import { ParentRepository } from '../../src/repositories/parent.repository';
+import { AppModule } from '../../../src/app.module';
+import { StudentRepository } from '../../../src/repositories/student.repository';
+import { GroupRepository } from '../../../src/repositories/group.repository';
+import { ParentRepository } from '../../../src/repositories/parent.repository';
 import {
   createSampleParent,
   createSampleGroup,
   createSampleStudent,
-} from '../helpers/models.helpers';
+} from '../../helpers/models.helpers';
 
 describe('StudentsController (e2e)', () => {
   let app: INestApplication;

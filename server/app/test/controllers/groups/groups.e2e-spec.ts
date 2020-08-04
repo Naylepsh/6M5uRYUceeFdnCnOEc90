@@ -3,12 +3,12 @@ import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { AppModule } from '../../src/app.module';
-import { LecturerRepository } from '../../src/repositories/lecturer.repository';
-import { GroupRepository } from '../../src/repositories/group.repository';
-import { StudentRepository } from '../../src/repositories/student.repository';
-import { expectDatesToBeTheSame } from '../helpers/date.helper';
-import { createSampleGroup } from '../helpers/models.helpers';
+import { AppModule } from '../../../src/app.module';
+import { LecturerRepository } from '../../../src/repositories/lecturer.repository';
+import { GroupRepository } from '../../../src/repositories/group.repository';
+import { StudentRepository } from '../../../src/repositories/student.repository';
+import { expectDatesToBeTheSame } from '../../helpers/date.helper';
+import { createSampleGroup } from '../../helpers/models.helpers';
 
 describe('GroupsController (e2e)', () => {
   let app: INestApplication;

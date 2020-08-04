@@ -3,13 +3,13 @@ import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { AppModule } from '../../src/app.module';
-import { LecturerRepository } from '../../src/repositories/lecturer.repository';
-import { GroupRepository } from '../../src/repositories/group.repository';
+import { AppModule } from '../../../src/app.module';
+import { LecturerRepository } from '../../../src/repositories/lecturer.repository';
+import { GroupRepository } from '../../../src/repositories/group.repository';
 import {
   createSampleLecturer,
   createSampleGroup,
-} from '../helpers/models.helpers';
+} from '../../helpers/models.helpers';
 
 describe('LecturersController (e2e)', () => {
   let app: INestApplication;

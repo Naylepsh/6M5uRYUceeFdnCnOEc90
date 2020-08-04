@@ -40,8 +40,8 @@ describe('ConsultationNotifier', () => {
 
   const loadNotifier = () => {
     const timeInterval = {
-      shouldStartAfterNMinutes: 10,
-      shouldEndBeforeNMinutes: 20,
+      shouldStartAfterMinutes: 10,
+      shouldEndBeforeMinutes: 20,
     };
     const appUrl = 'mocked-url.com';
     notifier = new ConsultationNotifier(emailService, timeInterval, appUrl);

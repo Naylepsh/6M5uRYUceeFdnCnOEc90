@@ -3,13 +3,13 @@ import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { AppModule } from '../../src/app.module';
-import { ParentRepository } from '../../src/repositories/parent.repository';
-import { StudentRepository } from '../../src/repositories/student.repository';
+import { AppModule } from '../../../src/app.module';
+import { ParentRepository } from '../../../src/repositories/parent.repository';
+import { StudentRepository } from '../../../src/repositories/student.repository';
 import {
   createSampleStudent,
   createSampleParent,
-} from '../helpers/models.helpers';
+} from '../../helpers/models.helpers';
 
 describe('ParentsController (e2e)', () => {
   let app: INestApplication;

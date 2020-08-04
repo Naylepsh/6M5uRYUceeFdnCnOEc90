@@ -3,15 +3,15 @@ import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { AppModule } from '../../src/app.module';
-import { LecturerRepository } from '../../src/repositories/lecturer.repository';
-import { ConsultationRepository } from '../../src/repositories/consultation.repository';
-import { StudentRepository } from '../../src/repositories/student.repository';
+import { AppModule } from '../../../src/app.module';
+import { LecturerRepository } from '../../../src/repositories/lecturer.repository';
+import { ConsultationRepository } from '../../../src/repositories/consultation.repository';
+import { StudentRepository } from '../../../src/repositories/student.repository';
 import {
   createSampleStudent,
   createSampleConsultation,
-} from '../helpers/models.helpers';
-import { expectDatetimesToBeTheSame } from '../helpers/date.helper';
+} from '../../helpers/models.helpers';
+import { expectDatetimesToBeTheSame } from '../../helpers/date.helper';
 
 describe('ConsultationsController (e2e)', () => {
   let app: INestApplication;
