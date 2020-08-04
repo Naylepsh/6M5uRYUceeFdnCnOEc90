@@ -7,6 +7,7 @@ import {
   Student,
 } from './consultation-mail-notifier.interfaces';
 import { ConsultationRepository } from '../../repositories/consultation.repository';
+import '../../utils/extensions/date.extentions';
 
 export class ConsultationNotifier {
   notificationsSentInPreviousRound = new Map();
