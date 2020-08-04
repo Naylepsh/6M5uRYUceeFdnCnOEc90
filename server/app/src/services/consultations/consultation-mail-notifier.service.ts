@@ -7,6 +7,7 @@ import {
   Parent,
   Student,
 } from './consultation-mail-notifier.interfaces';
+import { ConsultationRepository } from '../../repositories/consultation.repository';
 
 // IMPORTANT
 // The endpoint that consultations are gathered from is kinda hardcoded (with query: ?between[]...)
@@ -32,10 +33,10 @@ export class ConsultationNotifier {
   private createTimeFrame(): TimeFrame {
     const now = new Date();
     return {
-      startDatetime: now.addMinutes(
+      startDatetime: new Date(now).addMinutes(
         this.timeIntervalInMinutes.shouldStartAfterMinutes,
       ),
-      endDatetime: now.addMinutes(
+      endDatetime: new Date(now).addMinutes(
         this.timeIntervalInMinutes.shouldEndBeforeMinutes,
       ),
     };
@@ -43,14 +44,11 @@ export class ConsultationNotifier {
 
   // has to be set to public as otherwise it won't be mockable with jest
   public async getUpcommingConsultations(timeFrame: TimeFrame): Promise<any> {
-    const query = ConsultationNotifier.createTimeFrameQuery(timeFrame);
-    const { body } = await axios.get(`${this.appUrl}/consultations${query}`);
-    return body;
-  }
-
-  private static createTimeFrameQuery(timeFrame: TimeFrame): string {
-    const { startDatetime, endDatetime } = timeFrame;
-    return `?between[]="${startDatetime}"&between[]="${endDatetime}"`;
+    const repo = new ConsultationRepository();
+    return repo.findAllBetween(
+      timeFrame.startDatetime.toISOString(),
+      timeFrame.endDatetime.toISOString(),
+    );
   }
 
   private sendNotifications(upcommingConsultations: any): void {

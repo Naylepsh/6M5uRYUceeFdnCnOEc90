@@ -12,6 +12,7 @@ import {
   createSampleConsultation,
 } from '../../helpers/models.helpers';
 import { expectDatetimesToBeTheSame } from '../../helpers/date.helper';
+import '../../../src/utils/extensions/date.extentions';
 
 describe('ConsultationsController (e2e)', () => {
   let app: INestApplication;
@@ -63,9 +64,10 @@ describe('ConsultationsController (e2e)', () => {
     let query: string;
 
     beforeEach(async () => {
-      sampleConsultation.datetime = new Date(
-        'Sat Apr 17 2021 02:00:41 GMT+0200 (Central European Summer Time)',
-      );
+      // sampleConsultation.datetime = new Date(
+      //   'Sat Apr 17 2021 02:00:41 GMT+0200 (Central European Summer Time)',
+      // );
+      sampleConsultation.datetime = new Date().addHours(1);
       await populateDatabase();
       query = '';
     });
@@ -84,8 +86,11 @@ describe('ConsultationsController (e2e)', () => {
 
     describe('if "between" query was passed', () => {
       it('should return all consultations between two dates if query param was passed', async () => {
-        query =
-          '?between[]="Sat Apr 17 2021 01:00:41 GMT+0200 (Central European Summer Time)"&between[]="Sat Apr 17 2021 03:00:41 GMT+0200 (Central European Summer Time)"';
+        // query =
+        //   '?between[]="Sat Apr 17 2021 01:00:41 GMT+0200 (Central European Summer Time)"&between[]="Sat Apr 17 2021 03:00:41 GMT+0200 (Central European Summer Time)"';
+        query = `?between[]="${new Date().toUTCString()}"&between[]="${new Date()
+          .addHours(2)
+          .toUTCString()}"`;
 
         const { body } = await getConsultations();
 
