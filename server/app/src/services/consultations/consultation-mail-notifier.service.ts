@@ -33,10 +33,10 @@ export class ConsultationNotifier {
     const now = new Date();
     return {
       startDatetime: now.addMinutes(
-        this.timeIntervalInMinutes.shouldStartAfterNMinutes,
+        this.timeIntervalInMinutes.shouldStartAfterMinutes,
       ),
       endDatetime: now.addMinutes(
-        this.timeIntervalInMinutes.shouldEndBeforeNMinutes,
+        this.timeIntervalInMinutes.shouldEndBeforeMinutes,
       ),
     };
   }

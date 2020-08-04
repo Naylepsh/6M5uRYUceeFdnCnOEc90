@@ -4,8 +4,8 @@ export interface TimeFrame {
 }
 
 export interface TimeInverval {
-  shouldStartAfterNMinutes: number;
-  shouldEndBeforeNMinutes: number;
+  shouldStartAfterMinutes: number;
+  shouldEndBeforeMinutes: number;
 }
 
 export interface Consultation {
