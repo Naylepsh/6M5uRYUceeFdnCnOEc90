@@ -13,6 +13,7 @@ import {
 import { ConsultationRepository } from '../repositories/consultation.repository';
 import { ConsultationDto } from '../dtos/consultations/consultation.dto';
 import { SaveConsultationDto } from '../dtos/consultations/save-consultation.dto';
+import { ValidationPipe } from '../pipes/validation.pipe';
 
 const apiEndpoint = '/consultations';
 
@@ -50,7 +51,7 @@ export class ConsultationsController {
 
   @Post(apiEndpoint)
   async create(
-    @Body() createConsultationDto: SaveConsultationDto,
+    @Body(new ValidationPipe()) createConsultationDto: SaveConsultationDto,
   ): Promise<ConsultationDto> {
     const consultation = await this.consultationRepository.create(
       createConsultationDto,
