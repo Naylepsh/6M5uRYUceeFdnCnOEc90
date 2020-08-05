@@ -12,6 +12,7 @@ import {
 import { ParentRepository } from '../repositories/parent.repository';
 import { ParentDto } from '../dtos/parents/parent.dto';
 import { SaveParentDto } from '../dtos/parents/save-parent.dto';
+import { IdParams } from './id.params';
 
 const apiEndpoint = '/parents';
 
@@ -29,8 +30,8 @@ export class ParentsController {
   }
 
   @Get(`${apiEndpoint}/:id`)
-  async findById(@Param('id') id: string): Promise<ParentDto> {
-    ensureUuidIsValid(id);
+  async findById(@Param() idParams: IdParams): Promise<ParentDto> {
+    const { id } = idParams;
     const parent = await this.ensureParentExistence(id);
     return parent;
   }
@@ -43,17 +44,17 @@ export class ParentsController {
 
   @Put(`${apiEndpoint}/:id`)
   async update(
-    @Param('id') id: string,
+    @Param() idParams: IdParams,
     @Body() createParentDto: SaveParentDto,
   ): Promise<void> {
-    ensureUuidIsValid(id);
+    const { id } = idParams;
     await this.ensureParentExistence(id);
     return this.parentRepository.update({ ...createParentDto, id });
   }
 
   @Delete(`${apiEndpoint}/:id`)
-  async delete(@Param('id') id: string): Promise<void> {
-    ensureUuidIsValid(id);
+  async delete(@Param() idParams: IdParams): Promise<void> {
+    const { id } = idParams;
     await this.ensureParentExistence(id);
     return this.parentRepository.delete(id);
   }
@@ -65,17 +66,4 @@ export class ParentsController {
     }
     return parent;
   }
-}
-
-function ensureUuidIsValid(id: string): string {
-  if (!validateUuid(id)) {
-    throw new BadRequestException();
-  }
-  return id;
-}
-
-function validateUuid(id: string): boolean {
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  const match = id.match(uuidRegex);
-  return !!match;
 }

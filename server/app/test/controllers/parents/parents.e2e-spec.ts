@@ -10,6 +10,7 @@ import {
   createSampleStudent,
   createSampleParent,
 } from '../../helpers/models.helpers';
+import { ValidationPipe } from '../../../src/pipes/validation.pipe';
 
 describe('ParentsController (e2e)', () => {
   let app: INestApplication;
@@ -30,6 +31,7 @@ describe('ParentsController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
   };
 
@@ -100,6 +102,64 @@ describe('ParentsController (e2e)', () => {
 
         expect(body).toHaveProperty('children');
         expect(body.children.length).toBe(1);
+      });
+    });
+
+    describe('if invalid data was passed', () => {
+      it('should return 400 if first name was not passed', async () => {
+        delete sampleParent.firstName;
+
+        const { status } = await createParent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if last name was not passed', async () => {
+        delete sampleParent.lastName;
+
+        const { status } = await createParent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if phone number was not passed', async () => {
+        delete sampleParent.phoneNumber;
+
+        const { status } = await createParent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if email was not passed', async () => {
+        delete sampleParent.email;
+
+        const { status } = await createParent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid email was passed', async () => {
+        sampleParent.email = 'abc';
+
+        const { status } = await createParent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if children were not passed', async () => {
+        delete sampleParent.children;
+
+        const { status } = await createParent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid children ids were passed', async () => {
+        sampleParent.children = ['1', '2'];
+
+        const { status } = await createParent();
+
+        expect(status).toBe(400);
       });
     });
 
@@ -217,6 +277,72 @@ describe('ParentsController (e2e)', () => {
     describe('if invalid id was passed', () => {
       it('should return 400', async () => {
         parentId = '1';
+
+        const { status } = await updateParent();
+
+        expect(status).toBe(400);
+      });
+    });
+
+    describe('if invalid data was passed', () => {
+      it('should return 400 if invalid id was passed', async () => {
+        parentId = '1';
+
+        const { status } = await updateParent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if first name was not passed', async () => {
+        delete parentDataToUpdate.firstName;
+
+        const { status } = await updateParent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if last name was not passed', async () => {
+        delete parentDataToUpdate.lastName;
+
+        const { status } = await updateParent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if phone number was not passed', async () => {
+        delete parentDataToUpdate.phoneNumber;
+
+        const { status } = await updateParent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if email was not passed', async () => {
+        delete parentDataToUpdate.email;
+
+        const { status } = await updateParent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid email was passed', async () => {
+        parentDataToUpdate.email = 'abc';
+
+        const { status } = await updateParent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if children were not passed', async () => {
+        delete parentDataToUpdate.children;
+
+        const { status } = await updateParent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid children ids were passed', async () => {
+        parentDataToUpdate.children = ['1', '2'];
 
         const { status } = await updateParent();
 
