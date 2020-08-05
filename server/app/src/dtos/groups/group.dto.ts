@@ -4,7 +4,7 @@ import { StudentDto } from '../students/student.dto';
 export class GroupDto {
   id?: string;
   day: string;
-  hour: string;
+  time: string;
   address: string;
   room: string;
   startDate: string;

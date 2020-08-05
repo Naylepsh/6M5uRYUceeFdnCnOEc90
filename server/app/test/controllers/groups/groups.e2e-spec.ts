@@ -9,6 +9,7 @@ import { GroupRepository } from '../../../src/repositories/group.repository';
 import { StudentRepository } from '../../../src/repositories/student.repository';
 import { expectDatesToBeTheSame } from '../../helpers/date.helper';
 import { createSampleGroup } from '../../helpers/models.helpers';
+import { ValidationPipe } from '../../../src/pipes/validation.pipe';
 
 describe('GroupsController (e2e)', () => {
   let app: INestApplication;
@@ -30,6 +31,7 @@ describe('GroupsController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
   };
 
@@ -104,6 +106,88 @@ describe('GroupsController (e2e)', () => {
         expect(body.lecturers.length).toBe(1);
         expect(body).toHaveProperty('students');
         expect(body.students.length).toBe(1);
+      });
+    });
+
+    describe('if invalid data was passed', () => {
+      it('should return 400 if day was not passed', async () => {
+        delete sampleGroup.day;
+
+        const { status } = await createGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if time was not passed', async () => {
+        delete sampleGroup.time;
+
+        const { status } = await createGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if address was not passed', async () => {
+        delete sampleGroup.address;
+
+        const { status } = await createGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if room was not passed', async () => {
+        delete sampleGroup.room;
+
+        const { status } = await createGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if startDate was not passed', async () => {
+        delete sampleGroup.startDate;
+
+        const { status } = await createGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if endDate was not passed', async () => {
+        delete sampleGroup.endDate;
+
+        const { status } = await createGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if lecturers were not passed', async () => {
+        delete sampleGroup.lecturers;
+
+        const { status } = await createGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid lecturer ids was passed', async () => {
+        sampleGroup.lecturers = ['1', '2'];
+
+        const { status } = await createGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if students were not passed', async () => {
+        delete sampleGroup.students;
+
+        const { status } = await createGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid student ids was passed', async () => {
+        sampleGroup.students = ['1', '2'];
+
+        const { status } = await createGroup();
+
+        expect(status).toBe(400);
       });
     });
 
@@ -224,9 +308,89 @@ describe('GroupsController (e2e)', () => {
       });
     });
 
-    describe('if invalid id was passed', () => {
-      it('should return 400', async () => {
+    describe('if invalid data was passed', () => {
+      it('should return 400 if invalid id was passed', async () => {
         groupId = '1';
+
+        const { status } = await updateGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if day was not passed', async () => {
+        delete groupDataToUpdate.day;
+
+        const { status } = await updateGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if time was not passed', async () => {
+        delete groupDataToUpdate.time;
+
+        const { status } = await updateGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if address was not passed', async () => {
+        delete groupDataToUpdate.address;
+
+        const { status } = await updateGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if room was not passed', async () => {
+        delete groupDataToUpdate.room;
+
+        const { status } = await updateGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if startDate was not passed', async () => {
+        delete groupDataToUpdate.startDate;
+
+        const { status } = await updateGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if endDate was not passed', async () => {
+        delete groupDataToUpdate.endDate;
+
+        const { status } = await updateGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if lecturers were not passed', async () => {
+        delete groupDataToUpdate.lecturers;
+
+        const { status } = await updateGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid lecturer ids was passed', async () => {
+        groupDataToUpdate.lecturers = ['1', '2'];
+
+        const { status } = await updateGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if students were not passed', async () => {
+        delete groupDataToUpdate.students;
+
+        const { status } = await updateGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid student ids was passed', async () => {
+        groupDataToUpdate.students = ['1', '2'];
 
         const { status } = await updateGroup();
 

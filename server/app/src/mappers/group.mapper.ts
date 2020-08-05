@@ -5,11 +5,10 @@ import { LecturerMapper } from './lecturer.mapper';
 import { SaveGroupDto } from '../dtos/groups/save-group.dto';
 import { Student } from '../models/student.model';
 import { StudentMapper } from './student.mapper';
-import { stringify } from 'querystring';
 
 export interface GroupPseudoPersistance {
   day: string;
-  hour: string;
+  time: string;
   address: string;
   room: string;
   startDate: string;
@@ -20,10 +19,10 @@ export class GroupMapper {
   public static toPersistance(
     createGroupDto: SaveGroupDto,
   ): GroupPseudoPersistance {
-    const { day, hour, address, room, startDate, endDate } = createGroupDto;
+    const { day, time, address, room, startDate, endDate } = createGroupDto;
     return {
       day,
-      hour,
+      time,
       address,
       room,
       startDate,
@@ -36,7 +35,7 @@ export class GroupMapper {
     lecturers: Lecturer[] = [],
     students: Student[] = [],
   ): GroupDto {
-    const { id, day, hour, address, room, startDate, endDate } = group;
+    const { id, day, time, address, room, startDate, endDate } = group;
     const lecturerDtos = lecturers.map(lecturer =>
       LecturerMapper.toDto(lecturer),
     );
@@ -44,7 +43,7 @@ export class GroupMapper {
     return {
       id,
       day,
-      hour,
+      time,
       address,
       room,
       startDate: startDate,

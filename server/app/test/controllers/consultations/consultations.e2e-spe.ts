@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, HttpStatus, ValidationPipe } from '@nestjs/common';
+import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
@@ -13,6 +13,7 @@ import {
 } from '../../helpers/models.helpers';
 import { expectDatetimesToBeTheSame } from '../../helpers/date.helper';
 import '../../../src/utils/extensions/date.extentions';
+import { ValidationPipe } from '../../../src/pipes/validation.pipe';
 
 describe('ConsultationsController (e2e)', () => {
   let app: INestApplication;

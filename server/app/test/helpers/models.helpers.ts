@@ -18,7 +18,7 @@ interface IParent {
 
 interface IGroup {
   day: string;
-  hour: string;
+  time: string;
   address: string;
   room: string;
   startDate: string;
@@ -59,7 +59,7 @@ export function createSampleGroup(): IGroup {
     .addMinutes(faker.random.number());
   return {
     day: faker.date.weekday(),
-    hour: randomTime(),
+    time: randomTime(),
     address: faker.address.streetName(),
     room: faker.random.number() + '',
     startDate: formatDate(startDate),

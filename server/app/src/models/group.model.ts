@@ -18,7 +18,7 @@ export class Group {
   day: string;
 
   @Column()
-  hour: string;
+  time: string;
 
   @Column()
   address: string;
@@ -33,13 +33,13 @@ export class Group {
   endDate: string;
 
   @ManyToMany(
-    type => Lecturer,
+    () => Lecturer,
     lecturer => lecturer.groups,
   )
   @JoinTable()
   lecturers: Lecturer[];
 
-  @ManyToMany(type => Student)
+  @ManyToMany(() => Student)
   @JoinTable()
   students: Student[];
 }
