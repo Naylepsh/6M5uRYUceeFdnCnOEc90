@@ -5,13 +5,13 @@ import {
   Post,
   Body,
   NotFoundException,
-  BadRequestException,
   Delete,
   Put,
 } from '@nestjs/common';
 import { StudentRepository } from '../repositories/student.repository';
 import { StudentDto } from '../dtos/students/student.dto';
 import { SaveStudentDto } from '../dtos/students/save-student.dto';
+import { IdParams } from './id.params';
 
 const apiEndpoint = '/students';
 
@@ -29,31 +29,31 @@ export class StudentsController {
   }
 
   @Get(`${apiEndpoint}/:id`)
-  async findById(@Param('id') id: string): Promise<StudentDto> {
-    ensureUuidIsValid(id);
+  async findById(@Param() idParams: IdParams): Promise<StudentDto> {
+    const { id } = idParams;
     const student = await this.ensureStudentExistence(id);
     return student;
   }
 
   @Post(apiEndpoint)
-  async create(@Body() createStudentDto: SaveStudentDto): Promise<StudentDto> {
-    const student = await this.studentRepository.create(createStudentDto);
+  async create(@Body() saveStudentDto: SaveStudentDto): Promise<StudentDto> {
+    const student = await this.studentRepository.create(saveStudentDto);
     return student;
   }
 
   @Put(`${apiEndpoint}/:id`)
   async update(
-    @Param('id') id: string,
+    @Param() idParams: IdParams,
     @Body() createStudentDto: SaveStudentDto,
   ): Promise<void> {
-    ensureUuidIsValid(id);
+    const { id } = idParams;
     await this.ensureStudentExistence(id);
     return this.studentRepository.update({ ...createStudentDto, id });
   }
 
   @Delete(`${apiEndpoint}/:id`)
-  async delete(@Param('id') id: string): Promise<void> {
-    ensureUuidIsValid(id);
+  async delete(@Param() idParams: IdParams): Promise<void> {
+    const { id } = idParams;
     await this.ensureStudentExistence(id);
     return this.studentRepository.delete(id);
   }
@@ -65,17 +65,4 @@ export class StudentsController {
     }
     return student;
   }
-}
-
-function ensureUuidIsValid(id: string): string {
-  if (!validateUuid(id)) {
-    throw new BadRequestException();
-  }
-  return id;
-}
-
-function validateUuid(id: string): boolean {
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  const match = id.match(uuidRegex);
-  return !!match;
 }

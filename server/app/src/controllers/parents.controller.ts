@@ -5,7 +5,6 @@ import {
   Post,
   Body,
   NotFoundException,
-  BadRequestException,
   Delete,
   Put,
 } from '@nestjs/common';
