@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, HttpStatus } from '@nestjs/common';
+import { INestApplication, HttpStatus, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
@@ -34,6 +34,7 @@ describe('ConsultationsController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
   };
 
@@ -64,9 +65,6 @@ describe('ConsultationsController (e2e)', () => {
     let query: string;
 
     beforeEach(async () => {
-      // sampleConsultation.datetime = new Date(
-      //   'Sat Apr 17 2021 02:00:41 GMT+0200 (Central European Summer Time)',
-      // );
       sampleConsultation.datetime = new Date().addHours(1);
       await populateDatabase();
       query = '';
@@ -86,8 +84,6 @@ describe('ConsultationsController (e2e)', () => {
 
     describe('if "between" query was passed', () => {
       it('should return all consultations between two dates if query param was passed', async () => {
-        // query =
-        //   '?between[]="Sat Apr 17 2021 01:00:41 GMT+0200 (Central European Summer Time)"&between[]="Sat Apr 17 2021 03:00:41 GMT+0200 (Central European Summer Time)"';
         query = `?between[]="${new Date().toUTCString()}"&between[]="${new Date()
           .addHours(2)
           .toUTCString()}"`;
@@ -98,8 +94,9 @@ describe('ConsultationsController (e2e)', () => {
       });
 
       it('should return empty array if there are no consultations between args passed', async () => {
-        query =
-          '?between[]="Sat Apr 17 2021 03:00:41 GMT+0200 (Central European Summer Time)"&between[]="Sat Apr 17 2021 03:00:41 GMT+0200 (Central European Summer Time)"';
+        query = `?between[]="${new Date()
+          .addHours(3)
+          .toUTCString()}"&between[]="${new Date().addHours(2).toUTCString()}"`;
 
         const { body } = await getConsultations();
 
@@ -138,6 +135,72 @@ describe('ConsultationsController (e2e)', () => {
         expect(body.lecturers.length).toBe(1);
         expect(body).toHaveProperty('students');
         expect(body.students.length).toBe(1);
+      });
+    });
+
+    describe('if invalid data was passed', () => {
+      it('should return 400 if date was missing', async () => {
+        delete sampleConsultation.datetime;
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid date was passed', async () => {
+        sampleConsultation.datetime = 'abc';
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if address was missing', async () => {
+        delete sampleConsultation.address;
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if room was missing', async () => {
+        delete sampleConsultation.room;
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if students were missing', async () => {
+        delete sampleConsultation.students;
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid student ids were passed', async () => {
+        sampleConsultation.students = ['1', '2'];
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if lecturers were missing', async () => {
+        delete sampleConsultation.lecturers;
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid lecturer ids were passed', async () => {
+        sampleConsultation.lecturers = ['1', '2'];
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
       });
     });
 
@@ -268,9 +331,73 @@ describe('ConsultationsController (e2e)', () => {
       });
     });
 
-    describe('if invalid id was passed', () => {
-      it('should return 400', async () => {
+    describe('if invalid data was passed', () => {
+      it('should return 400 if invalid id was passed', async () => {
         consultationId = '1';
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if date was missing', async () => {
+        delete consultationDataToUpdate.datetime;
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid date was passed', async () => {
+        consultationDataToUpdate.datetime = 'abc';
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if address was missing', async () => {
+        delete consultationDataToUpdate.address;
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if room was missing', async () => {
+        delete consultationDataToUpdate.room;
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if students were missing', async () => {
+        delete consultationDataToUpdate.students;
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid student ids were passed', async () => {
+        consultationDataToUpdate.students = ['1', '2'];
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if lecturers were missing', async () => {
+        delete consultationDataToUpdate.lecturers;
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid lecturer ids were passed', async () => {
+        consultationDataToUpdate.lecturers = ['1', '2'];
 
         const { status } = await updateConsultation();
 

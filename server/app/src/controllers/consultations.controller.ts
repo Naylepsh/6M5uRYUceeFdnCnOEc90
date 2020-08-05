@@ -5,7 +5,6 @@ import {
   Post,
   Body,
   NotFoundException,
-  BadRequestException,
   Delete,
   Put,
   Query,
@@ -13,7 +12,7 @@ import {
 import { ConsultationRepository } from '../repositories/consultation.repository';
 import { ConsultationDto } from '../dtos/consultations/consultation.dto';
 import { SaveConsultationDto } from '../dtos/consultations/save-consultation.dto';
-import { ValidationPipe } from '../pipes/validation.pipe';
+import { IdParams } from './id.params';
 
 const apiEndpoint = '/consultations';
 
@@ -43,15 +42,14 @@ export class ConsultationsController {
   }
 
   @Get(`${apiEndpoint}/:id`)
-  async findById(@Param('id') id: string): Promise<ConsultationDto> {
-    ensureUuidIsValid(id);
-    const consultation = await this.ensureConsultationExistence(id);
+  async findById(@Param() idParams: IdParams): Promise<ConsultationDto> {
+    const consultation = await this.ensureConsultationExistence(idParams.id);
     return consultation;
   }
 
   @Post(apiEndpoint)
   async create(
-    @Body(new ValidationPipe()) createConsultationDto: SaveConsultationDto,
+    @Body() createConsultationDto: SaveConsultationDto,
   ): Promise<ConsultationDto> {
     const consultation = await this.consultationRepository.create(
       createConsultationDto,
@@ -61,19 +59,20 @@ export class ConsultationsController {
 
   @Put(`${apiEndpoint}/:id`)
   async update(
-    @Param('id') id: string,
+    @Param() idParams: IdParams,
     @Body() createConsultationDto: SaveConsultationDto,
   ): Promise<void> {
-    ensureUuidIsValid(id);
-    await this.ensureConsultationExistence(id);
-    return this.consultationRepository.update({ ...createConsultationDto, id });
+    await this.ensureConsultationExistence(idParams.id);
+    return this.consultationRepository.update({
+      ...createConsultationDto,
+      id: idParams.id,
+    });
   }
 
   @Delete(`${apiEndpoint}/:id`)
-  async delete(@Param('id') id: string): Promise<void> {
-    ensureUuidIsValid(id);
-    await this.ensureConsultationExistence(id);
-    return this.consultationRepository.delete(id);
+  async delete(@Param() idParams: IdParams): Promise<void> {
+    await this.ensureConsultationExistence(idParams.id);
+    return this.consultationRepository.delete(idParams.id);
   }
 
   private async ensureConsultationExistence(
@@ -85,17 +84,4 @@ export class ConsultationsController {
     }
     return consultation;
   }
-}
-
-function ensureUuidIsValid(id: string): string {
-  if (!validateUuid(id)) {
-    throw new BadRequestException();
-  }
-  return id;
-}
-
-function validateUuid(id: string): boolean {
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  const match = id.match(uuidRegex);
-  return !!match;
 }

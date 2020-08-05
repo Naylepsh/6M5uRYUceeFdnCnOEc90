@@ -1,7 +1,7 @@
-import { IsString, IsOptional, IsDateString } from 'class-validator';
+import { IsString, IsOptional, IsDateString, IsUUID } from 'class-validator';
 
 export class SaveConsultationDto {
-  @IsString()
+  @IsUUID('4')
   @IsOptional()
   id?: string;
 
@@ -16,9 +16,9 @@ export class SaveConsultationDto {
   @IsString()
   room: string;
 
-  @IsString({ each: true })
+  @IsUUID('4', { each: true })
   lecturers: string[];
 
-  @IsString({ each: true })
+  @IsUUID('4', { each: true })
   students: string[];
 }
