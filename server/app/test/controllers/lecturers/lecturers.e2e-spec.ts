@@ -3,13 +3,14 @@ import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { AppModule } from '../../src/app.module';
-import { LecturerRepository } from '../../src/repositories/lecturer.repository';
-import { GroupRepository } from '../../src/repositories/group.repository';
+import { AppModule } from '../../../src/app.module';
+import { LecturerRepository } from '../../../src/repositories/lecturer.repository';
+import { GroupRepository } from '../../../src/repositories/group.repository';
 import {
   createSampleLecturer,
   createSampleGroup,
-} from '../helpers/models.helpers';
+} from '../../helpers/models.helpers';
+import { ValidationPipe } from '../../../src/pipes/validation.pipe';
 
 describe('LecturersController (e2e)', () => {
   let app: INestApplication;
@@ -30,6 +31,7 @@ describe('LecturersController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
   };
 
@@ -100,6 +102,64 @@ describe('LecturersController (e2e)', () => {
 
         expect(body).toHaveProperty('groups');
         expect(body.groups.length).toBe(1);
+      });
+    });
+
+    describe('if invalid data was passed', () => {
+      it('should return 400 if first name was not passed', async () => {
+        delete sampleLecturer.firstName;
+
+        const { status } = await createLecturer();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if last name was not passed', async () => {
+        delete sampleLecturer.lastName;
+
+        const { status } = await createLecturer();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if phone number was not passed', async () => {
+        delete sampleLecturer.phoneNumber;
+
+        const { status } = await createLecturer();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if email was not passed', async () => {
+        delete sampleLecturer.email;
+
+        const { status } = await createLecturer();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid email was passed', async () => {
+        sampleLecturer.email = 'abc';
+
+        const { status } = await createLecturer();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if groups were not passed', async () => {
+        delete sampleLecturer.groups;
+
+        const { status } = await createLecturer();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid group ids were passed', async () => {
+        sampleLecturer.groups = ['1', '2'];
+
+        const { status } = await createLecturer();
+
+        expect(status).toBe(400);
       });
     });
 
@@ -219,6 +279,72 @@ describe('LecturersController (e2e)', () => {
     describe('if invalid id was passed', () => {
       it('should return 400', async () => {
         lecturerId = '1';
+
+        const { status } = await updateLecturer();
+
+        expect(status).toBe(400);
+      });
+    });
+
+    describe('if invalid data was passed', () => {
+      it('should return 400 if invalid id was passed', async () => {
+        lecturerId = '1';
+
+        const { status } = await updateLecturer();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if first name was not passed', async () => {
+        delete lecturerDataToUpdate.firstName;
+
+        const { status } = await updateLecturer();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if last name was not passed', async () => {
+        delete lecturerDataToUpdate.lastName;
+
+        const { status } = await updateLecturer();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if phone number was not passed', async () => {
+        delete lecturerDataToUpdate.phoneNumber;
+
+        const { status } = await updateLecturer();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if email was not passed', async () => {
+        delete lecturerDataToUpdate.email;
+
+        const { status } = await updateLecturer();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid email was passed', async () => {
+        lecturerDataToUpdate.email = 'abc';
+
+        const { status } = await updateLecturer();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if groups were not passed', async () => {
+        delete lecturerDataToUpdate.groups;
+
+        const { status } = await updateLecturer();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid group ids were passed', async () => {
+        lecturerDataToUpdate.groups = ['1', '2'];
 
         const { status } = await updateLecturer();
 

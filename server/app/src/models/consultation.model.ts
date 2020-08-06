@@ -14,7 +14,7 @@ export class Consultation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('timestamp')
+  @Column('timestamptz')
   datetime: Date;
 
   @Column()

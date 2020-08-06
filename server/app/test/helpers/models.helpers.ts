@@ -1,5 +1,5 @@
 import * as faker from 'faker';
-import './date.extentions';
+import '../../src/utils/extensions/date.extentions';
 
 interface IStudent {
   firstName: string;
@@ -18,7 +18,7 @@ interface IParent {
 
 interface IGroup {
   day: string;
-  hour: string;
+  time: string;
   address: string;
   room: string;
   startDate: string;
@@ -59,9 +59,9 @@ export function createSampleGroup(): IGroup {
     .addMinutes(faker.random.number());
   return {
     day: faker.date.weekday(),
-    hour: randomTime(),
+    time: randomTime(),
     address: faker.address.streetName(),
-    room: faker.random.number + '',
+    room: faker.random.number() + '',
     startDate: formatDate(startDate),
     endDate: formatDate(endDate),
     lecturers: [],

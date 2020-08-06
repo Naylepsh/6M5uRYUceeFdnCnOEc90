@@ -3,15 +3,17 @@ import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { AppModule } from '../../src/app.module';
-import { LecturerRepository } from '../../src/repositories/lecturer.repository';
-import { ConsultationRepository } from '../../src/repositories/consultation.repository';
-import { StudentRepository } from '../../src/repositories/student.repository';
+import { AppModule } from '../../../src/app.module';
+import { LecturerRepository } from '../../../src/repositories/lecturer.repository';
+import { ConsultationRepository } from '../../../src/repositories/consultation.repository';
+import { StudentRepository } from '../../../src/repositories/student.repository';
 import {
   createSampleStudent,
   createSampleConsultation,
-} from '../helpers/models.helpers';
-import { expectDatetimesToBeTheSame } from '../helpers/date.helper';
+} from '../../helpers/models.helpers';
+import { expectDatetimesToBeTheSame } from '../../helpers/date.helper';
+import '../../../src/utils/extensions/date.extentions';
+import { ValidationPipe } from '../../../src/pipes/validation.pipe';
 
 describe('ConsultationsController (e2e)', () => {
   let app: INestApplication;
@@ -33,6 +35,7 @@ describe('ConsultationsController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
   };
 
@@ -60,8 +63,12 @@ describe('ConsultationsController (e2e)', () => {
   });
 
   describe(`${apiEndpoint} (GET)`, () => {
+    let query: string;
+
     beforeEach(async () => {
+      sampleConsultation.datetime = new Date().addHours(1);
       await populateDatabase();
+      query = '';
     });
 
     it('should return 200', async () => {
@@ -76,8 +83,30 @@ describe('ConsultationsController (e2e)', () => {
       expect(body.length).toBe(1);
     });
 
+    describe('if "between" query was passed', () => {
+      it('should return all consultations between two dates if query param was passed', async () => {
+        query = `?between[]="${new Date().toUTCString()}"&between[]="${new Date()
+          .addHours(2)
+          .toUTCString()}"`;
+
+        const { body } = await getConsultations();
+
+        expect(body.length).toBe(1);
+      });
+
+      it('should return empty array if there are no consultations between args passed', async () => {
+        query = `?between[]="${new Date()
+          .addHours(3)
+          .toUTCString()}"&between[]="${new Date().addHours(2).toUTCString()}"`;
+
+        const { body } = await getConsultations();
+
+        expect(body.length).toBe(0);
+      });
+    });
+
     const getConsultations = () => {
-      return request(app.getHttpServer()).get(apiEndpoint);
+      return request(app.getHttpServer()).get(apiEndpoint + query);
     };
   });
 
@@ -107,6 +136,72 @@ describe('ConsultationsController (e2e)', () => {
         expect(body.lecturers.length).toBe(1);
         expect(body).toHaveProperty('students');
         expect(body.students.length).toBe(1);
+      });
+    });
+
+    describe('if invalid data was passed', () => {
+      it('should return 400 if date was missing', async () => {
+        delete sampleConsultation.datetime;
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid date was passed', async () => {
+        sampleConsultation.datetime = 'abc';
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if address was missing', async () => {
+        delete sampleConsultation.address;
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if room was missing', async () => {
+        delete sampleConsultation.room;
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if students were missing', async () => {
+        delete sampleConsultation.students;
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid student ids were passed', async () => {
+        sampleConsultation.students = ['1', '2'];
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if lecturers were missing', async () => {
+        delete sampleConsultation.lecturers;
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid lecturer ids were passed', async () => {
+        sampleConsultation.lecturers = ['1', '2'];
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
       });
     });
 
@@ -237,9 +332,73 @@ describe('ConsultationsController (e2e)', () => {
       });
     });
 
-    describe('if invalid id was passed', () => {
-      it('should return 400', async () => {
+    describe('if invalid data was passed', () => {
+      it('should return 400 if invalid id was passed', async () => {
         consultationId = '1';
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if date was missing', async () => {
+        delete consultationDataToUpdate.datetime;
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid date was passed', async () => {
+        consultationDataToUpdate.datetime = 'abc';
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if address was missing', async () => {
+        delete consultationDataToUpdate.address;
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if room was missing', async () => {
+        delete consultationDataToUpdate.room;
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if students were missing', async () => {
+        delete consultationDataToUpdate.students;
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid student ids were passed', async () => {
+        consultationDataToUpdate.students = ['1', '2'];
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if lecturers were missing', async () => {
+        delete consultationDataToUpdate.lecturers;
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid lecturer ids were passed', async () => {
+        consultationDataToUpdate.lecturers = ['1', '2'];
 
         const { status } = await updateConsultation();
 
@@ -337,13 +496,6 @@ describe('ConsultationsController (e2e)', () => {
   const createStudent = () => {
     const student = createSampleStudent();
     return studentRepository.create(student);
-  };
-
-  const getCurrentDate = () => {
-    const today = new Date();
-    const date = `${today.getFullYear()}-${today.getMonth() +
-      1}-${today.getDate()}`;
-    return date;
   };
 
   const populateDatabase = async () => {

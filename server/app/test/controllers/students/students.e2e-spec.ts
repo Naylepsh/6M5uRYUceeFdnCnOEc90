@@ -3,15 +3,16 @@ import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { AppModule } from '../../src/app.module';
-import { StudentRepository } from '../../src/repositories/student.repository';
-import { GroupRepository } from '../../src/repositories/group.repository';
-import { ParentRepository } from '../../src/repositories/parent.repository';
+import { AppModule } from '../../../src/app.module';
+import { StudentRepository } from '../../../src/repositories/student.repository';
+import { GroupRepository } from '../../../src/repositories/group.repository';
+import { ParentRepository } from '../../../src/repositories/parent.repository';
 import {
   createSampleParent,
   createSampleGroup,
   createSampleStudent,
-} from '../helpers/models.helpers';
+} from '../../helpers/models.helpers';
+import { ValidationPipe } from '../../../src/pipes/validation.pipe';
 
 describe('StudentsController (e2e)', () => {
   let app: INestApplication;
@@ -33,6 +34,7 @@ describe('StudentsController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
   };
 
@@ -107,6 +109,56 @@ describe('StudentsController (e2e)', () => {
         expect(body.groups.length).toBe(1);
         expect(body).toHaveProperty('parents');
         expect(body.parents.length).toBe(1);
+      });
+    });
+
+    describe('if invalid data was passed', () => {
+      it('should return 400 if first name was not passed', async () => {
+        delete sampleStudent.firstName;
+
+        const { status } = await createStudent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if last name was not passed', async () => {
+        delete sampleStudent.lastName;
+
+        const { status } = await createStudent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if groups were not passed', async () => {
+        delete sampleStudent.groups;
+
+        const { status } = await createStudent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid group ids were passed', async () => {
+        sampleStudent.groups = ['1', '2'];
+
+        const { status } = await createStudent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if parents were not passed', async () => {
+        delete sampleStudent.parents;
+
+        const { status } = await createStudent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid parent ids were passed', async () => {
+        sampleStudent.parents = ['1', '2'];
+
+        const { status } = await createStudent();
+
+        expect(status).toBe(400);
       });
     });
 
@@ -219,9 +271,57 @@ describe('StudentsController (e2e)', () => {
       });
     });
 
-    describe('if invalid id was passed', () => {
-      it('should return 400', async () => {
+    describe('if invalid data was passed', () => {
+      it('should return 400 if invalid id was passed', async () => {
         studentId = '1';
+
+        const { status } = await updateStudent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if first name was not passed', async () => {
+        delete studentDataToUpdate.firstName;
+
+        const { status } = await updateStudent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if last name was not passed', async () => {
+        delete studentDataToUpdate.lastName;
+
+        const { status } = await updateStudent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if groups were not passed', async () => {
+        delete studentDataToUpdate.groups;
+
+        const { status } = await updateStudent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid group ids were passed', async () => {
+        studentDataToUpdate.groups = ['1', '2'];
+
+        const { status } = await updateStudent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if parents were not passed', async () => {
+        delete studentDataToUpdate.parents;
+
+        const { status } = await updateStudent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if invalid parent ids were passed', async () => {
+        studentDataToUpdate.parents = ['1', '2'];
 
         const { status } = await updateStudent();
 
