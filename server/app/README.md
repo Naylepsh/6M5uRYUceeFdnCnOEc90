@@ -6,7 +6,7 @@
 [travis-url]: https://travis-ci.org/nestjs/nest
 [linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
 [linux-url]: https://travis-ci.org/nestjs/nest
-  
+
   <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
     <p align="center">
 <a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
@@ -72,4 +72,141 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 ## License
 
-  Nest is [MIT licensed](LICENSE).
+Nest is [MIT licensed](LICENSE).
+
+## API
+
+### Lecturers
+
+- lecturers/ (GET)
+- lecturers/ (POST) expects body of following format
+  ```
+  {
+    "firstName": <some-string>,
+    "lastName": <some-string>,
+    "phoneNumber": <some-string-(schema-not-yet-specified)>,
+    "email": <valid-email>,
+    "groups": <array-of-group-ids>
+  }
+  ```
+- lecturers/:`UUIDv4` (GET)
+- lecturers/:`UUIDv4` (PUT)
+  ```
+  {
+    "firstName": <some-string>,
+    "lastName": <some-string>,
+    "phoneNumber": <some-string-(schema-not-yet-specified)>,
+    "email": <valid-email>,
+    "groups": <array-of-group-ids>
+  }
+  ```
+- lecturers/:`UUIDv4` (DELETE)
+
+### Students
+
+- students/ (GET)
+- students/ (POST)
+  ```
+  {
+    "firstName": <some-string>,
+    "lastName": <some-string>,
+    "groups": <array-of-group-ids>,
+    "parents": <array-of-parent-ids>,
+  }
+  ```
+- students/:`UUIDv4` (GET)
+- students/:`UUIDv4` (PUT)
+  ```
+  {
+    "firstName": <some-string>,
+    "lastName": <some-string>,
+    "groups": <array-of-group-ids>,
+    "parents": <array-of-parent-ids>,
+  }
+  ```
+- students/:`UUIDv4` (DELETE)
+
+### Parents
+
+- parents/ (GET)
+- parents/ (POST)
+  ```
+  {
+    "firstName": <some-string>,
+    "lastName": <some-string>,
+    "phoneNumber": <some-string-(schema-not-yet-specified)>,
+    "email": <valid-email>,
+    "children": <array-of-student-ids>
+  }
+  ```
+- parents/:`UUIDv4` (GET)
+- parents/:`UUIDv4` (PUT)
+  ```
+  {
+    "firstName": <some-string>,
+    "lastName": <some-string>,
+    "phoneNumber": <some-string-(schema-not-yet-specified)>,
+    "email": <valid-email>,
+    "children": <array-of-student-ids>
+  }
+  ```
+- parents/:`UUIDv4` (DELETE)
+
+### Groups
+
+- groups/ (GET)
+- groups/ (POST)
+  ```
+  {
+    "day": <some-string-(schema-not-yet-specified)>,
+    "time": "hh:mm",
+    "address": <some-string>,
+    "room": <some-string>,
+    "startDate": "yyyy-mm-dd",
+    "endDate": "yyyy-mm-dd",
+    "lecturers": <array-of-lecturer-ids>,
+    "students": <array-of-student-ids>
+  }
+  ```
+- groups/:`UUIDv4` (GET)
+- groups/:`UUIDv4` (PUT)
+  ```
+  {
+    "day": <some-string-(schema-not-yet-specified)>,
+    "time": "hh:mm",
+    "address": <some-string>,
+    "room": <some-string>,
+    "startDate": "yyyy-mm-dd",
+    "endDate": "yyyy-mm-dd",
+    "lecturers": <array-of-lecturer-ids>,
+    "students": <array-of-student-ids>
+  }
+  ```
+- groups/:`UUIDv4` (DELETE)
+
+### Consultations
+
+- consultations/ (GET)
+  `supports '?between[]=<start-datetime>&between[]=<end-datetime>` query
+- consultations/ (POST)
+  ```
+  {
+    "datetime": <utc-datetime>,
+    "address": <some-string>,
+    "room": <some-string>,
+    "lecturers": <array-of-lecturer-ids>,
+    "students": <array-of-student-ids>
+  }
+  ```
+- consultations/:`UUIDv4` (GET)
+- consultations/:`UUIDv4` (PUT)
+  ```
+  {
+    "datetime": <utc-datetime>,
+    "address": <some-string>,
+    "room": <some-string>,
+    "lecturers": <array-of-lecturer-ids>,
+    "students": <array-of-student-ids>
+  }
+  ```
+- consultations/:`UUIDv4` (DELETE)
