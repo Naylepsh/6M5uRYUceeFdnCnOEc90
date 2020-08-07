@@ -3,7 +3,7 @@ import { ConsultationDto } from '../dtos/consultations/consultation.dto';
 import { SaveConsultationDto } from '../dtos/consultations/save-consultation.dto';
 import { Lecturer } from '../models/lecturer.model';
 import { Student } from '../models/student.model';
-import { Repository } from 'typeorm';
+import { Repository, getConnection } from 'typeorm';
 
 export interface ConsultationPseudoPersistance {
   datetime: Date;
@@ -46,7 +46,7 @@ export class ConsultationMapper {
 
   private static ensureRepoIsInitialized() {
     if (!this.consultationRepository) {
-      this.consultationRepository = new Repository<Consultation>();
+      this.consultationRepository = getConnection().getRepository(Consultation);
     }
   }
 }

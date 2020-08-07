@@ -5,14 +5,16 @@ import controllers from './controllers/';
 import databaseConfiguration from './config/database.configuration';
 import { TasksService } from './services/tasks/task.service';
 import { ConsultationRepository } from './repositories/consultation.repository';
+import { Connection } from 'typeorm';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(databaseConfiguration),
-    TypeOrmModule.forFeature([ConsultationRepository]),
     ScheduleModule.forRoot(),
   ],
   controllers,
   providers: [ConsultationRepository],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private connection: Connection) {}
+}

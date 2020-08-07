@@ -1,17 +1,15 @@
 import { ConsultationDto } from '../dtos/consultations/consultation.dto';
-import { Repository, EntityRepository } from 'typeorm';
+import { Repository, EntityRepository, Connection, Between } from 'typeorm';
 import { Consultation } from '../models/consultation.model';
-import { IRepository } from './repository.interface';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 @EntityRepository(Consultation)
-export class ConsultationRepository implements IRepository<Consultation> {
-  constructor(
-    @InjectRepository(Consultation)
-    private readonly repository: Repository<Consultation>,
-  ) {}
+export class ConsultationRepository {
+  repository: Repository<Consultation>;
+  constructor(connection: Connection) {
+    this.repository = connection.getRepository(Consultation);
+  }
 
   async findAll(): Promise<Consultation[]> {
     const consultations = await this.repository.find({
@@ -19,34 +17,17 @@ export class ConsultationRepository implements IRepository<Consultation> {
     });
 
     return consultations;
-    // return consultations.map(consultation =>
-    //   ConsultationMapper.toDto(
-    //     consultation,
-    //     consultation.lecturers,
-    //     consultation.students,
-    //   ),
-    // );
   }
 
   async findAllBetween(
     startDatetime: string,
     endDatetime: string,
   ): Promise<ConsultationDto[]> {
-    // const consultations = await getConnection()
-    //   .createQueryBuilder()
-    //   .select('consultation')
-    //   .from(Consultation, 'consultation')
-    //   .where('consultation.datetime BETWEEN :startDatetime AND :endDatetime', {
-    //     startDatetime,
-    //     endDatetime,
-    //   })
-    //   .leftJoinAndSelect('consultation.lecturers', 'lecturers')
-    //   .leftJoinAndSelect('consultation.students', 'students')
-    //   .leftJoinAndSelect('students.parents', 'parents')
-    //   .getMany();
-
-    // return consultations;
-    return [];
+    return this.repository.find({
+      where: {
+        datetime: Between(startDatetime, endDatetime),
+      },
+    });
   }
 
   async findById(id: string): Promise<Consultation> {
@@ -58,15 +39,19 @@ export class ConsultationRepository implements IRepository<Consultation> {
     return consultation;
   }
 
-  async create(consultation: Consultation): Promise<Consultation> {
+  async createConsultation(consultation: Consultation): Promise<Consultation> {
     return this.repository.save(consultation);
   }
 
-  async update(consultation: Consultation): Promise<void> {
-    await this.repository.update(consultation.id, consultation);
+  async updateConsultation(consultation: Consultation): Promise<void> {
+    const { id } = consultation;
+    delete consultation.id;
+    delete consultation.lecturers;
+    delete consultation.students;
+    await this.repository.update(id, consultation);
   }
 
-  async delete(id: string): Promise<void> {
+  async deleteConsultation(id: string): Promise<void> {
     await this.repository.delete(id);
   }
 }

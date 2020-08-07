@@ -490,7 +490,7 @@ describe('ConsultationsController (e2e)', () => {
   };
 
   const populateDatabase = async () => {
-    const consultation = await consultationRepository.create(
+    const consultation = await consultationRepository.createConsultation(
       sampleConsultation,
     );
     consultationId = consultation.id;

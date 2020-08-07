@@ -46,12 +46,13 @@ export class ConsultationNotifier {
     let res: IConsultation[];
 
     try {
-      const repo = new ConsultationRepository(new Repository<Consultation>());
+      // const repo = new ConsultationRepository();
 
-      res = await repo.findAllBetween(
-        timeFrame.startDatetime.toISOString(),
-        timeFrame.endDatetime.toISOString(),
-      );
+      // res = await repo.findAllBetween(
+      //   timeFrame.startDatetime.toISOString(),
+      //   timeFrame.endDatetime.toISOString(),
+      // );
+      res = [];
     } catch (err) {
       res = [];
     } finally {
