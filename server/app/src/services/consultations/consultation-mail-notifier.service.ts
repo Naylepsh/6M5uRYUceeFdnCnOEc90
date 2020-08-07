@@ -57,9 +57,9 @@ export class ConsultationNotifier {
     }
   }
 
-  private sendNotifications(upcommingConsultations: any): void {
+  private sendNotifications(upcomingConsultations: any): void {
     const notificationsSentInCurrentRound = new Map();
-    for (const consultation of upcommingConsultations) {
+    for (const consultation of upcomingConsultations) {
       for (const student of consultation.students) {
         const key = consultation.id + student.id;
         if (!this.notificationsSentInPreviousRound.has(key))
