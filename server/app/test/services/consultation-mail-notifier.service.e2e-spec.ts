@@ -13,7 +13,7 @@ import { getConnection } from 'typeorm';
 import { ConsultationNotifier } from '../../src/services/consultations/consultation-mail-notifier.service';
 import getAccount from '../../src/config/mail.account.configuration';
 import { EmailService } from '../../src/services/email/email.service';
-import { TimeInverval } from '../../src/services/consultations/consultation-mail-notifier.interfaces';
+import { ITimeInverval } from '../../src/services/consultations/consultation-mail-notifier.interfaces';
 import '../../src/utils/extensions/date.extentions';
 
 interface Entity {
@@ -27,7 +27,7 @@ describe('Consultation Notifier', () => {
   let consultationRepository: ConsultationRepository;
   let emailService: EmailService;
   let notifier: ConsultationNotifier;
-  const timeInterval: TimeInverval = {
+  const timeInterval: ITimeInverval = {
     shouldStartAfterMinutes: 60,
     shouldEndBeforeMinutes: 90,
   };
