@@ -45,7 +45,7 @@ describe('ConsultationNotifier', () => {
     };
     notifier = new ConsultationNotifier(emailService, timeInterval);
     jest
-      .spyOn(notifier, 'getUpcommingConsultations')
+      .spyOn(notifier, 'getUpcomingConsultations')
       .mockImplementation(() => consultations);
   };
 

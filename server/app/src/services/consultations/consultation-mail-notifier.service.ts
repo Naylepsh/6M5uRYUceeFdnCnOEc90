@@ -19,7 +19,7 @@ export class ConsultationNotifier {
 
   public async notifyParentsAboutTheirChildrenConsultations(): Promise<void> {
     const timeFrame = this.createTimeFrame();
-    const upcommingConsultations = await this.getUpcommingConsultations(
+    const upcommingConsultations = await this.getUpcomingConsultations(
       timeFrame,
     );
     this.sendNotifications(upcommingConsultations);
@@ -38,7 +38,7 @@ export class ConsultationNotifier {
   }
 
   // has to be set to public as otherwise it won't be mockable with jest
-  public async getUpcommingConsultations(
+  public async getUpcomingConsultations(
     timeFrame: ITimeFrame,
   ): Promise<IConsultation[]> {
     let res: IConsultation[];
