@@ -32,7 +32,9 @@ describe('ConsultationsController (e2e)', () => {
   const loadRepositories = () => {
     lecturerRepository = new LecturerRepository();
     studentRepository = new StudentRepository();
-    consultationRepository = new ConsultationRepository();
+    consultationRepository = app.get<ConsultationRepository>(
+      ConsultationRepository,
+    );
   };
 
   beforeEach(async () => {
