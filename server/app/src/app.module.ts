@@ -13,6 +13,6 @@ import { ConsultationRepository } from './repositories/consultation.repository';
     ScheduleModule.forRoot(),
   ],
   controllers,
-  providers: [ConsultationRepository, TasksService],
+  providers: [ConsultationRepository],
 })
 export class AppModule {}

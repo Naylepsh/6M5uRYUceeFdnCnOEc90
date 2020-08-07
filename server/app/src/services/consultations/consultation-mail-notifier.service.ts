@@ -8,6 +8,8 @@ import {
 } from './consultation-mail-notifier.interfaces';
 import { ConsultationRepository } from '../../repositories/consultation.repository';
 import '../../utils/extensions/date.extentions';
+import { Repository } from 'typeorm';
+import { Consultation } from '../../models/consultation.model';
 
 export class ConsultationNotifier {
   notificationsSentInPreviousRound = new Map();
@@ -44,7 +46,7 @@ export class ConsultationNotifier {
     let res: IConsultation[];
 
     try {
-      const repo = new ConsultationRepository();
+      const repo = new ConsultationRepository(new Repository<Consultation>());
 
       res = await repo.findAllBetween(
         timeFrame.startDatetime.toISOString(),

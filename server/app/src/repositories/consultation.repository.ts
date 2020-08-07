@@ -1,11 +1,12 @@
 import { ConsultationDto } from '../dtos/consultations/consultation.dto';
-import { Repository } from 'typeorm';
+import { Repository, EntityRepository } from 'typeorm';
 import { Consultation } from '../models/consultation.model';
 import { IRepository } from './repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
+@EntityRepository(Consultation)
 export class ConsultationRepository implements IRepository<Consultation> {
   constructor(
     @InjectRepository(Consultation)
