@@ -1,10 +1,10 @@
 import { EmailService } from '../email/email.service';
 import {
-  TimeInverval,
-  TimeFrame,
-  Consultation,
-  Parent,
-  Student,
+  ITimeInverval,
+  ITimeFrame,
+  IConsultation,
+  IParent,
+  IStudent,
 } from './consultation-mail-notifier.interfaces';
 import { ConsultationRepository } from '../../repositories/consultation.repository';
 import '../../utils/extensions/date.extentions';
@@ -14,18 +14,18 @@ export class ConsultationNotifier {
 
   constructor(
     private readonly emailService: EmailService,
-    private readonly timeIntervalInMinutes: TimeInverval,
+    private readonly timeIntervalInMinutes: ITimeInverval,
   ) {}
 
   public async notifyParentsAboutTheirChildrenConsultations(): Promise<void> {
     const timeFrame = this.createTimeFrame();
-    const upcommingConsultations = await this.getUpcommingConsultations(
+    const upcommingConsultations = await this.getUpcomingConsultations(
       timeFrame,
     );
     this.sendNotifications(upcommingConsultations);
   }
 
-  private createTimeFrame(): TimeFrame {
+  private createTimeFrame(): ITimeFrame {
     const now = new Date();
     return {
       startDatetime: new Date(now).addMinutes(
@@ -38,17 +38,28 @@ export class ConsultationNotifier {
   }
 
   // has to be set to public as otherwise it won't be mockable with jest
-  public async getUpcommingConsultations(timeFrame: TimeFrame): Promise<any> {
-    const repo = new ConsultationRepository();
-    return repo.findAllBetween(
-      timeFrame.startDatetime.toISOString(),
-      timeFrame.endDatetime.toISOString(),
-    );
+  public async getUpcomingConsultations(
+    timeFrame: ITimeFrame,
+  ): Promise<IConsultation[]> {
+    let res: IConsultation[];
+
+    try {
+      const repo = new ConsultationRepository();
+
+      res = await repo.findAllBetween(
+        timeFrame.startDatetime.toISOString(),
+        timeFrame.endDatetime.toISOString(),
+      );
+    } catch (err) {
+      res = [];
+    } finally {
+      return res;
+    }
   }
 
-  private sendNotifications(upcommingConsultations: any): void {
+  private sendNotifications(upcomingConsultations: IConsultation[]): void {
     const notificationsSentInCurrentRound = new Map();
-    for (const consultation of upcommingConsultations) {
+    for (const consultation of upcomingConsultations) {
       for (const student of consultation.students) {
         const key = consultation.id + student.id;
         if (!this.notificationsSentInPreviousRound.has(key))
@@ -60,9 +71,9 @@ export class ConsultationNotifier {
   }
 
   private sendMail(
-    consultation: Consultation,
-    student: Student,
-    parents: Parent[],
+    consultation: IConsultation,
+    student: IStudent,
+    parents: IParent[],
   ) {
     const sender = 'logity consultation reminder service';
     const recipents = parents.map(parent => parent.email);
