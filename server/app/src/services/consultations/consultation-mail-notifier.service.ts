@@ -8,7 +8,7 @@ import {
 } from './consultation-mail-notifier.interfaces';
 import { ConsultationRepository } from '../../repositories/consultation.repository';
 import '../../utils/extensions/date.extentions';
-import { Repository } from 'typeorm';
+import { Repository, getConnection } from 'typeorm';
 import { Consultation } from '../../models/consultation.model';
 
 export class ConsultationNotifier {
@@ -46,12 +46,13 @@ export class ConsultationNotifier {
     let res: IConsultation[];
 
     try {
-      // const repo = new ConsultationRepository();
+      const connection = getConnection();
+      const repo = new ConsultationRepository(connection);
 
-      // res = await repo.findAllBetween(
-      //   timeFrame.startDatetime.toISOString(),
-      //   timeFrame.endDatetime.toISOString(),
-      // );
+      res = await repo.findAllBetween(
+        timeFrame.startDatetime.toISOString(),
+        timeFrame.endDatetime.toISOString(),
+      );
       res = [];
     } catch (err) {
       res = [];
