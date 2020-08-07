@@ -11,11 +11,13 @@ export interface ITimeInverval {
 export interface IConsultation {
   id: string;
   datetime: Date;
+  students: IStudent[];
 }
 
 export interface IStudent {
   id: string;
   firstName: string;
+  parents: IParent[];
 }
 
 export interface IParent {
