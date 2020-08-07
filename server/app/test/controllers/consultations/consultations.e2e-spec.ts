@@ -1,9 +1,6 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
-import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { AppModule } from '../../../src/app.module';
 import { LecturerRepository } from '../../../src/repositories/lecturer.repository';
 import { ConsultationRepository } from '../../../src/repositories/consultation.repository';
 import { StudentRepository } from '../../../src/repositories/student.repository';
@@ -13,31 +10,24 @@ import {
 } from '../../helpers/models.helpers';
 import { expectDatetimesToBeTheSame } from '../../helpers/date.helper';
 import '../../../src/utils/extensions/date.extentions';
-import { ValidationPipe } from '../../../src/pipes/validation.pipe';
+import { createTestApp } from '../../helpers/app.helper';
+import { DatabaseUtility } from '../../helpers/database.helper';
 
 describe('ConsultationsController (e2e)', () => {
-  let app: INestApplication;
   const apiEndpoint = '/consultations';
+  let app: INestApplication;
   let lecturerRepository: LecturerRepository;
   let studentRepository: StudentRepository;
   let consultationRepository: ConsultationRepository;
   let sampleConsultation;
   let consultationId: string;
+  let databaseUtility: DatabaseUtility;
 
   beforeAll(async () => {
-    await loadApp();
+    app = await createTestApp();
     loadRepositories();
+    databaseUtility = await DatabaseUtility.init();
   });
-
-  const loadApp = async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe());
-    await app.init();
-  };
 
   const loadRepositories = () => {
     lecturerRepository = new LecturerRepository();
@@ -46,16 +36,15 @@ describe('ConsultationsController (e2e)', () => {
   };
 
   beforeEach(async () => {
-    await cleanDatabase();
     loadSampleConsultation();
+  });
+
+  afterEach(async () => {
+    await databaseUtility.cleanDatabase();
   });
 
   const loadSampleConsultation = () => {
     sampleConsultation = createSampleConsultation();
-  };
-
-  const cleanDatabase = () => {
-    return getConnection().synchronize(true);
   };
 
   afterAll(async () => {

@@ -1,9 +1,6 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
-import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { AppModule } from '../../../src/app.module';
 import { StudentRepository } from '../../../src/repositories/student.repository';
 import { GroupRepository } from '../../../src/repositories/group.repository';
 import { ParentRepository } from '../../../src/repositories/parent.repository';
@@ -12,7 +9,8 @@ import {
   createSampleGroup,
   createSampleStudent,
 } from '../../helpers/models.helpers';
-import { ValidationPipe } from '../../../src/pipes/validation.pipe';
+import { createTestApp } from '../../helpers/app.helper';
+import { DatabaseUtility } from './../../helpers/database.helper';
 
 describe('StudentsController (e2e)', () => {
   let app: INestApplication;
@@ -22,21 +20,13 @@ describe('StudentsController (e2e)', () => {
   let parentRepository: ParentRepository;
   let sampleStudent;
   let studentId: string;
+  let databaseUtility: DatabaseUtility;
 
   beforeAll(async () => {
-    await loadApp();
+    app = await createTestApp();
     loadRepositories();
+    databaseUtility = await DatabaseUtility.init();
   });
-
-  const loadApp = async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe());
-    await app.init();
-  };
 
   const loadRepositories = () => {
     studentRepository = new StudentRepository();
@@ -44,17 +34,16 @@ describe('StudentsController (e2e)', () => {
     parentRepository = new ParentRepository();
   };
 
-  beforeEach(async () => {
-    await cleanDatabase();
+  beforeEach(() => {
     loadSampleStudent();
+  });
+
+  afterEach(async () => {
+    await databaseUtility.cleanDatabase();
   });
 
   const loadSampleStudent = () => {
     sampleStudent = createSampleStudent();
-  };
-
-  const cleanDatabase = () => {
-    return getConnection().synchronize(true);
   };
 
   afterAll(async () => {

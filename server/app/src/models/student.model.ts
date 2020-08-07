@@ -20,17 +20,22 @@ export class Student {
   @Column()
   lastName: string;
 
-  @ManyToMany(type => Group)
-  @JoinTable()
+  @ManyToMany(
+    () => Group,
+    group => group.students,
+  )
   groups: Group[];
 
   @ManyToMany(
-    type => Parent,
+    () => Parent,
     parent => parent.children,
   )
   @JoinTable()
   parents: Parent[];
 
-  @ManyToMany(type => Consultation)
+  @ManyToMany(
+    () => Consultation,
+    consultation => consultation.students,
+  )
   consultations: Consultation[];
 }

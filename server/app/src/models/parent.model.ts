@@ -19,7 +19,7 @@ export class Parent {
   email: string;
 
   @ManyToMany(
-    type => Student,
+    () => Student,
     student => student.parents,
   )
   children: Student[];
