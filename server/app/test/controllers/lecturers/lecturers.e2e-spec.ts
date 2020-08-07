@@ -1,6 +1,5 @@
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
-import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { LecturerRepository } from '../../../src/repositories/lecturer.repository';
 import { GroupRepository } from '../../../src/repositories/group.repository';
@@ -9,6 +8,7 @@ import {
   createSampleGroup,
 } from '../../helpers/models.helpers';
 import { createTestApp } from '../../helpers/app.helper';
+import { DatabaseUtility } from '../../helpers/database.helper';
 
 describe('LecturersController (e2e)', () => {
   let app: INestApplication;
@@ -17,10 +17,12 @@ describe('LecturersController (e2e)', () => {
   let groupRepository: GroupRepository;
   let sampleLecturer;
   let lecturerId: string;
+  let databaseUtility: DatabaseUtility;
 
   beforeAll(async () => {
     app = await createTestApp();
     loadRepositories();
+    databaseUtility = await DatabaseUtility.init();
   });
 
   const loadRepositories = () => {
@@ -28,17 +30,16 @@ describe('LecturersController (e2e)', () => {
     groupRepository = new GroupRepository();
   };
 
-  beforeEach(async () => {
-    await cleanDatabase();
+  beforeEach(() => {
     loadSampleLecturer();
+  });
+
+  afterEach(async () => {
+    await databaseUtility.cleanDatabase();
   });
 
   const loadSampleLecturer = () => {
     sampleLecturer = createSampleLecturer();
-  };
-
-  const cleanDatabase = () => {
-    return getConnection().synchronize(true);
   };
 
   afterAll(async () => {

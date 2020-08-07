@@ -1,6 +1,5 @@
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
-import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { LecturerRepository } from '../../../src/repositories/lecturer.repository';
 import { ConsultationRepository } from '../../../src/repositories/consultation.repository';
@@ -12,19 +11,22 @@ import {
 import { expectDatetimesToBeTheSame } from '../../helpers/date.helper';
 import '../../../src/utils/extensions/date.extentions';
 import { createTestApp } from '../../helpers/app.helper';
+import { DatabaseUtility } from '../../helpers/database.helper';
 
 describe('ConsultationsController (e2e)', () => {
-  let app: INestApplication;
   const apiEndpoint = '/consultations';
+  let app: INestApplication;
   let lecturerRepository: LecturerRepository;
   let studentRepository: StudentRepository;
   let consultationRepository: ConsultationRepository;
   let sampleConsultation;
   let consultationId: string;
+  let databaseUtility: DatabaseUtility;
 
   beforeAll(async () => {
     app = await createTestApp();
     loadRepositories();
+    databaseUtility = await DatabaseUtility.init();
   });
 
   const loadRepositories = () => {
@@ -34,16 +36,15 @@ describe('ConsultationsController (e2e)', () => {
   };
 
   beforeEach(async () => {
-    await cleanDatabase();
     loadSampleConsultation();
+  });
+
+  afterEach(async () => {
+    await databaseUtility.cleanDatabase();
   });
 
   const loadSampleConsultation = () => {
     sampleConsultation = createSampleConsultation();
-  };
-
-  const cleanDatabase = () => {
-    return getConnection().synchronize(true);
   };
 
   afterAll(async () => {

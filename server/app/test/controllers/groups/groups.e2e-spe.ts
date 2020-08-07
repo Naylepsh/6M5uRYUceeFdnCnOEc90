@@ -1,6 +1,5 @@
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
-import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { LecturerRepository } from '../../../src/repositories/lecturer.repository';
 import { GroupRepository } from '../../../src/repositories/group.repository';
@@ -8,6 +7,7 @@ import { StudentRepository } from '../../../src/repositories/student.repository'
 import { expectDatesToBeTheSame } from '../../helpers/date.helper';
 import { createSampleGroup } from '../../helpers/models.helpers';
 import { createTestApp } from '../../helpers/app.helper';
+import { DatabaseUtility } from '../../helpers/database.helper';
 
 describe('GroupsController (e2e)', () => {
   let app: INestApplication;
@@ -17,10 +17,12 @@ describe('GroupsController (e2e)', () => {
   let groupRepository: GroupRepository;
   let sampleGroup;
   let groupId: string;
+  let databaseUtility: DatabaseUtility;
 
   beforeAll(async () => {
     app = await createTestApp();
     loadRepositories();
+    databaseUtility = await DatabaseUtility.init();
   });
 
   const loadRepositories = () => {
@@ -29,17 +31,16 @@ describe('GroupsController (e2e)', () => {
     groupRepository = new GroupRepository();
   };
 
-  beforeEach(async () => {
-    await cleanDatabase();
+  beforeEach(() => {
     loadSampleGroup();
+  });
+
+  afterEach(async () => {
+    databaseUtility.cleanDatabase();
   });
 
   const loadSampleGroup = () => {
     sampleGroup = createSampleGroup();
-  };
-
-  const cleanDatabase = () => {
-    return getConnection().synchronize(true);
   };
 
   afterAll(async () => {
