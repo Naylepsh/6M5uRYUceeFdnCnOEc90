@@ -44,7 +44,7 @@ describe('ConsultationNotifier', () => {
       shouldEndBeforeMinutes: 20,
     };
     const appUrl = 'mocked-url.com';
-    notifier = new ConsultationNotifier(emailService, timeInterval, appUrl);
+    notifier = new ConsultationNotifier(emailService, timeInterval);
     jest
       .spyOn(notifier, 'getUpcommingConsultations')
       .mockImplementation(() => consultations);
