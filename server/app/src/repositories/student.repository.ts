@@ -40,9 +40,7 @@ export class StudentRepository {
   }
 
   async update(student: Student): Promise<void> {
-    const { id } = student;
-    delete student.id;
-    await this.repository.update(id, student);
+    await this.repository.save(student);
   }
 
   async delete(id: string): Promise<void> {

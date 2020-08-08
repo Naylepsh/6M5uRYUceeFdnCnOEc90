@@ -15,15 +15,24 @@ import { IdParams } from './id.params';
 import { Connection } from 'typeorm';
 import { StudentMapper } from '../mappers/student.mapper';
 import { Student } from './../models/student.model';
+import { ParentRepository } from '../repositories/parent.repository';
+import { GroupRepository } from '../repositories/group.repository';
+import { ConsultationRepository } from '../repositories/consultation.repository';
 
 const apiEndpoint = '/students';
 
 @Controller()
 export class StudentsController {
   studentRepository: StudentRepository;
+  parentRepository: ParentRepository;
+  groupRepository: GroupRepository;
+  consultationRepository: ConsultationRepository;
 
   constructor(private readonly connection: Connection) {
     this.studentRepository = new StudentRepository(connection);
+    this.parentRepository = new ParentRepository(connection);
+    this.groupRepository = new GroupRepository(connection);
+    this.consultationRepository = new ConsultationRepository(connection);
   }
 
   @Get(apiEndpoint)
@@ -41,7 +50,19 @@ export class StudentsController {
 
   @Post(apiEndpoint)
   async create(@Body() saveStudentDto: SaveStudentDto): Promise<StudentDto> {
-    const student = StudentMapper.toPersistance(saveStudentDto);
+    const parents = await this.parentRepository.findByIds(
+      saveStudentDto.parents,
+    );
+    const groups = await this.groupRepository.findByIds(saveStudentDto.groups);
+    const consultations = await this.consultationRepository.findByIds(
+      saveStudentDto.consultations,
+    );
+    const student = StudentMapper.toPersistance(
+      saveStudentDto,
+      parents,
+      groups,
+      consultations,
+    );
     const res = await this.studentRepository.create(student);
     return StudentMapper.toDto(res);
   }
@@ -49,11 +70,23 @@ export class StudentsController {
   @Put(`${apiEndpoint}/:id`)
   async update(
     @Param() idParams: IdParams,
-    @Body() createStudentDto: SaveStudentDto,
+    @Body() saveStudentDto: SaveStudentDto,
   ): Promise<void> {
     const { id } = idParams;
     await this.ensureStudentExistence(id);
-    const student = StudentMapper.toPersistance(createStudentDto);
+    const parents = await this.parentRepository.findByIds(
+      saveStudentDto.parents,
+    );
+    const groups = await this.groupRepository.findByIds(saveStudentDto.groups);
+    const consultations = await this.consultationRepository.findByIds(
+      saveStudentDto.consultations,
+    );
+    const student = StudentMapper.toPersistance(
+      saveStudentDto,
+      parents,
+      groups,
+      consultations,
+    );
     return this.studentRepository.update({ ...student, id });
   }
 

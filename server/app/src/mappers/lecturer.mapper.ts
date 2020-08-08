@@ -7,6 +7,7 @@ import { Consultation } from '../models/consultation.model';
 
 export class LecturerMapper {
   private static lecturerRepository: Repository<Lecturer>;
+
   public static toPersistance(
     createLecturerDto: SaveLecturerDto,
     groups: Group[],

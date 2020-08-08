@@ -2,8 +2,6 @@ import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { v4 as uuidv4 } from 'uuid';
 import { StudentRepository } from '../../../src/repositories/student.repository';
-import { GroupRepository } from '../../../src/repositories/group.repository';
-import { ParentRepository } from '../../../src/repositories/parent.repository';
 import {
   createSampleParent,
   createSampleGroup,
@@ -11,13 +9,12 @@ import {
 } from '../../helpers/models.helpers';
 import { createTestApp } from '../../helpers/app.helper';
 import { DatabaseUtility } from '../../helpers/database.helper';
+import { getConnection } from 'typeorm';
 
 describe('StudentsController (e2e)', () => {
   let app: INestApplication;
   const apiEndpoint = '/students';
   let studentRepository: StudentRepository;
-  let groupRepository: GroupRepository;
-  let parentRepository: ParentRepository;
   let sampleStudent;
   let studentId: string;
   let databaseUtility: DatabaseUtility;
@@ -29,9 +26,7 @@ describe('StudentsController (e2e)', () => {
   });
 
   const loadRepositories = () => {
-    studentRepository = new StudentRepository();
-    groupRepository = new GroupRepository();
-    parentRepository = new ParentRepository();
+    studentRepository = new StudentRepository(getConnection());
   };
 
   beforeEach(() => {
@@ -341,7 +336,7 @@ describe('StudentsController (e2e)', () => {
         await deleteStudent();
 
         const student = await studentRepository.findById(studentId);
-        expect(student).toBeNull();
+        expect(student).toBeUndefined();
       });
 
       it('should remove only the student from database', async () => {
@@ -391,14 +386,20 @@ describe('StudentsController (e2e)', () => {
     return request(app.getHttpServer()).get(`${apiEndpoint}/${studentId}`);
   };
 
-  const createGroup = () => {
+  const createGroup = async () => {
     const group = createSampleGroup();
-    return groupRepository.create(group);
+    const { body } = await request(app.getHttpServer())
+      .post('/groups')
+      .send(group);
+    return body;
   };
 
-  const createParent = () => {
+  const createParent = async () => {
     const parent = createSampleParent();
-    return parentRepository.create(parent);
+    const { body } = await request(app.getHttpServer())
+      .post('/parents')
+      .send(parent);
+    return body;
   };
 
   const populateDatabase = async () => {
