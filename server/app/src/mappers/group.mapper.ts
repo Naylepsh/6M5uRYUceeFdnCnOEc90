@@ -2,12 +2,19 @@ import { Group } from '../models/group.model';
 import { GroupDto } from '../dtos/groups/group.dto';
 import { SaveGroupDto } from '../dtos/groups/save-group.dto';
 import { Repository, getConnection } from 'typeorm';
+import { Lecturer } from '../models/lecturer.model';
+import { Student } from '../models/student.model';
 
 export class GroupMapper {
   static groupRepository: Repository<Group>;
 
-  public static toPersistance(createGroupDto: SaveGroupDto): Group {
+  public static toPersistance(
+    createGroupDto: SaveGroupDto,
+    lecturers: Lecturer[],
+    students: Student[],
+  ): Group {
     this.ensureRepoIsInitialized();
+
     const { day, time, address, room, startDate, endDate } = createGroupDto;
     const obj = {
       day,
@@ -16,6 +23,8 @@ export class GroupMapper {
       room,
       startDate,
       endDate,
+      lecturers,
+      students,
     };
     return this.groupRepository.create(obj);
   }

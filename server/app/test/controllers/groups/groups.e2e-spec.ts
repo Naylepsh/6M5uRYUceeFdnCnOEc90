@@ -10,6 +10,7 @@ import {
 } from '../../helpers/models.helpers';
 import { createTestApp } from '../../helpers/app.helper';
 import { DatabaseUtility } from '../../helpers/database.helper';
+import { getConnection } from 'typeorm';
 
 describe('GroupsController (e2e)', () => {
   let app: INestApplication;
@@ -26,7 +27,7 @@ describe('GroupsController (e2e)', () => {
   });
 
   const loadRepositories = () => {
-    groupRepository = new GroupRepository();
+    groupRepository = new GroupRepository(getConnection());
   };
 
   beforeEach(() => {
@@ -34,7 +35,7 @@ describe('GroupsController (e2e)', () => {
   });
 
   afterEach(async () => {
-    databaseUtility.cleanDatabase();
+    await databaseUtility.cleanDatabase();
   });
 
   const loadSampleGroup = () => {
@@ -411,7 +412,7 @@ describe('GroupsController (e2e)', () => {
         await deleteGroup();
 
         const group = await groupRepository.findById(groupId);
-        expect(group).toBeNull();
+        expect(group).toBeUndefined();
       });
 
       it('should remove only the group from database', async () => {
