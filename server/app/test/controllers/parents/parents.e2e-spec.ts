@@ -2,19 +2,18 @@ import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { v4 as uuidv4 } from 'uuid';
 import { ParentRepository } from '../../../src/repositories/parent.repository';
-import { StudentRepository } from '../../../src/repositories/student.repository';
 import {
   createSampleStudent,
   createSampleParent,
 } from '../../helpers/models.helpers';
 import { createTestApp } from '../../helpers/app.helper';
 import { DatabaseUtility } from '../../helpers/database.helper';
+import { getConnection } from 'typeorm';
 
 describe('ParentsController (e2e)', () => {
   let app: INestApplication;
   const apiEndpoint = '/parents';
   let parentRepository: ParentRepository;
-  let studentRepository: StudentRepository;
   let sampleParent;
   let parentId: string;
   let databaseUtility: DatabaseUtility;
@@ -26,8 +25,7 @@ describe('ParentsController (e2e)', () => {
   });
 
   const loadRepositories = () => {
-    parentRepository = new ParentRepository();
-    studentRepository = new StudentRepository();
+    parentRepository = new ParentRepository(getConnection());
   };
 
   beforeEach(() => {
@@ -362,7 +360,7 @@ describe('ParentsController (e2e)', () => {
         await deleteParent();
 
         const parent = await parentRepository.findById(parentId);
-        expect(parent).toBeNull();
+        expect(parent).toBeUndefined();
       });
 
       it('should remove only the parent from database', async () => {
@@ -410,9 +408,12 @@ describe('ParentsController (e2e)', () => {
     return request(app.getHttpServer()).get(`${apiEndpoint}/${parentId}`);
   };
 
-  const createStudent = () => {
+  const createStudent = async () => {
     const student = createSampleStudent();
-    return studentRepository.create(student);
+    const { body } = await request(app.getHttpServer())
+      .post('/students')
+      .send(student);
+    return body;
   };
 
   const populateDatabase = async () => {
