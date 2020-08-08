@@ -28,6 +28,7 @@ export class ConsultationRepository {
       where: {
         datetime: Between(startDatetime, endDatetime),
       },
+      relations: ['lecturers', 'students', 'students.parents'],
     });
   }
 

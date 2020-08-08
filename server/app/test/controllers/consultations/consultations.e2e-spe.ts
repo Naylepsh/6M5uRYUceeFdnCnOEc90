@@ -115,7 +115,6 @@ describe('ConsultationsController (e2e)', () => {
         const student = await createStudent();
         sampleConsultation.lecturers = [lecturer.id];
         sampleConsultation.students = [student.id];
-        console.log(sampleConsultation);
 
         const { body } = await createConsultation();
 

@@ -11,9 +11,9 @@ export class StudentMapper {
 
   public static toPersistance(
     saveStudentDto: SaveStudentDto,
-    parents: Parent[],
-    groups: Group[],
-    consultations: Consultation[],
+    parents: Parent[] = [],
+    groups: Group[] = [],
+    consultations: Consultation[] = [],
   ): Student {
     this.ensureRepoIsInitialized();
 

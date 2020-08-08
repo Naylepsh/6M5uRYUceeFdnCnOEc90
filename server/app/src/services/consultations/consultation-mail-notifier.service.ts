@@ -8,11 +8,11 @@ import {
 } from './consultation-mail-notifier.interfaces';
 import { ConsultationRepository } from '../../repositories/consultation.repository';
 import '../../utils/extensions/date.extentions';
-import { Repository, getConnection } from 'typeorm';
-import { Consultation } from '../../models/consultation.model';
+import { getConnection } from 'typeorm';
 
 export class ConsultationNotifier {
   notificationsSentInPreviousRound = new Map();
+  notificationsSentInCurrentRound = new Map();
 
   constructor(
     private readonly emailService: EmailService,
@@ -49,11 +49,11 @@ export class ConsultationNotifier {
       const connection = getConnection();
       const repo = new ConsultationRepository(connection);
 
+      // some dirty mumbo jumbo with dates cause without it database has problem comparing the dates?!
       res = await repo.findAllBetween(
-        timeFrame.startDatetime.toISOString(),
-        timeFrame.endDatetime.toISOString(),
+        new Date(timeFrame.startDatetime.toUTCString()).toISOString(),
+        new Date(timeFrame.endDatetime.toUTCString()).toISOString(),
       );
-      res = [];
     } catch (err) {
       res = [];
     } finally {
@@ -62,16 +62,29 @@ export class ConsultationNotifier {
   }
 
   private sendNotifications(upcomingConsultations: IConsultation[]): void {
-    const notificationsSentInCurrentRound = new Map();
     for (const consultation of upcomingConsultations) {
+      if (!consultation.students) break;
       for (const student of consultation.students) {
-        const key = consultation.id + student.id;
-        if (!this.notificationsSentInPreviousRound.has(key))
+        const key = this.createKey(consultation, student);
+        if (this.isEligableForNotification(student, key))
           this.sendMail(consultation, student, student.parents);
-        notificationsSentInCurrentRound.set(key, true);
+        this.notificationsSentInCurrentRound.set(key, true);
       }
     }
-    this.notificationsSentInPreviousRound = notificationsSentInCurrentRound;
+    this.notificationsSentInPreviousRound = this.notificationsSentInCurrentRound;
+    this.notificationsSentInCurrentRound = new Map();
+  }
+
+  private createKey(consultation: IConsultation, student: IStudent): string {
+    return consultation.id + student.id;
+  }
+
+  private isEligableForNotification(student: IStudent, key: string) {
+    return (
+      !this.notificationsSentInPreviousRound.has(key) &&
+      student.parents &&
+      student.parents.length > 0
+    );
   }
 
   private sendMail(

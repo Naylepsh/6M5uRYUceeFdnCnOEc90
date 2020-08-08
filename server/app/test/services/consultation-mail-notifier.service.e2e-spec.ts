@@ -1,22 +1,18 @@
 import { INestApplication } from '@nestjs/common';
 import { TestingModule, Test } from '@nestjs/testing';
 import { AppModule } from '../../src/app.module';
-import { ParentRepository } from '../../src/repositories/parent.repository';
-import { StudentRepository } from '../../src/repositories/student.repository';
-import { ConsultationRepository } from '../../src/repositories/consultation.repository';
 import {
   createSampleConsultation,
   createSampleParent,
   createSampleStudent,
 } from '../helpers/models.helpers';
-import { getConnection } from 'typeorm';
 import { ConsultationNotifier } from '../../src/services/consultations/consultation-mail-notifier.service';
 import getAccount from '../../src/config/mail.account.configuration';
 import { EmailService } from '../../src/services/email/email.service';
 import { ITimeInverval } from '../../src/services/consultations/consultation-mail-notifier.interfaces';
 import '../../src/utils/extensions/date.extentions';
-import { ConsultationMapper } from '../../src/mappers/consultation.mapper';
-import { StudentMapper } from '../../src/mappers/student.mapper';
+import { DatabaseUtility } from './../helpers/database.helper';
+import * as request from 'supertest';
 
 interface Entity {
   id: string;
@@ -24,19 +20,17 @@ interface Entity {
 
 describe('Consultation Notifier', () => {
   let app: INestApplication;
-  let parentRepository: ParentRepository;
-  let studentRepository: StudentRepository;
-  let consultationRepository: ConsultationRepository;
   let emailService: EmailService;
   let notifier: ConsultationNotifier;
   const timeInterval: ITimeInverval = {
-    shouldStartAfterMinutes: 60,
-    shouldEndBeforeMinutes: 90,
+    shouldStartAfterMinutes: 0,
+    shouldEndBeforeMinutes: 900,
   };
+  let databaseUtility: DatabaseUtility;
 
   beforeAll(async () => {
     await loadApp();
-    loadRepositories();
+    databaseUtility = await DatabaseUtility.init();
     await loadNotifier();
   });
 
@@ -49,12 +43,6 @@ describe('Consultation Notifier', () => {
     await app.init();
   };
 
-  const loadRepositories = () => {
-    parentRepository = new ParentRepository();
-    studentRepository = new StudentRepository(getConnection());
-    consultationRepository = new ConsultationRepository(getConnection());
-  };
-
   const loadNotifier = async () => {
     const account = await getAccount();
     emailService = new EmailService(account);
@@ -63,7 +51,7 @@ describe('Consultation Notifier', () => {
   };
 
   beforeEach(async () => {
-    populateDatabase();
+    await populateDatabase();
   });
 
   const populateDatabase = async () => {
@@ -72,19 +60,24 @@ describe('Consultation Notifier', () => {
     await createConsultation([student.id]);
   };
 
-  const createParent = (): Promise<Entity> => {
+  const createParent = async (): Promise<Entity> => {
     const parent = createSampleParent();
-    return parentRepository.create(parent);
+    const { body } = await request(app.getHttpServer())
+      .post('/parents')
+      .send(parent);
+    return body;
   };
 
-  const createStudent = (parentIds: string[]): Promise<Entity> => {
+  const createStudent = async (parentIds: string[]): Promise<Entity> => {
     const student = createSampleStudent();
     student.parents = parentIds;
-    const st = StudentMapper.toPersistance(student);
-    return studentRepository.create(st);
+    const { body } = await request(app.getHttpServer())
+      .post('/students')
+      .send(student);
+    return body;
   };
 
-  const createConsultation = (studentIds: string[]): Promise<Entity> => {
+  const createConsultation = async (studentIds: string[]): Promise<Entity> => {
     const consultation = createSampleConsultation();
     consultation.datetime = new Date(
       new Date()
@@ -93,17 +86,15 @@ describe('Consultation Notifier', () => {
         .toUTCString(),
     );
     consultation.students = studentIds;
-    const cons = ConsultationMapper.toPersistance(consultation);
-    return consultationRepository.createConsultation(cons);
+    const { body } = await request(app.getHttpServer())
+      .post('/consultations')
+      .send(consultation);
+    return body;
   };
 
   afterEach(async () => {
-    await cleanDatabase();
+    await databaseUtility.cleanDatabase();
   });
-
-  const cleanDatabase = () => {
-    return getConnection().synchronize(true);
-  };
 
   afterAll(async () => {
     await app.close();

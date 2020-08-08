@@ -408,7 +408,6 @@ describe('GroupsController (e2e)', () => {
       });
 
       it('should remove group from database', async () => {
-        console.log('groupId', groupId);
         await deleteGroup();
 
         const group = await groupRepository.findById(groupId);

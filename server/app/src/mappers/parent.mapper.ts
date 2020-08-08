@@ -2,7 +2,6 @@ import { SaveParentDto } from '../dtos/parents/save-parent.dto';
 import { Parent } from '../models/parent.model';
 import { ParentDto } from '../dtos/parents/parent.dto';
 import { Student } from '../models/student.model';
-import { StudentMapper } from './student.mapper';
 import { Repository, getConnection } from 'typeorm';
 
 export class ParentMapper {
@@ -10,7 +9,7 @@ export class ParentMapper {
 
   public static toPersistance(
     saveParentDto: SaveParentDto,
-    children: Student[],
+    children: Student[] = [],
   ): Parent {
     this.ensureRepoIsInitialized();
 
