@@ -16,14 +16,17 @@ import { IdParams } from './id.params';
 import { ConsultationMapper } from '../mappers/consultation.mapper';
 import { Consultation } from '../models/consultation.model';
 import { Connection } from 'typeorm';
+import { LecturerRepository } from '../repositories/lecturer.repository';
 
 const apiEndpoint = '/consultations';
 
 @Controller()
 export class ConsultationsController {
   consultationRepository: ConsultationRepository;
+  lecturerRepository: LecturerRepository;
   constructor(private readonly connection: Connection) {
     this.consultationRepository = new ConsultationRepository(connection);
+    this.lecturerRepository = new LecturerRepository(connection);
   }
 
   @Get(apiEndpoint)
@@ -54,8 +57,12 @@ export class ConsultationsController {
   async create(
     @Body() createConsultationDto: SaveConsultationDto,
   ): Promise<ConsultationDto> {
+    const lecturers = await this.lecturerRepository.findByIds(
+      createConsultationDto.lecturers,
+    );
     const consultation = ConsultationMapper.toPersistance(
       createConsultationDto,
+      lecturers,
     );
     const res = await this.consultationRepository.createConsultation(
       consultation,

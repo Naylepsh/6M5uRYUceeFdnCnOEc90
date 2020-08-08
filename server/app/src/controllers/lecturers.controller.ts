@@ -12,33 +12,37 @@ import { LecturerRepository } from '../repositories/lecturer.repository';
 import { LecturerDto } from '../dtos/lecturers/lecturer.dto';
 import { SaveLecturerDto } from '../dtos/lecturers/save-lecturer.dto';
 import { IdParams } from './id.params';
+import { Connection } from 'typeorm';
+import { LecturerMapper } from '../mappers/lecturer.mapper';
+import { Lecturer } from '../models/lecturer.model';
 
 const apiEndpoint = '/lecturers';
 
 @Controller()
 export class LecturersController {
   lecturerRepository: LecturerRepository;
-  constructor() {
-    this.lecturerRepository = new LecturerRepository();
+  constructor(private readonly connection: Connection) {
+    this.lecturerRepository = new LecturerRepository(connection);
   }
 
   @Get(apiEndpoint)
   async findAll(): Promise<LecturerDto[]> {
     const lecturers = await this.lecturerRepository.findAll();
-    return lecturers;
+    return lecturers.map(LecturerMapper.toDto);
   }
 
   @Get(`${apiEndpoint}/:id`)
   async findById(@Param() idParams: IdParams): Promise<LecturerDto> {
     const { id } = idParams;
     const lecturer = await this.ensureLecturerExistence(id);
-    return lecturer;
+    return LecturerMapper.toDto(lecturer);
   }
 
   @Post(apiEndpoint)
   async create(@Body() saveLecturerDto: SaveLecturerDto): Promise<LecturerDto> {
-    const lecturer = await this.lecturerRepository.create(saveLecturerDto);
-    return lecturer;
+    const lecturer = LecturerMapper.toPersistance(saveLecturerDto);
+    const res = await this.lecturerRepository.create(lecturer);
+    return res;
   }
 
   @Put(`${apiEndpoint}/:id`)
@@ -48,7 +52,8 @@ export class LecturersController {
   ): Promise<void> {
     const { id } = idParams;
     await this.ensureLecturerExistence(id);
-    return this.lecturerRepository.update({ ...createLecturerDto, id });
+    const lecturer = LecturerMapper.toPersistance(createLecturerDto);
+    return this.lecturerRepository.update({ ...lecturer, id });
   }
 
   @Delete(`${apiEndpoint}/:id`)
@@ -58,7 +63,7 @@ export class LecturersController {
     return this.lecturerRepository.delete(id);
   }
 
-  private async ensureLecturerExistence(id: string): Promise<LecturerDto> {
+  private async ensureLecturerExistence(id: string): Promise<Lecturer> {
     const lecturer = await this.lecturerRepository.findById(id);
     if (!lecturer) {
       throw new NotFoundException();

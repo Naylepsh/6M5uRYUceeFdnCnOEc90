@@ -10,7 +10,7 @@ import {
   createSampleStudent,
 } from '../../helpers/models.helpers';
 import { createTestApp } from '../../helpers/app.helper';
-import { DatabaseUtility } from './../../helpers/database.helper';
+import { DatabaseUtility } from '../../helpers/database.helper';
 
 describe('StudentsController (e2e)', () => {
   let app: INestApplication;

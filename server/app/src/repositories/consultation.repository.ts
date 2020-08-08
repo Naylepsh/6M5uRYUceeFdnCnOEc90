@@ -6,13 +6,14 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 @EntityRepository(Consultation)
 export class ConsultationRepository {
-  repository: Repository<Consultation>;
+  consultationRepository: Repository<Consultation>;
+
   constructor(connection: Connection) {
-    this.repository = connection.getRepository(Consultation);
+    this.consultationRepository = connection.getRepository(Consultation);
   }
 
   async findAll(): Promise<Consultation[]> {
-    const consultations = await this.repository.find({
+    const consultations = await this.consultationRepository.find({
       relations: ['lecturers', 'students', 'students.parents'],
     });
 
@@ -23,7 +24,7 @@ export class ConsultationRepository {
     startDatetime: string,
     endDatetime: string,
   ): Promise<ConsultationDto[]> {
-    return this.repository.find({
+    return this.consultationRepository.find({
       where: {
         datetime: Between(startDatetime, endDatetime),
       },
@@ -31,7 +32,7 @@ export class ConsultationRepository {
   }
 
   async findById(id: string): Promise<Consultation> {
-    const consultation = await this.repository.findOne({
+    const consultation = await this.consultationRepository.findOne({
       where: { id },
       relations: ['lecturers', 'students', 'students.parents'],
     });
@@ -40,7 +41,7 @@ export class ConsultationRepository {
   }
 
   async createConsultation(consultation: Consultation): Promise<Consultation> {
-    return this.repository.save(consultation);
+    return this.consultationRepository.save(consultation);
   }
 
   async updateConsultation(consultation: Consultation): Promise<void> {
@@ -48,10 +49,10 @@ export class ConsultationRepository {
     delete consultation.id;
     delete consultation.lecturers;
     delete consultation.students;
-    await this.repository.update(id, consultation);
+    await this.consultationRepository.update(id, consultation);
   }
 
   async deleteConsultation(id: string): Promise<void> {
-    await this.repository.delete(id);
+    await this.consultationRepository.delete(id);
   }
 }

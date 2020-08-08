@@ -1,12 +1,12 @@
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { v4 as uuidv4 } from 'uuid';
-import { LecturerRepository } from '../../../src/repositories/lecturer.repository';
 import { ConsultationRepository } from '../../../src/repositories/consultation.repository';
 import { StudentRepository } from '../../../src/repositories/student.repository';
 import {
   createSampleStudent,
   createSampleConsultation,
+  createSampleLecturer,
 } from '../../helpers/models.helpers';
 import { expectDatetimesToBeTheSame } from '../../helpers/date.helper';
 import '../../../src/utils/extensions/date.extentions';
@@ -16,7 +16,6 @@ import { DatabaseUtility } from '../../helpers/database.helper';
 describe('ConsultationsController (e2e)', () => {
   const apiEndpoint = '/consultations';
   let app: INestApplication;
-  let lecturerRepository: LecturerRepository;
   let studentRepository: StudentRepository;
   let consultationRepository: ConsultationRepository;
   let sampleConsultation;
@@ -30,7 +29,6 @@ describe('ConsultationsController (e2e)', () => {
   });
 
   const loadRepositories = () => {
-    lecturerRepository = new LecturerRepository();
     studentRepository = new StudentRepository();
     consultationRepository = app.get<ConsultationRepository>(
       ConsultationRepository,
@@ -120,6 +118,7 @@ describe('ConsultationsController (e2e)', () => {
         const student = await createStudent();
         sampleConsultation.lecturers = [lecturer.id];
         sampleConsultation.students = [student.id];
+        console.log(sampleConsultation);
 
         const { body } = await createConsultation();
 
@@ -419,8 +418,10 @@ describe('ConsultationsController (e2e)', () => {
       it('should remove consultation from database', async () => {
         await deleteConsultation();
 
-        const lecturer = await lecturerRepository.findById(consultationId);
-        expect(lecturer).toBeNull();
+        const consultation = await consultationRepository.findById(
+          consultationId,
+        );
+        expect(consultation).toBeUndefined();
       });
 
       it('should remove only the consultation from database', async () => {
@@ -472,16 +473,12 @@ describe('ConsultationsController (e2e)', () => {
     return request(app.getHttpServer()).get(`${apiEndpoint}/${consultationId}`);
   };
 
-  const createLecturer = () => {
-    const lecturer = {
-      firstName: 'john',
-      lastName: 'doe',
-      email: 'example@mail.com',
-      phoneNumber: '123456789',
-      consultations: [],
-      groups: [],
-    };
-    return lecturerRepository.create(lecturer);
+  const createLecturer = async () => {
+    const lecturer = createSampleLecturer();
+    const { body } = await request(app.getHttpServer())
+      .post('/lecturers')
+      .send(lecturer);
+    return body;
   };
 
   const createStudent = () => {

@@ -15,6 +15,7 @@ import getAccount from '../../src/config/mail.account.configuration';
 import { EmailService } from '../../src/services/email/email.service';
 import { ITimeInverval } from '../../src/services/consultations/consultation-mail-notifier.interfaces';
 import '../../src/utils/extensions/date.extentions';
+import { ConsultationMapper } from '../../src/mappers/consultation.mapper';
 
 interface Entity {
   id: string;
@@ -50,7 +51,7 @@ describe('Consultation Notifier', () => {
   const loadRepositories = () => {
     parentRepository = new ParentRepository();
     studentRepository = new StudentRepository();
-    consultationRepository = new ConsultationRepository();
+    consultationRepository = new ConsultationRepository(getConnection());
   };
 
   const loadNotifier = async () => {
@@ -90,7 +91,8 @@ describe('Consultation Notifier', () => {
         .toUTCString(),
     );
     consultation.students = studentIds;
-    return consultationRepository.create(consultation);
+    const cons = ConsultationMapper.toPersistance(consultation);
+    return consultationRepository.createConsultation(cons);
   };
 
   afterEach(async () => {

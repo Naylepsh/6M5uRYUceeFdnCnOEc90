@@ -9,6 +9,7 @@ import {
 } from '../../helpers/models.helpers';
 import { createTestApp } from '../../helpers/app.helper';
 import { DatabaseUtility } from '../../helpers/database.helper';
+import { getConnection } from 'typeorm';
 
 describe('LecturersController (e2e)', () => {
   let app: INestApplication;
@@ -26,7 +27,7 @@ describe('LecturersController (e2e)', () => {
   });
 
   const loadRepositories = () => {
-    lecturerRepository = new LecturerRepository();
+    lecturerRepository = new LecturerRepository(getConnection());
     groupRepository = new GroupRepository();
   };
 
@@ -364,7 +365,7 @@ describe('LecturersController (e2e)', () => {
         await deleteLecturer();
 
         const lecturer = await lecturerRepository.findById(lecturerId);
-        expect(lecturer).toBeNull();
+        expect(lecturer).toBeUndefined();
       });
 
       it('should remove only the lecturer from database', async () => {

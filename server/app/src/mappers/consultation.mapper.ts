@@ -1,23 +1,15 @@
 import { Consultation } from '../models/consultation.model';
 import { ConsultationDto } from '../dtos/consultations/consultation.dto';
 import { SaveConsultationDto } from '../dtos/consultations/save-consultation.dto';
-import { Lecturer } from '../models/lecturer.model';
-import { Student } from '../models/student.model';
 import { Repository, getConnection } from 'typeorm';
-
-export interface ConsultationPseudoPersistance {
-  datetime: Date;
-  address: string;
-  room: string;
-  lecturers: Lecturer[];
-  students: Student[];
-}
+import { Lecturer } from '../models/lecturer.model';
 
 export class ConsultationMapper {
   static consultationRepository: Repository<Consultation>;
 
   public static toPersistance(
     createConsultationDto: SaveConsultationDto,
+    lecturers: Lecturer[] = [],
   ): Consultation {
     this.ensureRepoIsInitialized();
 
@@ -26,9 +18,11 @@ export class ConsultationMapper {
       datetime,
       address,
       room,
-      lecturers: [],
-      students: [],
+      lecturers,
     };
+    if (!lecturers) {
+      delete obj.lecturers;
+    }
     return this.consultationRepository.create(obj);
   }
 
