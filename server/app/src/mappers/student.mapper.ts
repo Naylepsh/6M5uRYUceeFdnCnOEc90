@@ -1,36 +1,30 @@
 import { SaveStudentDto } from '../dtos/students/save-student.dto';
 import { Student } from '../models/student.model';
 import { StudentDto } from '../dtos/students/student.dto';
-import { Group } from '../models/group.model';
-import { GroupMapper } from './group.mapper';
-import { Parent } from '../models/parent.model';
-import { ParentMapper } from './parent.mapper';
-
-export interface StudentPseudoPersistance {
-  id?: string;
-  firstName: string;
-  lastName: string;
-}
+import { Repository, getConnection } from 'typeorm';
 
 export class StudentMapper {
-  public static toPersistance(
-    saveStudentDto: SaveStudentDto,
-  ): StudentPseudoPersistance {
+  static studentRepository: Repository<Student>;
+
+  public static toPersistance(saveStudentDto: SaveStudentDto): Student {
+    this.ensureRepoIsInitialized();
+
     const { firstName, lastName } = saveStudentDto;
-    return {
+    const obj = {
       firstName,
       lastName,
     };
+    return this.studentRepository.create(obj);
   }
 
-  public static toDto(
-    student: Student,
-    groups: Group[] = [],
-    parents: Parent[] = [],
-  ): StudentDto {
-    const { id, firstName, lastName } = student;
-    const groupDtos = groups.map(group => GroupMapper.toDto(group));
-    const parentDtos = parents.map(parent => ParentMapper.toDto(parent));
-    return { id, firstName, lastName, groups: groupDtos, parents: parentDtos };
+  public static toDto(student: Student): StudentDto {
+    const { id, firstName, lastName, groups, parents } = student;
+    return { id, firstName, lastName, groups, parents };
+  }
+
+  private static ensureRepoIsInitialized() {
+    if (!this.studentRepository) {
+      this.studentRepository = getConnection().getRepository(Student);
+    }
   }
 }

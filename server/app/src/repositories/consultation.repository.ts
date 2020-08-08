@@ -45,11 +45,7 @@ export class ConsultationRepository {
   }
 
   async updateConsultation(consultation: Consultation): Promise<void> {
-    const { id } = consultation;
-    delete consultation.id;
-    delete consultation.lecturers;
-    delete consultation.students;
-    await this.consultationRepository.update(id, consultation);
+    await this.consultationRepository.save(consultation);
   }
 
   async deleteConsultation(id: string): Promise<void> {

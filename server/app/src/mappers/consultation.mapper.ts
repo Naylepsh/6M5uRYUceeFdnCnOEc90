@@ -3,6 +3,7 @@ import { ConsultationDto } from '../dtos/consultations/consultation.dto';
 import { SaveConsultationDto } from '../dtos/consultations/save-consultation.dto';
 import { Repository, getConnection } from 'typeorm';
 import { Lecturer } from '../models/lecturer.model';
+import { Student } from '../models/student.model';
 
 export class ConsultationMapper {
   static consultationRepository: Repository<Consultation>;
@@ -10,6 +11,7 @@ export class ConsultationMapper {
   public static toPersistance(
     createConsultationDto: SaveConsultationDto,
     lecturers: Lecturer[] = [],
+    students: Student[] = [],
   ): Consultation {
     this.ensureRepoIsInitialized();
 
@@ -19,6 +21,7 @@ export class ConsultationMapper {
       address,
       room,
       lecturers,
+      students,
     };
     if (!lecturers) {
       delete obj.lecturers;

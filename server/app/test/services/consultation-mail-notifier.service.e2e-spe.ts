@@ -16,6 +16,7 @@ import { EmailService } from '../../src/services/email/email.service';
 import { ITimeInverval } from '../../src/services/consultations/consultation-mail-notifier.interfaces';
 import '../../src/utils/extensions/date.extentions';
 import { ConsultationMapper } from '../../src/mappers/consultation.mapper';
+import { StudentMapper } from '../../src/mappers/student.mapper';
 
 interface Entity {
   id: string;
@@ -50,7 +51,7 @@ describe('Consultation Notifier', () => {
 
   const loadRepositories = () => {
     parentRepository = new ParentRepository();
-    studentRepository = new StudentRepository();
+    studentRepository = new StudentRepository(getConnection());
     consultationRepository = new ConsultationRepository(getConnection());
   };
 
@@ -79,7 +80,8 @@ describe('Consultation Notifier', () => {
   const createStudent = (parentIds: string[]): Promise<Entity> => {
     const student = createSampleStudent();
     student.parents = parentIds;
-    return studentRepository.create(student);
+    const st = StudentMapper.toPersistance(student);
+    return studentRepository.create(st);
   };
 
   const createConsultation = (studentIds: string[]): Promise<Entity> => {

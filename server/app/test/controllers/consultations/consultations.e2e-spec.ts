@@ -2,7 +2,6 @@ import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { v4 as uuidv4 } from 'uuid';
 import { ConsultationRepository } from '../../../src/repositories/consultation.repository';
-import { StudentRepository } from '../../../src/repositories/student.repository';
 import {
   createSampleStudent,
   createSampleConsultation,
@@ -16,7 +15,6 @@ import { DatabaseUtility } from '../../helpers/database.helper';
 describe('ConsultationsController (e2e)', () => {
   const apiEndpoint = '/consultations';
   let app: INestApplication;
-  let studentRepository: StudentRepository;
   let consultationRepository: ConsultationRepository;
   let sampleConsultation;
   let consultationId: string;
@@ -29,7 +27,6 @@ describe('ConsultationsController (e2e)', () => {
   });
 
   const loadRepositories = () => {
-    studentRepository = new StudentRepository();
     consultationRepository = app.get<ConsultationRepository>(
       ConsultationRepository,
     );
@@ -481,9 +478,12 @@ describe('ConsultationsController (e2e)', () => {
     return body;
   };
 
-  const createStudent = () => {
+  const createStudent = async () => {
     const student = createSampleStudent();
-    return studentRepository.create(student);
+    const { body } = await request(app.getHttpServer())
+      .post('/students')
+      .send(student);
+    return body;
   };
 
   const populateDatabase = async () => {

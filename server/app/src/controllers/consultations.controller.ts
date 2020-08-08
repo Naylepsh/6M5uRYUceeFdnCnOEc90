@@ -17,6 +17,7 @@ import { ConsultationMapper } from '../mappers/consultation.mapper';
 import { Consultation } from '../models/consultation.model';
 import { Connection } from 'typeorm';
 import { LecturerRepository } from '../repositories/lecturer.repository';
+import { StudentRepository } from '../repositories/student.repository';
 
 const apiEndpoint = '/consultations';
 
@@ -24,9 +25,12 @@ const apiEndpoint = '/consultations';
 export class ConsultationsController {
   consultationRepository: ConsultationRepository;
   lecturerRepository: LecturerRepository;
+  studentRepository: StudentRepository;
+
   constructor(private readonly connection: Connection) {
     this.consultationRepository = new ConsultationRepository(connection);
     this.lecturerRepository = new LecturerRepository(connection);
+    this.studentRepository = new StudentRepository(connection);
   }
 
   @Get(apiEndpoint)
@@ -60,14 +64,18 @@ export class ConsultationsController {
     const lecturers = await this.lecturerRepository.findByIds(
       createConsultationDto.lecturers,
     );
+    const students = await this.studentRepository.findByIds(
+      createConsultationDto.students,
+    );
     const consultation = ConsultationMapper.toPersistance(
       createConsultationDto,
       lecturers,
+      students,
     );
     const res = await this.consultationRepository.createConsultation(
       consultation,
     );
-    return res;
+    return ConsultationMapper.toDto(res);
   }
 
   @Put(`${apiEndpoint}/:id`)
@@ -76,10 +84,18 @@ export class ConsultationsController {
     @Body() createConsultationDto: SaveConsultationDto,
   ): Promise<void> {
     await this.ensureConsultationExistence(idParams.id);
+    const lecturers = await this.lecturerRepository.findByIds(
+      createConsultationDto.lecturers,
+    );
+    const students = await this.studentRepository.findByIds(
+      createConsultationDto.students,
+    );
     const consultation = ConsultationMapper.toPersistance(
       createConsultationDto,
+      lecturers,
+      students,
     );
-    return this.consultationRepository.updateConsultation({
+    await this.consultationRepository.updateConsultation({
       ...consultation,
       id: idParams.id,
     });
