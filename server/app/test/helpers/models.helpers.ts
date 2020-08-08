@@ -6,6 +6,7 @@ interface IStudent {
   lastName: string;
   groups: string[];
   parents: string[];
+  consultations: string[];
 }
 
 interface IParent {
@@ -33,6 +34,7 @@ interface ILecturer {
   phoneNumber: string;
   email: string;
   groups: string[];
+  consultations: string[];
 }
 
 interface IConsultation {
@@ -49,6 +51,7 @@ export function createSampleStudent(): IStudent {
     lastName: faker.name.lastName(),
     groups: [],
     parents: [],
+    consultations: [],
   };
 }
 
@@ -85,6 +88,7 @@ export function createSampleLecturer(): ILecturer {
     phoneNumber: faker.phone.phoneNumber(),
     email: faker.internet.email(),
     groups: [],
+    consultations: [],
   };
 }
 

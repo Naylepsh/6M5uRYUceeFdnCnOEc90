@@ -2,19 +2,18 @@ import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { v4 as uuidv4 } from 'uuid';
 import { LecturerRepository } from '../../../src/repositories/lecturer.repository';
-import { GroupRepository } from '../../../src/repositories/group.repository';
 import {
   createSampleLecturer,
   createSampleGroup,
 } from '../../helpers/models.helpers';
 import { createTestApp } from '../../helpers/app.helper';
 import { DatabaseUtility } from '../../helpers/database.helper';
+import { getConnection } from 'typeorm';
 
 describe('LecturersController (e2e)', () => {
   let app: INestApplication;
   const apiEndpoint = '/lecturers';
   let lecturerRepository: LecturerRepository;
-  let groupRepository: GroupRepository;
   let sampleLecturer;
   let lecturerId: string;
   let databaseUtility: DatabaseUtility;
@@ -26,8 +25,7 @@ describe('LecturersController (e2e)', () => {
   });
 
   const loadRepositories = () => {
-    lecturerRepository = new LecturerRepository();
-    groupRepository = new GroupRepository();
+    lecturerRepository = new LecturerRepository(getConnection());
   };
 
   beforeEach(() => {
@@ -364,7 +362,7 @@ describe('LecturersController (e2e)', () => {
         await deleteLecturer();
 
         const lecturer = await lecturerRepository.findById(lecturerId);
-        expect(lecturer).toBeNull();
+        expect(lecturer).toBeUndefined();
       });
 
       it('should remove only the lecturer from database', async () => {
@@ -416,9 +414,12 @@ describe('LecturersController (e2e)', () => {
     return request(app.getHttpServer()).get(`${apiEndpoint}/${lecturerId}`);
   };
 
-  const createGroup = () => {
+  const createGroup = async () => {
     const group = createSampleGroup();
-    return groupRepository.create(group);
+    const { body } = await request(app.getHttpServer())
+      .post('/groups')
+      .send(group);
+    return body;
   };
 
   const populateDatabase = async () => {

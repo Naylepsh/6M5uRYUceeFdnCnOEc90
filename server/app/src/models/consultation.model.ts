@@ -26,6 +26,7 @@ export class Consultation {
   @ManyToMany(
     () => Lecturer,
     lecturer => lecturer.consultations,
+    { cascade: true },
   )
   @JoinTable()
   lecturers: Lecturer[];
@@ -33,6 +34,7 @@ export class Consultation {
   @ManyToMany(
     () => Student,
     student => student.consultations,
+    { cascade: true },
   )
   @JoinTable()
   students: Student[];
