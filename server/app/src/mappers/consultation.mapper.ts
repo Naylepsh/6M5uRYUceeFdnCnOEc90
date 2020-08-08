@@ -23,9 +23,6 @@ export class ConsultationMapper {
       lecturers,
       students,
     };
-    if (!lecturers) {
-      delete obj.lecturers;
-    }
     return this.consultationRepository.create(obj);
   }
 

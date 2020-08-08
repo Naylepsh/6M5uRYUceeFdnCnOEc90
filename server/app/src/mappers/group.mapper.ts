@@ -1,26 +1,15 @@
 import { Group } from '../models/group.model';
-import { Lecturer } from '../models/lecturer.model';
 import { GroupDto } from '../dtos/groups/group.dto';
-import { LecturerMapper } from './lecturer.mapper';
 import { SaveGroupDto } from '../dtos/groups/save-group.dto';
-import { Student } from '../models/student.model';
-import { StudentMapper } from './student.mapper';
-
-export interface GroupPseudoPersistance {
-  day: string;
-  time: string;
-  address: string;
-  room: string;
-  startDate: string;
-  endDate: string;
-}
+import { Repository, getConnection } from 'typeorm';
 
 export class GroupMapper {
-  public static toPersistance(
-    createGroupDto: SaveGroupDto,
-  ): GroupPseudoPersistance {
+  static groupRepository: Repository<Group>;
+
+  public static toPersistance(createGroupDto: SaveGroupDto): Group {
+    this.ensureRepoIsInitialized();
     const { day, time, address, room, startDate, endDate } = createGroupDto;
-    return {
+    const obj = {
       day,
       time,
       address,
@@ -28,28 +17,37 @@ export class GroupMapper {
       startDate,
       endDate,
     };
+    return this.groupRepository.create(obj);
   }
 
-  public static toDto(
-    group: Group,
-    lecturers: Lecturer[] = [],
-    students: Student[] = [],
-  ): GroupDto {
-    const { id, day, time, address, room, startDate, endDate } = group;
-    const lecturerDtos = lecturers.map(lecturer =>
-      LecturerMapper.toDto(lecturer),
-    );
-    const studentDtos = students.map(student => StudentMapper.toDto(student));
+  public static toDto(group: Group): GroupDto {
+    const {
+      id,
+      day,
+      time,
+      address,
+      room,
+      startDate,
+      endDate,
+      lecturers,
+      students,
+    } = group;
     return {
       id,
       day,
       time,
       address,
       room,
-      startDate: startDate,
-      endDate: endDate,
-      lecturers: lecturerDtos,
-      students: studentDtos,
+      startDate,
+      endDate,
+      lecturers,
+      students,
     };
+  }
+
+  private static ensureRepoIsInitialized() {
+    if (!this.groupRepository) {
+      this.groupRepository = getConnection().getRepository(Group);
+    }
   }
 }

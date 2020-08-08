@@ -15,14 +15,21 @@ import { IdParams } from './id.params';
 import { Connection } from 'typeorm';
 import { LecturerMapper } from '../mappers/lecturer.mapper';
 import { Lecturer } from '../models/lecturer.model';
+import { GroupRepository } from '../repositories/group.repository';
+import { ConsultationRepository } from '../repositories/consultation.repository';
 
 const apiEndpoint = '/lecturers';
 
 @Controller()
 export class LecturersController {
   lecturerRepository: LecturerRepository;
+  groupRepository: GroupRepository;
+  consultationRepository: ConsultationRepository;
+
   constructor(private readonly connection: Connection) {
     this.lecturerRepository = new LecturerRepository(connection);
+    this.groupRepository = new GroupRepository(connection);
+    this.consultationRepository = new ConsultationRepository(connection);
   }
 
   @Get(apiEndpoint)
@@ -40,7 +47,15 @@ export class LecturersController {
 
   @Post(apiEndpoint)
   async create(@Body() saveLecturerDto: SaveLecturerDto): Promise<LecturerDto> {
-    const lecturer = LecturerMapper.toPersistance(saveLecturerDto);
+    const groups = await this.groupRepository.findByIds(saveLecturerDto.groups);
+    const consultations = await this.consultationRepository.findByIds(
+      saveLecturerDto.consultations,
+    );
+    const lecturer = LecturerMapper.toPersistance(
+      saveLecturerDto,
+      groups,
+      consultations,
+    );
     const res = await this.lecturerRepository.create(lecturer);
     return res;
   }
@@ -48,11 +63,19 @@ export class LecturersController {
   @Put(`${apiEndpoint}/:id`)
   async update(
     @Param() idParams: IdParams,
-    @Body() createLecturerDto: SaveLecturerDto,
+    @Body() saveLecturerDto: SaveLecturerDto,
   ): Promise<void> {
     const { id } = idParams;
     await this.ensureLecturerExistence(id);
-    const lecturer = LecturerMapper.toPersistance(createLecturerDto);
+    const groups = await this.groupRepository.findByIds(saveLecturerDto.groups);
+    const consultations = await this.consultationRepository.findByIds(
+      saveLecturerDto.consultations,
+    );
+    const lecturer = LecturerMapper.toPersistance(
+      saveLecturerDto,
+      groups,
+      consultations,
+    );
     return this.lecturerRepository.update({ ...lecturer, id });
   }
 

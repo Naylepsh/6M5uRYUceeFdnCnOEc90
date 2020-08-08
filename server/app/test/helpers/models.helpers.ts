@@ -34,6 +34,7 @@ interface ILecturer {
   phoneNumber: string;
   email: string;
   groups: string[];
+  consultations: string[];
 }
 
 interface IConsultation {
@@ -87,6 +88,7 @@ export function createSampleLecturer(): ILecturer {
     phoneNumber: faker.phone.phoneNumber(),
     email: faker.internet.email(),
     groups: [],
+    consultations: [],
   };
 }
 

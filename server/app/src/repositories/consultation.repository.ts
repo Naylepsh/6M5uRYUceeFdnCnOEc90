@@ -40,6 +40,15 @@ export class ConsultationRepository {
     return consultation;
   }
 
+  async findByIds(ids: string[]): Promise<Consultation[]> {
+    if (ids.length == 0) return [];
+    const consultations = await this.consultationRepository
+      .createQueryBuilder()
+      .where('id IN (:...ids)', { ids })
+      .getMany();
+    return consultations;
+  }
+
   async createConsultation(consultation: Consultation): Promise<Consultation> {
     return this.consultationRepository.save(consultation);
   }

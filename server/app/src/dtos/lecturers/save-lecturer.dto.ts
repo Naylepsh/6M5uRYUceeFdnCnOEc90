@@ -19,4 +19,7 @@ export class SaveLecturerDto {
 
   @IsUUID('4', { each: true })
   groups: string[];
+
+  @IsUUID('4', { each: true })
+  consultations: string[];
 }

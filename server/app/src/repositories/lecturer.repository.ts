@@ -39,9 +39,7 @@ export class LecturerRepository {
   }
 
   async update(lecturer: Lecturer): Promise<void> {
-    const { id } = lecturer;
-    delete lecturer.id;
-    await this.repository.update(id, lecturer);
+    await this.repository.save(lecturer);
   }
 
   async delete(id: string): Promise<void> {

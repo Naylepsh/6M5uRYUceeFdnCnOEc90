@@ -2,7 +2,6 @@ import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { v4 as uuidv4 } from 'uuid';
 import { LecturerRepository } from '../../../src/repositories/lecturer.repository';
-import { GroupRepository } from '../../../src/repositories/group.repository';
 import {
   createSampleLecturer,
   createSampleGroup,
@@ -15,7 +14,6 @@ describe('LecturersController (e2e)', () => {
   let app: INestApplication;
   const apiEndpoint = '/lecturers';
   let lecturerRepository: LecturerRepository;
-  let groupRepository: GroupRepository;
   let sampleLecturer;
   let lecturerId: string;
   let databaseUtility: DatabaseUtility;
@@ -28,7 +26,6 @@ describe('LecturersController (e2e)', () => {
 
   const loadRepositories = () => {
     lecturerRepository = new LecturerRepository(getConnection());
-    groupRepository = new GroupRepository();
   };
 
   beforeEach(() => {
@@ -417,9 +414,12 @@ describe('LecturersController (e2e)', () => {
     return request(app.getHttpServer()).get(`${apiEndpoint}/${lecturerId}`);
   };
 
-  const createGroup = () => {
+  const createGroup = async () => {
     const group = createSampleGroup();
-    return groupRepository.create(group);
+    const { body } = await request(app.getHttpServer())
+      .post('/groups')
+      .send(group);
+    return body;
   };
 
   const populateDatabase = async () => {
