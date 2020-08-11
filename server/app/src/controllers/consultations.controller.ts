@@ -18,18 +18,18 @@ import { Consultation } from '../models/consultation.model';
 import { Connection } from 'typeorm';
 import { LecturerRepository } from '../repositories/lecturer.repository';
 import { StudentRepository } from '../repositories/student.repository';
+import { LecturersByIdsPipe } from '../pipes/lecturers-by-ids.pipe';
+import { Lecturer } from '../models/lecturer.model';
 
 const apiEndpoint = '/consultations';
 
 @Controller()
 export class ConsultationsController {
   consultationRepository: ConsultationRepository;
-  lecturerRepository: LecturerRepository;
   studentRepository: StudentRepository;
 
   constructor(private readonly connection: Connection) {
     this.consultationRepository = new ConsultationRepository(connection);
-    this.lecturerRepository = new LecturerRepository(connection);
     this.studentRepository = new StudentRepository(connection);
   }
 
@@ -60,10 +60,9 @@ export class ConsultationsController {
   @Post(apiEndpoint)
   async create(
     @Body() createConsultationDto: SaveConsultationDto,
+    @Body('lecturers', LecturersByIdsPipe)
+    lecturers: Lecturer[],
   ): Promise<ConsultationDto> {
-    const lecturers = await this.lecturerRepository.findByIds(
-      createConsultationDto.lecturers,
-    );
     const students = await this.studentRepository.findByIds(
       createConsultationDto.students,
     );
@@ -82,11 +81,9 @@ export class ConsultationsController {
   async update(
     @Param() idParams: IdParams,
     @Body() createConsultationDto: SaveConsultationDto,
+    @Body('lecturers', LecturersByIdsPipe) lecturers: Lecturer[],
   ): Promise<void> {
     await this.ensureConsultationExistence(idParams.id);
-    const lecturers = await this.lecturerRepository.findByIds(
-      createConsultationDto.lecturers,
-    );
     const students = await this.studentRepository.findByIds(
       createConsultationDto.students,
     );
