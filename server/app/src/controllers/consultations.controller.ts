@@ -16,20 +16,19 @@ import { IdParams } from './id.params';
 import { ConsultationMapper } from '../mappers/consultation.mapper';
 import { Consultation } from '../models/consultation.model';
 import { Connection } from 'typeorm';
-import { StudentRepository } from '../repositories/student.repository';
 import { LecturersByIdsPipe } from '../pipes/lecturers-by-ids.pipe';
 import { Lecturer } from '../models/lecturer.model';
+import { StudentsByIdsPipe } from '../pipes/students-by-ids.pipe';
+import { Student } from '../models/student.model';
 
 const apiEndpoint = '/consultations';
 
 @Controller()
 export class ConsultationsController {
   consultationRepository: ConsultationRepository;
-  studentRepository: StudentRepository;
 
   constructor(private readonly connection: Connection) {
     this.consultationRepository = new ConsultationRepository(connection);
-    this.studentRepository = new StudentRepository(connection);
   }
 
   @Get(apiEndpoint)
@@ -61,10 +60,8 @@ export class ConsultationsController {
     @Body() createConsultationDto: SaveConsultationDto,
     @Body('lecturers', LecturersByIdsPipe)
     lecturers: Lecturer[],
+    @Body('students', StudentsByIdsPipe) students: Student[],
   ): Promise<ConsultationDto> {
-    const students = await this.studentRepository.findByIds(
-      createConsultationDto.students,
-    );
     const consultation = ConsultationMapper.toPersistance(
       createConsultationDto,
       lecturers,
@@ -81,11 +78,9 @@ export class ConsultationsController {
     @Param() idParams: IdParams,
     @Body() createConsultationDto: SaveConsultationDto,
     @Body('lecturers', LecturersByIdsPipe) lecturers: Lecturer[],
+    @Body('students', StudentsByIdsPipe) students: Student[],
   ): Promise<void> {
     await this.ensureConsultationExistence(idParams.id);
-    const students = await this.studentRepository.findByIds(
-      createConsultationDto.students,
-    );
     const consultation = ConsultationMapper.toPersistance(
       createConsultationDto,
       lecturers,

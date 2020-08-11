@@ -13,20 +13,19 @@ import { ParentDto } from '../dtos/parents/parent.dto';
 import { SaveParentDto } from '../dtos/parents/save-parent.dto';
 import { IdParams } from './id.params';
 import { Connection } from 'typeorm';
-import { StudentRepository } from '../repositories/student.repository';
 import { ParentMapper } from '../mappers/parent.mapper';
 import { Parent } from '../models/parent.model';
+import { StudentsByIdsPipe } from '../pipes/students-by-ids.pipe';
+import { Student } from '../models/student.model';
 
 const apiEndpoint = '/parents';
 
 @Controller()
 export class ParentsController {
   parentRepository: ParentRepository;
-  studentRepository: StudentRepository;
 
   constructor(private readonly connection: Connection) {
     this.parentRepository = new ParentRepository(connection);
-    this.studentRepository = new StudentRepository(connection);
   }
 
   @Get(apiEndpoint)
@@ -43,11 +42,11 @@ export class ParentsController {
   }
 
   @Post(apiEndpoint)
-  async create(@Body() saveParentDto: SaveParentDto): Promise<ParentDto> {
-    const students = await this.studentRepository.findByIds(
-      saveParentDto.children,
-    );
-    const parent = ParentMapper.toPersistance(saveParentDto, students);
+  async create(
+    @Body() saveParentDto: SaveParentDto,
+    @Body('children', StudentsByIdsPipe) children: Student[],
+  ): Promise<ParentDto> {
+    const parent = ParentMapper.toPersistance(saveParentDto, children);
     const res = await this.parentRepository.create(parent);
     return res;
   }
@@ -56,13 +55,11 @@ export class ParentsController {
   async update(
     @Param() idParams: IdParams,
     @Body() saveParentDto: SaveParentDto,
+    @Body('children', StudentsByIdsPipe) children: Student[],
   ): Promise<void> {
     const { id } = idParams;
     await this.ensureParentExistence(id);
-    const students = await this.studentRepository.findByIds(
-      saveParentDto.children,
-    );
-    const parent = ParentMapper.toPersistance(saveParentDto, students);
+    const parent = ParentMapper.toPersistance(saveParentDto, children);
     return this.parentRepository.update({ ...parent, id });
   }
 
