@@ -15,22 +15,21 @@ import { IdParams } from './id.params';
 import { Connection } from 'typeorm';
 import { StudentMapper } from '../mappers/student.mapper';
 import { Student } from './../models/student.model';
-import { GroupRepository } from '../repositories/group.repository';
 import { ConsultationRepository } from '../repositories/consultation.repository';
 import { ParentsByIdsPipe } from '../pipes/parents-by-ids.pipe';
 import { Parent } from '../models/parent.model';
+import { GroupsByIdsPipe } from '../pipes/groups-by-ids.pipe';
+import { Group } from '../models/group.model';
 
 const apiEndpoint = '/students';
 
 @Controller()
 export class StudentsController {
   studentRepository: StudentRepository;
-  groupRepository: GroupRepository;
   consultationRepository: ConsultationRepository;
 
   constructor(private readonly connection: Connection) {
     this.studentRepository = new StudentRepository(connection);
-    this.groupRepository = new GroupRepository(connection);
     this.consultationRepository = new ConsultationRepository(connection);
   }
 
@@ -51,8 +50,8 @@ export class StudentsController {
   async create(
     @Body() saveStudentDto: SaveStudentDto,
     @Body('parents', ParentsByIdsPipe) parents: Parent[],
+    @Body('groups', GroupsByIdsPipe) groups: Group[],
   ): Promise<StudentDto> {
-    const groups = await this.groupRepository.findByIds(saveStudentDto.groups);
     const consultations = await this.consultationRepository.findByIds(
       saveStudentDto.consultations,
     );
@@ -71,10 +70,10 @@ export class StudentsController {
     @Param() idParams: IdParams,
     @Body() saveStudentDto: SaveStudentDto,
     @Body('parents', ParentsByIdsPipe) parents: Parent[],
+    @Body('groups', GroupsByIdsPipe) groups: Group[],
   ): Promise<void> {
     const { id } = idParams;
     await this.ensureStudentExistence(id);
-    const groups = await this.groupRepository.findByIds(saveStudentDto.groups);
     const consultations = await this.consultationRepository.findByIds(
       saveStudentDto.consultations,
     );

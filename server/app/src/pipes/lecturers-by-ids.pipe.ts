@@ -6,6 +6,7 @@ import { Lecturer } from '../models/lecturer.model';
 @Injectable()
 export class LecturersByIdsPipe implements PipeTransform<any> {
   lecturerRepository: LecturerRepository;
+
   constructor() {
     const connection = getConnection();
     this.lecturerRepository = new LecturerRepository(connection);
