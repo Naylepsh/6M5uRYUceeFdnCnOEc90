@@ -15,22 +15,21 @@ import { IdParams } from './id.params';
 import { Connection } from 'typeorm';
 import { StudentMapper } from '../mappers/student.mapper';
 import { Student } from './../models/student.model';
-import { ConsultationRepository } from '../repositories/consultation.repository';
 import { ParentsByIdsPipe } from '../pipes/parents-by-ids.pipe';
 import { Parent } from '../models/parent.model';
 import { GroupsByIdsPipe } from '../pipes/groups-by-ids.pipe';
 import { Group } from '../models/group.model';
+import { ConsultationsByIdsPipe } from '../pipes/consultations-by-ids.pipe';
+import { Consultation } from '../models/consultation.model';
 
 const apiEndpoint = '/students';
 
 @Controller()
 export class StudentsController {
   studentRepository: StudentRepository;
-  consultationRepository: ConsultationRepository;
 
   constructor(private readonly connection: Connection) {
     this.studentRepository = new StudentRepository(connection);
-    this.consultationRepository = new ConsultationRepository(connection);
   }
 
   @Get(apiEndpoint)
@@ -51,10 +50,9 @@ export class StudentsController {
     @Body() saveStudentDto: SaveStudentDto,
     @Body('parents', ParentsByIdsPipe) parents: Parent[],
     @Body('groups', GroupsByIdsPipe) groups: Group[],
+    @Body('consultations', ConsultationsByIdsPipe)
+    consultations: Consultation[],
   ): Promise<StudentDto> {
-    const consultations = await this.consultationRepository.findByIds(
-      saveStudentDto.consultations,
-    );
     const student = StudentMapper.toPersistance(
       saveStudentDto,
       parents,
@@ -71,12 +69,11 @@ export class StudentsController {
     @Body() saveStudentDto: SaveStudentDto,
     @Body('parents', ParentsByIdsPipe) parents: Parent[],
     @Body('groups', GroupsByIdsPipe) groups: Group[],
+    @Body('consultations', ConsultationsByIdsPipe)
+    consultations: Consultation[],
   ): Promise<void> {
     const { id } = idParams;
     await this.ensureStudentExistence(id);
-    const consultations = await this.consultationRepository.findByIds(
-      saveStudentDto.consultations,
-    );
     const student = StudentMapper.toPersistance(
       saveStudentDto,
       parents,

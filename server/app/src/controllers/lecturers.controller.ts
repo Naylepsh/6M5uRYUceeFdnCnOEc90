@@ -15,20 +15,19 @@ import { IdParams } from './id.params';
 import { Connection } from 'typeorm';
 import { LecturerMapper } from '../mappers/lecturer.mapper';
 import { Lecturer } from '../models/lecturer.model';
-import { ConsultationRepository } from '../repositories/consultation.repository';
 import { GroupsByIdsPipe } from '../pipes/groups-by-ids.pipe';
 import { Group } from '../models/group.model';
+import { ConsultationsByIdsPipe } from '../pipes/consultations-by-ids.pipe';
+import { Consultation } from '../models/consultation.model';
 
 const apiEndpoint = '/lecturers';
 
 @Controller()
 export class LecturersController {
   lecturerRepository: LecturerRepository;
-  consultationRepository: ConsultationRepository;
 
   constructor(private readonly connection: Connection) {
     this.lecturerRepository = new LecturerRepository(connection);
-    this.consultationRepository = new ConsultationRepository(connection);
   }
 
   @Get(apiEndpoint)
@@ -48,10 +47,9 @@ export class LecturersController {
   async create(
     @Body() saveLecturerDto: SaveLecturerDto,
     @Body('groups', GroupsByIdsPipe) groups: Group[],
+    @Body('consultations', ConsultationsByIdsPipe)
+    consultations: Consultation[],
   ): Promise<LecturerDto> {
-    const consultations = await this.consultationRepository.findByIds(
-      saveLecturerDto.consultations,
-    );
     const lecturer = LecturerMapper.toPersistance(
       saveLecturerDto,
       groups,
@@ -66,12 +64,11 @@ export class LecturersController {
     @Param() idParams: IdParams,
     @Body() saveLecturerDto: SaveLecturerDto,
     @Body('groups', GroupsByIdsPipe) groups: Group[],
+    @Body('consultations', ConsultationsByIdsPipe)
+    consultations: Consultation[],
   ): Promise<void> {
     const { id } = idParams;
     await this.ensureLecturerExistence(id);
-    const consultations = await this.consultationRepository.findByIds(
-      saveLecturerDto.consultations,
-    );
     const lecturer = LecturerMapper.toPersistance(
       saveLecturerDto,
       groups,
