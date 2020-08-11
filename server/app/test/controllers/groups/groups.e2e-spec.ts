@@ -162,6 +162,14 @@ describe('GroupsController (e2e)', () => {
         expect(status).toBe(400);
       });
 
+      it('should return 400 if ids of non-existing lecturers were passed', async () => {
+        sampleGroup.lecturers = [uuidv4()];
+
+        const { status } = await createGroup();
+
+        expect(status).toBe(400);
+      });
+
       it('should return 400 if students were not passed', async () => {
         delete sampleGroup.students;
 
@@ -172,6 +180,14 @@ describe('GroupsController (e2e)', () => {
 
       it('should return 400 if invalid student ids was passed', async () => {
         sampleGroup.students = ['1', '2'];
+
+        const { status } = await createGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if ids of non-existing students were passed', async () => {
+        sampleGroup.students = [uuidv4()];
 
         const { status } = await createGroup();
 

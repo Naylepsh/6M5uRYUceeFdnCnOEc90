@@ -1,4 +1,4 @@
-import { Injectable, PipeTransform } from '@nestjs/common';
+import { Injectable, PipeTransform, BadRequestException } from '@nestjs/common';
 import { getConnection } from 'typeorm';
 import { GroupRepository } from './../repositories/group.repository';
 import { Group } from '../models/group.model';
@@ -14,6 +14,9 @@ export class GroupsByIdsPipe implements PipeTransform<any> {
 
   async transform(ids: string[]): Promise<Group[]> {
     const groups = await this.groupRepository.findByIds(ids);
+    if (groups.length < ids.length) {
+      throw new BadRequestException('Some of the given groups do not exist');
+    }
     return groups;
   }
 }

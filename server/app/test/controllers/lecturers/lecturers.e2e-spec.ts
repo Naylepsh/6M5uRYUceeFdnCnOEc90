@@ -148,6 +148,14 @@ describe('LecturersController (e2e)', () => {
 
         expect(status).toBe(400);
       });
+
+      it('should return 400 if ids of non-existing groups were passed', async () => {
+        sampleLecturer.groups = [uuidv4()];
+
+        const { status } = await createLecturer();
+
+        expect(status).toBe(400);
+      });
     });
 
     const createLecturer = () => {
@@ -332,6 +340,14 @@ describe('LecturersController (e2e)', () => {
 
       it('should return 400 if invalid group ids were passed', async () => {
         lecturerDataToUpdate.groups = ['1', '2'];
+
+        const { status } = await updateLecturer();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if ids of non-existing groups were passed', async () => {
+        lecturerDataToUpdate.groups = [uuidv4()];
 
         const { status } = await updateLecturer();
 

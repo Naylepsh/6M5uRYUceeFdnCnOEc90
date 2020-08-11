@@ -1,4 +1,4 @@
-import { Injectable, PipeTransform } from '@nestjs/common';
+import { Injectable, PipeTransform, BadRequestException } from '@nestjs/common';
 import { getConnection } from 'typeorm';
 import { ParentRepository } from './../repositories/parent.repository';
 import { Parent } from '../models/parent.model';
@@ -14,6 +14,9 @@ export class ParentsByIdsPipe implements PipeTransform<any> {
 
   async transform(ids: string[]): Promise<Parent[]> {
     const parents = await this.parentRepository.findByIds(ids);
+    if (parents.length < ids.length) {
+      throw new BadRequestException('Some of the given parents do not exist');
+    }
     return parents;
   }
 }
