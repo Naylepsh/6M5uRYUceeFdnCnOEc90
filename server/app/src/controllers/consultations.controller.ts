@@ -16,7 +16,6 @@ import { IdParams } from './id.params';
 import { ConsultationMapper } from '../mappers/consultation.mapper';
 import { Consultation } from '../models/consultation.model';
 import { Connection } from 'typeorm';
-import { LecturerRepository } from '../repositories/lecturer.repository';
 import { StudentRepository } from '../repositories/student.repository';
 import { LecturersByIdsPipe } from '../pipes/lecturers-by-ids.pipe';
 import { Lecturer } from '../models/lecturer.model';

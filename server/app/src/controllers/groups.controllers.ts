@@ -15,20 +15,19 @@ import { IdParams } from './id.params';
 import { Connection } from 'typeorm';
 import { GroupMapper } from '../mappers/group.mapper';
 import { Group } from '../models/group.model';
-import { LecturerRepository } from '../repositories/lecturer.repository';
 import { StudentRepository } from '../repositories/student.repository';
+import { LecturersByIdsPipe } from '../pipes/lecturers-by-ids.pipe';
+import { Lecturer } from '../models/lecturer.model';
 
 const apiEndpoint = '/groups';
 
 @Controller()
 export class GroupsController {
   groupRepository: GroupRepository;
-  lecturerRepository: LecturerRepository;
   studentRepository: StudentRepository;
 
   constructor(private readonly connection: Connection) {
     this.groupRepository = new GroupRepository(connection);
-    this.lecturerRepository = new LecturerRepository(connection);
     this.studentRepository = new StudentRepository(connection);
   }
 
@@ -46,10 +45,10 @@ export class GroupsController {
   }
 
   @Post(apiEndpoint)
-  async create(@Body() saveGroupDto: SaveGroupDto): Promise<GroupDto> {
-    const lecturers = await this.lecturerRepository.findByIds(
-      saveGroupDto.lecturers,
-    );
+  async create(
+    @Body() saveGroupDto: SaveGroupDto,
+    @Body('lecturers', LecturersByIdsPipe) lecturers: Lecturer[],
+  ): Promise<GroupDto> {
     const students = await this.studentRepository.findByIds(
       saveGroupDto.students,
     );
@@ -62,12 +61,10 @@ export class GroupsController {
   async update(
     @Param() idParams: IdParams,
     @Body() saveGroupDto: SaveGroupDto,
+    @Body('lecturers', LecturersByIdsPipe) lecturers: Lecturer[],
   ): Promise<void> {
     const { id } = idParams;
     await this.ensureGroupExistence(id);
-    const lecturers = await this.lecturerRepository.findByIds(
-      saveGroupDto.lecturers,
-    );
     const students = await this.studentRepository.findByIds(
       saveGroupDto.students,
     );

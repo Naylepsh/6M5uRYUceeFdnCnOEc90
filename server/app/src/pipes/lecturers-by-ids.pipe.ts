@@ -1,4 +1,4 @@
-import { Injectable, PipeTransform, ArgumentMetadata } from '@nestjs/common';
+import { Injectable, PipeTransform } from '@nestjs/common';
 import { getConnection } from 'typeorm';
 import { LecturerRepository } from './../repositories/lecturer.repository';
 import { Lecturer } from '../models/lecturer.model';
@@ -11,10 +11,7 @@ export class LecturersByIdsPipe implements PipeTransform<any> {
     this.lecturerRepository = new LecturerRepository(connection);
   }
 
-  async transform(
-    value: string[],
-    metadata: ArgumentMetadata,
-  ): Promise<Lecturer[]> {
+  async transform(value: string[]): Promise<Lecturer[]> {
     const lecturers = await this.lecturerRepository.findByIds(value);
     return lecturers;
   }
