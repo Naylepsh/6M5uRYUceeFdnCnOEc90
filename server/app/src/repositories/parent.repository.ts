@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Parent } from '../models/parent.model';
 import { Repository, Connection } from 'typeorm';
+import { IRepository } from './repository.interface';
 
 @Injectable()
-export class ParentRepository {
+export class ParentRepository implements IRepository<Parent> {
   repository: Repository<Parent>;
+
   constructor(connection: Connection) {
     this.repository = connection.getRepository(Parent);
   }

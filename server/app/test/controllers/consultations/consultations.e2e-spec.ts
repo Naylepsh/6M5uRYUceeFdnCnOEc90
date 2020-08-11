@@ -526,7 +526,7 @@ describe('ConsultationsController (e2e)', () => {
   };
 
   const populateDatabase = async () => {
-    const consultation = await consultationRepository.createConsultation(
+    const consultation = await consultationRepository.create(
       sampleConsultation,
     );
     consultationId = consultation.id;

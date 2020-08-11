@@ -2,10 +2,11 @@ import { ConsultationDto } from '../dtos/consultations/consultation.dto';
 import { Repository, EntityRepository, Connection, Between } from 'typeorm';
 import { Consultation } from '../models/consultation.model';
 import { Injectable } from '@nestjs/common';
+import { IRepository } from './repository.interface';
 
 @Injectable()
 @EntityRepository(Consultation)
-export class ConsultationRepository {
+export class ConsultationRepository implements IRepository<Consultation> {
   consultationRepository: Repository<Consultation>;
 
   constructor(connection: Connection) {
@@ -50,15 +51,15 @@ export class ConsultationRepository {
     return consultations;
   }
 
-  async createConsultation(consultation: Consultation): Promise<Consultation> {
+  async create(consultation: Consultation): Promise<Consultation> {
     return this.consultationRepository.save(consultation);
   }
 
-  async updateConsultation(consultation: Consultation): Promise<void> {
+  async update(consultation: Consultation): Promise<void> {
     await this.consultationRepository.save(consultation);
   }
 
-  async deleteConsultation(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     await this.consultationRepository.delete(id);
   }
 }

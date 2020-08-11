@@ -67,9 +67,7 @@ export class ConsultationsController {
       lecturers,
       students,
     );
-    const res = await this.consultationRepository.createConsultation(
-      consultation,
-    );
+    const res = await this.consultationRepository.create(consultation);
     return ConsultationMapper.toDto(res);
   }
 
@@ -86,7 +84,7 @@ export class ConsultationsController {
       lecturers,
       students,
     );
-    await this.consultationRepository.updateConsultation({
+    await this.consultationRepository.update({
       ...consultation,
       id: idParams.id,
     });
@@ -95,7 +93,7 @@ export class ConsultationsController {
   @Delete(`${apiEndpoint}/:id`)
   async delete(@Param() idParams: IdParams): Promise<void> {
     await this.ensureConsultationExistence(idParams.id);
-    return this.consultationRepository.deleteConsultation(idParams.id);
+    return this.consultationRepository.delete(idParams.id);
   }
 
   private async ensureConsultationExistence(id: string): Promise<Consultation> {
