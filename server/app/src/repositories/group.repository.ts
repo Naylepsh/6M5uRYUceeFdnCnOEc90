@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Repository, Connection } from 'typeorm';
 import { Group } from '../models/group.model';
+import { IRepository } from './repository.interface';
 
 @Injectable()
-export class GroupRepository {
+export class GroupRepository implements IRepository<Group> {
   repository: Repository<Group>;
 
   constructor(connection: Connection) {

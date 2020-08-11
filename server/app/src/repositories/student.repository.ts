@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Student } from '../models/student.model';
 import { Repository, Connection } from 'typeorm';
+import { IRepository } from './repository.interface';
 
 @Injectable()
-export class StudentRepository {
+export class StudentRepository implements IRepository<Student> {
   repository: Repository<Student>;
 
   constructor(connection: Connection) {

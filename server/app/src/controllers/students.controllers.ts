@@ -11,28 +11,25 @@ import {
 import { StudentRepository } from '../repositories/student.repository';
 import { StudentDto } from '../dtos/students/student.dto';
 import { SaveStudentDto } from '../dtos/students/save-student.dto';
-import { IdParams } from './id.params';
+import { IdDto } from '../dtos/id/id.dto';
 import { Connection } from 'typeorm';
 import { StudentMapper } from '../mappers/student.mapper';
 import { Student } from './../models/student.model';
-import { ParentRepository } from '../repositories/parent.repository';
-import { GroupRepository } from '../repositories/group.repository';
-import { ConsultationRepository } from '../repositories/consultation.repository';
+import { ParentsByIdsPipe } from '../pipes/parents-by-ids.pipe';
+import { Parent } from '../models/parent.model';
+import { GroupsByIdsPipe } from '../pipes/groups-by-ids.pipe';
+import { Group } from '../models/group.model';
+import { ConsultationsByIdsPipe } from '../pipes/consultations-by-ids.pipe';
+import { Consultation } from '../models/consultation.model';
 
 const apiEndpoint = '/students';
 
 @Controller()
 export class StudentsController {
   studentRepository: StudentRepository;
-  parentRepository: ParentRepository;
-  groupRepository: GroupRepository;
-  consultationRepository: ConsultationRepository;
 
   constructor(private readonly connection: Connection) {
     this.studentRepository = new StudentRepository(connection);
-    this.parentRepository = new ParentRepository(connection);
-    this.groupRepository = new GroupRepository(connection);
-    this.consultationRepository = new ConsultationRepository(connection);
   }
 
   @Get(apiEndpoint)
@@ -42,21 +39,20 @@ export class StudentsController {
   }
 
   @Get(`${apiEndpoint}/:id`)
-  async findById(@Param() idParams: IdParams): Promise<StudentDto> {
-    const { id } = idParams;
+  async findById(@Param() idDto: IdDto): Promise<StudentDto> {
+    const { id } = idDto;
     const student = await this.ensureStudentExistence(id);
     return StudentMapper.toDto(student);
   }
 
   @Post(apiEndpoint)
-  async create(@Body() saveStudentDto: SaveStudentDto): Promise<StudentDto> {
-    const parents = await this.parentRepository.findByIds(
-      saveStudentDto.parents,
-    );
-    const groups = await this.groupRepository.findByIds(saveStudentDto.groups);
-    const consultations = await this.consultationRepository.findByIds(
-      saveStudentDto.consultations,
-    );
+  async create(
+    @Body() saveStudentDto: SaveStudentDto,
+    @Body('parents', ParentsByIdsPipe) parents: Parent[],
+    @Body('groups', GroupsByIdsPipe) groups: Group[],
+    @Body('consultations', ConsultationsByIdsPipe)
+    consultations: Consultation[],
+  ): Promise<StudentDto> {
     const student = StudentMapper.toPersistance(
       saveStudentDto,
       parents,
@@ -69,18 +65,15 @@ export class StudentsController {
 
   @Put(`${apiEndpoint}/:id`)
   async update(
-    @Param() idParams: IdParams,
+    @Param() idDto: IdDto,
     @Body() saveStudentDto: SaveStudentDto,
+    @Body('parents', ParentsByIdsPipe) parents: Parent[],
+    @Body('groups', GroupsByIdsPipe) groups: Group[],
+    @Body('consultations', ConsultationsByIdsPipe)
+    consultations: Consultation[],
   ): Promise<void> {
-    const { id } = idParams;
+    const { id } = idDto;
     await this.ensureStudentExistence(id);
-    const parents = await this.parentRepository.findByIds(
-      saveStudentDto.parents,
-    );
-    const groups = await this.groupRepository.findByIds(saveStudentDto.groups);
-    const consultations = await this.consultationRepository.findByIds(
-      saveStudentDto.consultations,
-    );
     const student = StudentMapper.toPersistance(
       saveStudentDto,
       parents,
@@ -91,8 +84,8 @@ export class StudentsController {
   }
 
   @Delete(`${apiEndpoint}/:id`)
-  async delete(@Param() idParams: IdParams): Promise<void> {
-    const { id } = idParams;
+  async delete(@Param() idDto: IdDto): Promise<void> {
+    const { id } = idDto;
     await this.ensureStudentExistence(id);
     return this.studentRepository.delete(id);
   }

@@ -12,25 +12,23 @@ import {
 import { ConsultationRepository } from '../repositories/consultation.repository';
 import { ConsultationDto } from '../dtos/consultations/consultation.dto';
 import { SaveConsultationDto } from '../dtos/consultations/save-consultation.dto';
-import { IdParams } from './id.params';
+import { IdDto } from '../dtos/id/id.dto';
 import { ConsultationMapper } from '../mappers/consultation.mapper';
 import { Consultation } from '../models/consultation.model';
 import { Connection } from 'typeorm';
-import { LecturerRepository } from '../repositories/lecturer.repository';
-import { StudentRepository } from '../repositories/student.repository';
+import { LecturersByIdsPipe } from '../pipes/lecturers-by-ids.pipe';
+import { Lecturer } from '../models/lecturer.model';
+import { StudentsByIdsPipe } from '../pipes/students-by-ids.pipe';
+import { Student } from '../models/student.model';
 
 const apiEndpoint = '/consultations';
 
 @Controller()
 export class ConsultationsController {
   consultationRepository: ConsultationRepository;
-  lecturerRepository: LecturerRepository;
-  studentRepository: StudentRepository;
 
   constructor(private readonly connection: Connection) {
     this.consultationRepository = new ConsultationRepository(connection);
-    this.lecturerRepository = new LecturerRepository(connection);
-    this.studentRepository = new StudentRepository(connection);
   }
 
   @Get(apiEndpoint)
@@ -52,59 +50,50 @@ export class ConsultationsController {
   }
 
   @Get(`${apiEndpoint}/:id`)
-  async findById(@Param() idParams: IdParams): Promise<ConsultationDto> {
-    const consultation = await this.ensureConsultationExistence(idParams.id);
+  async findById(@Param() idDto: IdDto): Promise<ConsultationDto> {
+    const consultation = await this.ensureConsultationExistence(idDto.id);
     return ConsultationMapper.toDto(consultation);
   }
 
   @Post(apiEndpoint)
   async create(
     @Body() createConsultationDto: SaveConsultationDto,
+    @Body('lecturers', LecturersByIdsPipe)
+    lecturers: Lecturer[],
+    @Body('students', StudentsByIdsPipe) students: Student[],
   ): Promise<ConsultationDto> {
-    const lecturers = await this.lecturerRepository.findByIds(
-      createConsultationDto.lecturers,
-    );
-    const students = await this.studentRepository.findByIds(
-      createConsultationDto.students,
-    );
     const consultation = ConsultationMapper.toPersistance(
       createConsultationDto,
       lecturers,
       students,
     );
-    const res = await this.consultationRepository.createConsultation(
-      consultation,
-    );
+    const res = await this.consultationRepository.create(consultation);
     return ConsultationMapper.toDto(res);
   }
 
   @Put(`${apiEndpoint}/:id`)
   async update(
-    @Param() idParams: IdParams,
+    @Param() idDto: IdDto,
     @Body() createConsultationDto: SaveConsultationDto,
+    @Body('lecturers', LecturersByIdsPipe) lecturers: Lecturer[],
+    @Body('students', StudentsByIdsPipe) students: Student[],
   ): Promise<void> {
-    await this.ensureConsultationExistence(idParams.id);
-    const lecturers = await this.lecturerRepository.findByIds(
-      createConsultationDto.lecturers,
-    );
-    const students = await this.studentRepository.findByIds(
-      createConsultationDto.students,
-    );
+    await this.ensureConsultationExistence(idDto.id);
     const consultation = ConsultationMapper.toPersistance(
       createConsultationDto,
       lecturers,
       students,
     );
-    await this.consultationRepository.updateConsultation({
+    await this.consultationRepository.update({
       ...consultation,
-      id: idParams.id,
+      id: idDto.id,
     });
   }
 
   @Delete(`${apiEndpoint}/:id`)
-  async delete(@Param() idParams: IdParams): Promise<void> {
-    await this.ensureConsultationExistence(idParams.id);
-    return this.consultationRepository.deleteConsultation(idParams.id);
+  async delete(@Param() idDto: IdDto): Promise<void> {
+    await this.ensureConsultationExistence(idDto.id);
+    return this.consultationRepository.delete(idDto.id);
   }
 
   private async ensureConsultationExistence(id: string): Promise<Consultation> {

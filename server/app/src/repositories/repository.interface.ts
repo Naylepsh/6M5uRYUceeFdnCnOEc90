@@ -1,7 +1,8 @@
-export interface IRepository<Model> {
-  findAll(): Promise<Model[]>;
-  findById(id: string): Promise<Model>;
-  create(model: Model): Promise<Model>;
-  update(model: Model): Promise<void>;
+export interface IRepository<Entity> {
+  findAll(): Promise<Entity[]>;
+  findById(id: string): Promise<Entity>;
+  findByIds(ids: string[]): Promise<Entity[]>;
+  create(model: Entity): Promise<Entity>;
+  update(model: Entity): Promise<void>;
   delete(id: string): Promise<void>;
 }

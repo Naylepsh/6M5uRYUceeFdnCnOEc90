@@ -174,6 +174,14 @@ describe('ConsultationsController (e2e)', () => {
         expect(status).toBe(400);
       });
 
+      it('should return 400 if ids of non-existing students were passed', async () => {
+        sampleConsultation.students = [uuidv4()];
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
       it('should return 400 if lecturers were missing', async () => {
         delete sampleConsultation.lecturers;
 
@@ -184,6 +192,14 @@ describe('ConsultationsController (e2e)', () => {
 
       it('should return 400 if invalid lecturer ids were passed', async () => {
         sampleConsultation.lecturers = ['1', '2'];
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if ids of non-existing lecturers were passed', async () => {
+        sampleConsultation.lecturers = [uuidv4()];
 
         const { status } = await createConsultation();
 
@@ -383,6 +399,14 @@ describe('ConsultationsController (e2e)', () => {
         expect(status).toBe(400);
       });
 
+      it('should return 400 if ids for non-existing students were passed', async () => {
+        consultationDataToUpdate.students = [uuidv4()];
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
       it('should return 400 if lecturers were missing', async () => {
         delete consultationDataToUpdate.lecturers;
 
@@ -393,6 +417,14 @@ describe('ConsultationsController (e2e)', () => {
 
       it('should return 400 if invalid lecturer ids were passed', async () => {
         consultationDataToUpdate.lecturers = ['1', '2'];
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if ids for non-existing lecturers were passed', async () => {
+        consultationDataToUpdate.lecturers = [uuidv4()];
 
         const { status } = await updateConsultation();
 
@@ -494,7 +526,7 @@ describe('ConsultationsController (e2e)', () => {
   };
 
   const populateDatabase = async () => {
-    const consultation = await consultationRepository.createConsultation(
+    const consultation = await consultationRepository.create(
       sampleConsultation,
     );
     consultationId = consultation.id;

@@ -148,6 +148,14 @@ describe('ParentsController (e2e)', () => {
 
         expect(status).toBe(400);
       });
+
+      it('should return 400 if ids of non-existing children were passed', async () => {
+        sampleParent.children = [uuidv4()];
+
+        const { status } = await createParent();
+
+        expect(status).toBe(400);
+      });
     });
 
     const createParent = () => {
@@ -330,6 +338,14 @@ describe('ParentsController (e2e)', () => {
 
       it('should return 400 if invalid children ids were passed', async () => {
         parentDataToUpdate.children = ['1', '2'];
+
+        const { status } = await updateParent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if ids of non-existing children were passed', async () => {
+        parentDataToUpdate.children = [uuidv4()];
 
         const { status } = await updateParent();
 

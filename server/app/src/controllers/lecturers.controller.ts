@@ -11,25 +11,23 @@ import {
 import { LecturerRepository } from '../repositories/lecturer.repository';
 import { LecturerDto } from '../dtos/lecturers/lecturer.dto';
 import { SaveLecturerDto } from '../dtos/lecturers/save-lecturer.dto';
-import { IdParams } from './id.params';
+import { IdDto } from '../dtos/id/id.dto';
 import { Connection } from 'typeorm';
 import { LecturerMapper } from '../mappers/lecturer.mapper';
 import { Lecturer } from '../models/lecturer.model';
-import { GroupRepository } from '../repositories/group.repository';
-import { ConsultationRepository } from '../repositories/consultation.repository';
+import { GroupsByIdsPipe } from '../pipes/groups-by-ids.pipe';
+import { Group } from '../models/group.model';
+import { ConsultationsByIdsPipe } from '../pipes/consultations-by-ids.pipe';
+import { Consultation } from '../models/consultation.model';
 
 const apiEndpoint = '/lecturers';
 
 @Controller()
 export class LecturersController {
   lecturerRepository: LecturerRepository;
-  groupRepository: GroupRepository;
-  consultationRepository: ConsultationRepository;
 
   constructor(private readonly connection: Connection) {
     this.lecturerRepository = new LecturerRepository(connection);
-    this.groupRepository = new GroupRepository(connection);
-    this.consultationRepository = new ConsultationRepository(connection);
   }
 
   @Get(apiEndpoint)
@@ -39,18 +37,19 @@ export class LecturersController {
   }
 
   @Get(`${apiEndpoint}/:id`)
-  async findById(@Param() idParams: IdParams): Promise<LecturerDto> {
-    const { id } = idParams;
+  async findById(@Param() idDto: IdDto): Promise<LecturerDto> {
+    const { id } = idDto;
     const lecturer = await this.ensureLecturerExistence(id);
     return LecturerMapper.toDto(lecturer);
   }
 
   @Post(apiEndpoint)
-  async create(@Body() saveLecturerDto: SaveLecturerDto): Promise<LecturerDto> {
-    const groups = await this.groupRepository.findByIds(saveLecturerDto.groups);
-    const consultations = await this.consultationRepository.findByIds(
-      saveLecturerDto.consultations,
-    );
+  async create(
+    @Body() saveLecturerDto: SaveLecturerDto,
+    @Body('groups', GroupsByIdsPipe) groups: Group[],
+    @Body('consultations', ConsultationsByIdsPipe)
+    consultations: Consultation[],
+  ): Promise<LecturerDto> {
     const lecturer = LecturerMapper.toPersistance(
       saveLecturerDto,
       groups,
@@ -62,15 +61,14 @@ export class LecturersController {
 
   @Put(`${apiEndpoint}/:id`)
   async update(
-    @Param() idParams: IdParams,
+    @Param() idDto: IdDto,
     @Body() saveLecturerDto: SaveLecturerDto,
+    @Body('groups', GroupsByIdsPipe) groups: Group[],
+    @Body('consultations', ConsultationsByIdsPipe)
+    consultations: Consultation[],
   ): Promise<void> {
-    const { id } = idParams;
+    const { id } = idDto;
     await this.ensureLecturerExistence(id);
-    const groups = await this.groupRepository.findByIds(saveLecturerDto.groups);
-    const consultations = await this.consultationRepository.findByIds(
-      saveLecturerDto.consultations,
-    );
     const lecturer = LecturerMapper.toPersistance(
       saveLecturerDto,
       groups,
@@ -80,8 +78,8 @@ export class LecturersController {
   }
 
   @Delete(`${apiEndpoint}/:id`)
-  async delete(@Param() idParams: IdParams): Promise<void> {
-    const { id } = idParams;
+  async delete(@Param() idDto: IdDto): Promise<void> {
+    const { id } = idDto;
     await this.ensureLecturerExistence(id);
     return this.lecturerRepository.delete(id);
   }
