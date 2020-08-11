@@ -41,6 +41,7 @@ interface IConsultation {
   datetime: Date;
   address: string;
   room: string;
+  description: string;
   lecturers: string[];
   students: string[];
 }
@@ -106,7 +107,8 @@ export function createSampleConsultation(): IConsultation {
   return {
     datetime: faker.date.future(),
     address: faker.address.streetName(),
-    room: faker.random.number + '',
+    room: faker.random.number() + '',
+    description: faker.commerce.product(),
     lecturers: [],
     students: [],
   };

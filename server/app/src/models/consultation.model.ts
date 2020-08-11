@@ -23,6 +23,9 @@ export class Consultation {
   @Column()
   room: string;
 
+  @Column()
+  description: string;
+
   @ManyToMany(
     () => Lecturer,
     lecturer => lecturer.consultations,

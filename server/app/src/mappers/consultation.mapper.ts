@@ -15,11 +15,12 @@ export class ConsultationMapper {
   ): Consultation {
     this.ensureRepoIsInitialized();
 
-    const { datetime, address, room } = createConsultationDto;
+    const { datetime, address, room, description } = createConsultationDto;
     const obj = {
       datetime,
       address,
       room,
+      description,
       lecturers,
       students,
     };
@@ -27,12 +28,21 @@ export class ConsultationMapper {
   }
 
   public static toDto(consultation: Consultation): ConsultationDto {
-    const { id, datetime, address, room, lecturers, students } = consultation;
+    const {
+      id,
+      datetime,
+      address,
+      room,
+      description,
+      lecturers,
+      students,
+    } = consultation;
     return {
       id,
       datetime,
       address,
       room,
+      description,
       lecturers,
       students,
     };

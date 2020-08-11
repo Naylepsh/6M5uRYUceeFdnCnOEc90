@@ -218,6 +218,10 @@ describe('ConsultationsController (e2e)', () => {
         expect(body).toHaveProperty('hour', sampleConsultation.hour);
         expect(body).toHaveProperty('address', sampleConsultation.address);
         expect(body).toHaveProperty('room', sampleConsultation.room);
+        expect(body).toHaveProperty(
+          'description',
+          sampleConsultation.description,
+        );
         expect(body).toHaveProperty('datetime');
         expectDatetimesToBeTheSame(body.datetime, sampleConsultation.datetime);
       });
@@ -282,6 +286,10 @@ describe('ConsultationsController (e2e)', () => {
         expect(consultation).toHaveProperty(
           'address',
           consultationDataToUpdate.address,
+        );
+        expect(consultation).toHaveProperty(
+          'description',
+          consultationDataToUpdate.description,
         );
         expect(consultation).toHaveProperty(
           'room',
