@@ -11,7 +11,7 @@ import {
 import { LecturerRepository } from '../repositories/lecturer.repository';
 import { LecturerDto } from '../dtos/lecturers/lecturer.dto';
 import { SaveLecturerDto } from '../dtos/lecturers/save-lecturer.dto';
-import { IdParams } from './id.params';
+import { IdDto } from '../dtos/id.dto';
 import { Connection } from 'typeorm';
 import { LecturerMapper } from '../mappers/lecturer.mapper';
 import { Lecturer } from '../models/lecturer.model';
@@ -37,8 +37,8 @@ export class LecturersController {
   }
 
   @Get(`${apiEndpoint}/:id`)
-  async findById(@Param() idParams: IdParams): Promise<LecturerDto> {
-    const { id } = idParams;
+  async findById(@Param() idDto: IdDto): Promise<LecturerDto> {
+    const { id } = idDto;
     const lecturer = await this.ensureLecturerExistence(id);
     return LecturerMapper.toDto(lecturer);
   }
@@ -61,13 +61,13 @@ export class LecturersController {
 
   @Put(`${apiEndpoint}/:id`)
   async update(
-    @Param() idParams: IdParams,
+    @Param() idDto: IdDto,
     @Body() saveLecturerDto: SaveLecturerDto,
     @Body('groups', GroupsByIdsPipe) groups: Group[],
     @Body('consultations', ConsultationsByIdsPipe)
     consultations: Consultation[],
   ): Promise<void> {
-    const { id } = idParams;
+    const { id } = idDto;
     await this.ensureLecturerExistence(id);
     const lecturer = LecturerMapper.toPersistance(
       saveLecturerDto,
@@ -78,8 +78,8 @@ export class LecturersController {
   }
 
   @Delete(`${apiEndpoint}/:id`)
-  async delete(@Param() idParams: IdParams): Promise<void> {
-    const { id } = idParams;
+  async delete(@Param() idDto: IdDto): Promise<void> {
+    const { id } = idDto;
     await this.ensureLecturerExistence(id);
     return this.lecturerRepository.delete(id);
   }

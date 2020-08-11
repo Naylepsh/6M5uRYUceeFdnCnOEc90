@@ -11,7 +11,7 @@ import {
 import { ParentRepository } from '../repositories/parent.repository';
 import { ParentDto } from '../dtos/parents/parent.dto';
 import { SaveParentDto } from '../dtos/parents/save-parent.dto';
-import { IdParams } from './id.params';
+import { IdDto } from '../dtos/id.dto';
 import { Connection } from 'typeorm';
 import { ParentMapper } from '../mappers/parent.mapper';
 import { Parent } from '../models/parent.model';
@@ -35,8 +35,8 @@ export class ParentsController {
   }
 
   @Get(`${apiEndpoint}/:id`)
-  async findById(@Param() idParams: IdParams): Promise<ParentDto> {
-    const { id } = idParams;
+  async findById(@Param() idDto: IdDto): Promise<ParentDto> {
+    const { id } = idDto;
     const parent = await this.ensureParentExistence(id);
     return ParentMapper.toDto(parent);
   }
@@ -53,19 +53,19 @@ export class ParentsController {
 
   @Put(`${apiEndpoint}/:id`)
   async update(
-    @Param() idParams: IdParams,
+    @Param() idDto: IdDto,
     @Body() saveParentDto: SaveParentDto,
     @Body('children', StudentsByIdsPipe) children: Student[],
   ): Promise<void> {
-    const { id } = idParams;
+    const { id } = idDto;
     await this.ensureParentExistence(id);
     const parent = ParentMapper.toPersistance(saveParentDto, children);
     return this.parentRepository.update({ ...parent, id });
   }
 
   @Delete(`${apiEndpoint}/:id`)
-  async delete(@Param() idParams: IdParams): Promise<void> {
-    const { id } = idParams;
+  async delete(@Param() idDto: IdDto): Promise<void> {
+    const { id } = idDto;
     await this.ensureParentExistence(id);
     return this.parentRepository.delete(id);
   }

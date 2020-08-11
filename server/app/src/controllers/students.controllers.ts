@@ -11,7 +11,7 @@ import {
 import { StudentRepository } from '../repositories/student.repository';
 import { StudentDto } from '../dtos/students/student.dto';
 import { SaveStudentDto } from '../dtos/students/save-student.dto';
-import { IdParams } from './id.params';
+import { IdDto } from '../dtos/id.dto';
 import { Connection } from 'typeorm';
 import { StudentMapper } from '../mappers/student.mapper';
 import { Student } from './../models/student.model';
@@ -39,8 +39,8 @@ export class StudentsController {
   }
 
   @Get(`${apiEndpoint}/:id`)
-  async findById(@Param() idParams: IdParams): Promise<StudentDto> {
-    const { id } = idParams;
+  async findById(@Param() idDto: IdDto): Promise<StudentDto> {
+    const { id } = idDto;
     const student = await this.ensureStudentExistence(id);
     return StudentMapper.toDto(student);
   }
@@ -65,14 +65,14 @@ export class StudentsController {
 
   @Put(`${apiEndpoint}/:id`)
   async update(
-    @Param() idParams: IdParams,
+    @Param() idDto: IdDto,
     @Body() saveStudentDto: SaveStudentDto,
     @Body('parents', ParentsByIdsPipe) parents: Parent[],
     @Body('groups', GroupsByIdsPipe) groups: Group[],
     @Body('consultations', ConsultationsByIdsPipe)
     consultations: Consultation[],
   ): Promise<void> {
-    const { id } = idParams;
+    const { id } = idDto;
     await this.ensureStudentExistence(id);
     const student = StudentMapper.toPersistance(
       saveStudentDto,
@@ -84,8 +84,8 @@ export class StudentsController {
   }
 
   @Delete(`${apiEndpoint}/:id`)
-  async delete(@Param() idParams: IdParams): Promise<void> {
-    const { id } = idParams;
+  async delete(@Param() idDto: IdDto): Promise<void> {
+    const { id } = idDto;
     await this.ensureStudentExistence(id);
     return this.studentRepository.delete(id);
   }
