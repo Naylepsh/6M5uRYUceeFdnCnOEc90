@@ -1,24 +1,14 @@
-import { Injectable, PipeTransform, BadRequestException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { getConnection } from 'typeorm';
 import { ConsultationRepository } from './../repositories/consultation.repository';
 import { Consultation } from '../models/consultation.model';
+import { EntitiesByIdsPipe } from './entities-by-ids.pipe';
 
 @Injectable()
-export class ConsultationsByIdsPipe implements PipeTransform<any> {
-  consultationRepository: ConsultationRepository;
-
+export class ConsultationsByIdsPipe extends EntitiesByIdsPipe<Consultation> {
   constructor() {
     const connection = getConnection();
-    this.consultationRepository = new ConsultationRepository(connection);
-  }
-
-  async transform(ids: string[]): Promise<Consultation[]> {
-    const consultations = await this.consultationRepository.findByIds(ids);
-    if (consultations.length < ids.length) {
-      throw new BadRequestException(
-        'Some of the given consultations do not exist',
-      );
-    }
-    return consultations;
+    const consultationRepository = new ConsultationRepository(connection);
+    super(consultationRepository);
   }
 }
