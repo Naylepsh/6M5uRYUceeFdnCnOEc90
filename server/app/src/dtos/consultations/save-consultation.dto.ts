@@ -16,6 +16,9 @@ export class SaveConsultationDto {
   @IsString()
   room: string;
 
+  @IsString()
+  description: string;
+
   @IsUUID('4', { each: true })
   lecturers: string[];
 
