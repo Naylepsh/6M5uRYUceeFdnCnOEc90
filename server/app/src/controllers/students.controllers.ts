@@ -15,22 +15,21 @@ import { IdParams } from './id.params';
 import { Connection } from 'typeorm';
 import { StudentMapper } from '../mappers/student.mapper';
 import { Student } from './../models/student.model';
-import { ParentRepository } from '../repositories/parent.repository';
 import { GroupRepository } from '../repositories/group.repository';
 import { ConsultationRepository } from '../repositories/consultation.repository';
+import { ParentsByIdsPipe } from '../pipes/parents-by-ids.pipe';
+import { Parent } from '../models/parent.model';
 
 const apiEndpoint = '/students';
 
 @Controller()
 export class StudentsController {
   studentRepository: StudentRepository;
-  parentRepository: ParentRepository;
   groupRepository: GroupRepository;
   consultationRepository: ConsultationRepository;
 
   constructor(private readonly connection: Connection) {
     this.studentRepository = new StudentRepository(connection);
-    this.parentRepository = new ParentRepository(connection);
     this.groupRepository = new GroupRepository(connection);
     this.consultationRepository = new ConsultationRepository(connection);
   }
@@ -49,10 +48,10 @@ export class StudentsController {
   }
 
   @Post(apiEndpoint)
-  async create(@Body() saveStudentDto: SaveStudentDto): Promise<StudentDto> {
-    const parents = await this.parentRepository.findByIds(
-      saveStudentDto.parents,
-    );
+  async create(
+    @Body() saveStudentDto: SaveStudentDto,
+    @Body('parents', ParentsByIdsPipe) parents: Parent[],
+  ): Promise<StudentDto> {
     const groups = await this.groupRepository.findByIds(saveStudentDto.groups);
     const consultations = await this.consultationRepository.findByIds(
       saveStudentDto.consultations,
@@ -71,12 +70,10 @@ export class StudentsController {
   async update(
     @Param() idParams: IdParams,
     @Body() saveStudentDto: SaveStudentDto,
+    @Body('parents', ParentsByIdsPipe) parents: Parent[],
   ): Promise<void> {
     const { id } = idParams;
     await this.ensureStudentExistence(id);
-    const parents = await this.parentRepository.findByIds(
-      saveStudentDto.parents,
-    );
     const groups = await this.groupRepository.findByIds(saveStudentDto.groups);
     const consultations = await this.consultationRepository.findByIds(
       saveStudentDto.consultations,
