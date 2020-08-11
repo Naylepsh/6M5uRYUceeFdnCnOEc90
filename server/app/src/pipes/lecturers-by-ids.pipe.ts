@@ -11,8 +11,8 @@ export class LecturersByIdsPipe implements PipeTransform<any> {
     this.lecturerRepository = new LecturerRepository(connection);
   }
 
-  async transform(value: string[]): Promise<Lecturer[]> {
-    const lecturers = await this.lecturerRepository.findByIds(value);
+  async transform(ids: string[]): Promise<Lecturer[]> {
+    const lecturers = await this.lecturerRepository.findByIds(ids);
     return lecturers;
   }
 }
