@@ -111,7 +111,7 @@ function Post({ post }) {
         )}
       </div>
       <div className="Post_message">{post.message}</div>
-      <div className="Post_place">{post.place}</div>
+      <div className="Post_place">Lokalizacja: {post.place}</div>
     </div>
   );
 }

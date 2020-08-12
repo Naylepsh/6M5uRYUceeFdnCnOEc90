@@ -95,14 +95,27 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
           {message.length}/{MAX_MESSAGE_LENGTH}
         </div>
         <RecentPostsDropdown uid={auth.uid} onSelect={handleRecentSelect} />
-        <textarea
+        {/* <textarea
           ref={placeRef}
           className="NewPost_input"
           placeholder="Dodaj lokalizację"
           value={place}
           onChange={handleAboutChangePlace}
           onKeyDown={handleMessageKeyDown}
-        />
+        /> */}
+        <label for="place">Wybierz lokalizację: </label>
+        <select name="place" id="place" ref={placeRef}>
+          <option value="Pl. Solidarności - Zielona">
+            Pl. Solidarności - Zielona
+          </option>
+          <option value="Pl. Solidarności - Niebieska">
+            Pl. Solidarności - Niebieska
+          </option>
+          <option value="Pl. Solidarności - Żółta">
+            Pl. Solidarności - Żółta
+          </option>
+          <option value="Zdalnie">Zdalnie</option>
+        </select>
         <div className="NewPost_buttons">
           <div>
             <button disabled={saving} type="submit" className="icon_button cta">
