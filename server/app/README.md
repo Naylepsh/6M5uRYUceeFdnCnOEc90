@@ -84,7 +84,7 @@ Nest is [MIT licensed](LICENSE).
   {
     "firstName": <some-string>,
     "lastName": <some-string>,
-    "phoneNumber": <some-string-(schema-not-yet-specified)>,
+    "phoneNumber": <valid-in-polish-region-9-digits-no-other-characters>
     "email": <valid-email>,
     "groups": <array-of-group-ids>,
     "consultations": <array-of-consultation-ids>
@@ -96,7 +96,7 @@ Nest is [MIT licensed](LICENSE).
   {
     "firstName": <some-string>,
     "lastName": <some-string>,
-    "phoneNumber": <some-string-(schema-not-yet-specified)>,
+    "phoneNumber": <valid-in-polish-region-9-digits-no-other-characters>
     "email": <valid-email>,
     "groups": <array-of-group-ids>,
     "consultations": <array-of-consultation-ids>
@@ -138,7 +138,7 @@ Nest is [MIT licensed](LICENSE).
   {
     "firstName": <some-string>,
     "lastName": <some-string>,
-    "phoneNumber": <some-string-(schema-not-yet-specified)>,
+    "phoneNumber": <valid-in-polish-region-9-digits-no-other-characters>
     "email": <valid-email>,
     "children": <array-of-student-ids>
   }
@@ -149,7 +149,7 @@ Nest is [MIT licensed](LICENSE).
   {
     "firstName": <some-string>,
     "lastName": <some-string>,
-    "phoneNumber": <some-string-(schema-not-yet-specified)>,
+    "phoneNumber": <valid-in-polish-region-9-digits-no-other-characters>
     "email": <valid-email>,
     "children": <array-of-student-ids>
   }

@@ -86,7 +86,7 @@ export function createSampleLecturer(): ILecturer {
   return {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
-    phoneNumber: faker.phone.phoneNumber(),
+    phoneNumber: randomPhoneNumber(),
     email: faker.internet.email(),
     groups: [],
     consultations: [],
@@ -97,10 +97,15 @@ export function createSampleParent(): IParent {
   return {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
-    phoneNumber: faker.phone.phoneNumber(),
+    phoneNumber: randomPhoneNumber(),
     email: faker.internet.email(),
     children: [],
   };
+}
+
+// actually not so random
+function randomPhoneNumber(): string {
+  return '123456789';
 }
 
 export function createSampleConsultation(): IConsultation {
