@@ -3,11 +3,12 @@ import { useAppState } from "./../states/AppState";
 import { createPost, DATE_FORMAT } from "./../tools";
 import { format as formatDate } from "date-fns";
 import Avatar from "./Avatar";
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaChevronDown } from "react-icons/fa";
 import RecentPostsDropdown from "./RecentPostsDropdown";
+import { Menu, MenuItem, MenuButton, MenuList } from "@reach/menu-button";
 import "./NewPost.css";
 
-const MAX_MESSAGE_LENGTH = 100;
+const MAX_MESSAGE_LENGTH = 200;
 
 export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
   const [{ auth }] = useAppState();
@@ -16,12 +17,17 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
     getLocalStorageValue(makeNewPostKey(date)) || ""
   );
 
+  const [place, setPlace] = useState(
+    getLocalStorageValue(makeNewPostKey(date)) || ""
+  );
+
   const [saving, setSaving] = useState(false);
   const formRef = useRef();
   const messageRef = useRef();
+  const placeRef = useRef();
 
   useEffect(() => {
-    setLocalStorage(makeNewPostKey(date), message);
+    setLocalStorage(makeNewPostKey(date), message, place);
   });
 
   useEffect(() => {
@@ -30,8 +36,12 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
     }
   }, [takeFocus]);
 
-  const handleAboutChange = (event) => {
+  const handleAboutChangeMessage = (event) => {
     setMessage(event.target.value);
+  };
+
+  const handleAboutChangePlace = (event) => {
+    setPlace(event.target.value);
   };
 
   const tooMuchText = message.length > MAX_MESSAGE_LENGTH;
@@ -41,6 +51,7 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
 
     createPost({
       message: messageRef.current.value,
+      place: placeRef.current.value,
       date: formatDate(date, DATE_FORMAT),
       uid: auth.uid,
     }).then((post) => {
@@ -77,13 +88,21 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
           className="NewPost_input"
           placeholder="Nowa notatka..."
           value={message}
-          onChange={handleAboutChange}
+          onChange={handleAboutChangeMessage}
           onKeyDown={handleMessageKeyDown}
         />
         <div className="NewPost_char_count">
           {message.length}/{MAX_MESSAGE_LENGTH}
         </div>
         <RecentPostsDropdown uid={auth.uid} onSelect={handleRecentSelect} />
+        <textarea
+          ref={placeRef}
+          className="NewPost_input"
+          placeholder="Dodaj lokalizację"
+          value={place}
+          onChange={handleAboutChangePlace}
+          onKeyDown={handleMessageKeyDown}
+        />
         <div className="NewPost_buttons">
           <div>
             <button disabled={saving} type="submit" className="icon_button cta">
