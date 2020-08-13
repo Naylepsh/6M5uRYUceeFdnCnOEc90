@@ -189,7 +189,7 @@ Nest is [MIT licensed](LICENSE).
 ### Consultations
 
 - consultations/ (GET)
-  `supports '?between[]=<start-datetime>&between[]=<end-datetime>` query
+  supports `'?between[]=<start-datetime>&between[]=<end-datetime>` query
 - consultations/ (POST)
   ```
   {
