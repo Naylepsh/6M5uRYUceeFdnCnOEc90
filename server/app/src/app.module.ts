@@ -4,7 +4,6 @@ import { ScheduleModule } from '@nestjs/schedule';
 import controllers from './controllers/';
 import databaseConfiguration from './config/database.configuration';
 import { TasksService } from './services/tasks/task.service';
-import { ConsultationRepository } from './repositories/consultation.repository';
 import { Connection } from 'typeorm';
 
 @Module({
@@ -13,7 +12,7 @@ import { Connection } from 'typeorm';
     ScheduleModule.forRoot(),
   ],
   controllers,
-  providers: [ConsultationRepository],
+  providers: [TasksService],
 })
 export class AppModule {
   constructor(private connection: Connection) {}
