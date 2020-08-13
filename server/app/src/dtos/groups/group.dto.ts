@@ -6,7 +6,6 @@ export class GroupDto {
   day: string;
   time: string;
   address: string;
-  room: string;
   startDate: string;
   endDate: string;
   students: StudentDto[];

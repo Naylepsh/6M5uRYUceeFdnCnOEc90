@@ -149,14 +149,6 @@ describe('ConsultationsController (e2e)', () => {
         expect(status).toBe(400);
       });
 
-      it('should return 400 if room was missing', async () => {
-        delete sampleConsultation.room;
-
-        const { status } = await createConsultation();
-
-        expect(status).toBe(400);
-      });
-
       it('should return 400 if students were missing', async () => {
         delete sampleConsultation.students;
 
@@ -232,7 +224,6 @@ describe('ConsultationsController (e2e)', () => {
         expect(body).toHaveProperty('day', sampleConsultation.day);
         expect(body).toHaveProperty('hour', sampleConsultation.hour);
         expect(body).toHaveProperty('address', sampleConsultation.address);
-        expect(body).toHaveProperty('room', sampleConsultation.room);
         expect(body).toHaveProperty(
           'description',
           sampleConsultation.description,
@@ -306,10 +297,6 @@ describe('ConsultationsController (e2e)', () => {
           'description',
           consultationDataToUpdate.description,
         );
-        expect(consultation).toHaveProperty(
-          'room',
-          consultationDataToUpdate.room,
-        );
         expectDatetimesToBeTheSame(
           consultation.datetime,
           consultationDataToUpdate.datetime,
@@ -368,14 +355,6 @@ describe('ConsultationsController (e2e)', () => {
 
       it('should return 400 if address was missing', async () => {
         delete consultationDataToUpdate.address;
-
-        const { status } = await updateConsultation();
-
-        expect(status).toBe(400);
-      });
-
-      it('should return 400 if room was missing', async () => {
-        delete consultationDataToUpdate.room;
 
         const { status } = await updateConsultation();
 

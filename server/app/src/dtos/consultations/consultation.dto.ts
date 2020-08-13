@@ -5,7 +5,6 @@ export class ConsultationDto {
   id: string;
   datetime: Date;
   address: string;
-  room: string;
   description: string;
   students: StudentDto[];
   lecturers: LecturerDto[];

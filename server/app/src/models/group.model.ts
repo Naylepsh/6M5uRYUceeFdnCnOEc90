@@ -23,9 +23,6 @@ export class Group {
   @Column()
   address: string;
 
-  @Column()
-  room: string;
-
   @Column('date')
   startDate: string;
 

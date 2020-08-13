@@ -122,14 +122,6 @@ describe('GroupsController (e2e)', () => {
         expect(status).toBe(400);
       });
 
-      it('should return 400 if room was not passed', async () => {
-        delete sampleGroup.room;
-
-        const { status } = await createGroup();
-
-        expect(status).toBe(400);
-      });
-
       it('should return 400 if startDate was not passed', async () => {
         delete sampleGroup.startDate;
 
@@ -222,7 +214,6 @@ describe('GroupsController (e2e)', () => {
         expect(body).toHaveProperty('day', sampleGroup.day);
         expect(body).toHaveProperty('hour', sampleGroup.hour);
         expect(body).toHaveProperty('address', sampleGroup.address);
-        expect(body).toHaveProperty('room', sampleGroup.room);
         expect(body).toHaveProperty('startDate');
         expect(body).toHaveProperty('endDate');
         expectDatesToBeTheSame(body.startDate, sampleGroup.startDate);
@@ -281,7 +272,6 @@ describe('GroupsController (e2e)', () => {
         expect(group).toHaveProperty('day', groupDataToUpdate.day);
         expect(group).toHaveProperty('hour', groupDataToUpdate.hour);
         expect(group).toHaveProperty('address', groupDataToUpdate.address);
-        expect(group).toHaveProperty('room', groupDataToUpdate.room);
         expect(group).toHaveProperty('startDate');
         expectDatesToBeTheSame(group.startDate, groupDataToUpdate.startDate);
         expect(group).toHaveProperty('endDate');
@@ -340,14 +330,6 @@ describe('GroupsController (e2e)', () => {
 
       it('should return 400 if address was not passed', async () => {
         delete groupDataToUpdate.address;
-
-        const { status } = await updateGroup();
-
-        expect(status).toBe(400);
-      });
-
-      it('should return 400 if room was not passed', async () => {
-        delete groupDataToUpdate.room;
 
         const { status } = await updateGroup();
 

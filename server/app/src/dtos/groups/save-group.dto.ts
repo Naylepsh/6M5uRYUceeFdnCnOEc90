@@ -15,9 +15,6 @@ export class SaveGroupDto {
   address: string;
 
   @IsString()
-  room: string;
-
-  @IsString()
   startDate: string;
 
   @IsString()
