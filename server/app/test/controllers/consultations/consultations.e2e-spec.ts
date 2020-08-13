@@ -11,6 +11,7 @@ import { expectDatetimesToBeTheSame } from '../../helpers/date.helper';
 import '../../../src/utils/extensions/date.extentions';
 import { createTestApp } from '../../helpers/app.helper';
 import { DatabaseUtility } from '../../helpers/database.helper';
+import { getConnection } from 'typeorm';
 
 describe('ConsultationsController (e2e)', () => {
   const apiEndpoint = '/consultations';
@@ -27,9 +28,7 @@ describe('ConsultationsController (e2e)', () => {
   });
 
   const loadRepositories = () => {
-    consultationRepository = app.get<ConsultationRepository>(
-      ConsultationRepository,
-    );
+    consultationRepository = new ConsultationRepository(getConnection());
   };
 
   beforeEach(async () => {
