@@ -165,7 +165,6 @@ Nest is [MIT licensed](LICENSE).
     "day": <some-string-(schema-not-yet-specified)>,
     "time": "hh:mm",
     "address": <some-string>,
-    "room": <some-string>,
     "startDate": "yyyy-mm-dd",
     "endDate": "yyyy-mm-dd",
     "lecturers": <array-of-lecturer-ids>,
@@ -179,7 +178,6 @@ Nest is [MIT licensed](LICENSE).
     "day": <some-string-(schema-not-yet-specified)>,
     "time": "hh:mm",
     "address": <some-string>,
-    "room": <some-string>,
     "startDate": "yyyy-mm-dd",
     "endDate": "yyyy-mm-dd",
     "lecturers": <array-of-lecturer-ids>,
@@ -197,7 +195,6 @@ Nest is [MIT licensed](LICENSE).
   {
     "datetime": <utc-datetime>,
     "address": <some-string>,
-    "room": <some-string>,
     "description": <some-string>,
     "lecturers": <array-of-lecturer-ids>,
     "students": <array-of-student-ids>
@@ -209,7 +206,6 @@ Nest is [MIT licensed](LICENSE).
   {
     "datetime": <utc-datetime>,
     "address": <some-string>,
-    "room": <some-string>,
     "description": <some-string>,
     "lecturers": <array-of-lecturer-ids>,
     "students": <array-of-student-ids>
