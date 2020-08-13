@@ -15,12 +15,11 @@ export class GroupMapper {
   ): Group {
     this.ensureRepoIsInitialized();
 
-    const { day, time, address, room, startDate, endDate } = createGroupDto;
+    const { day, time, address, startDate, endDate } = createGroupDto;
     const obj = {
       day,
       time,
       address,
-      room,
       startDate,
       endDate,
       lecturers,
@@ -35,7 +34,6 @@ export class GroupMapper {
       day,
       time,
       address,
-      room,
       startDate,
       endDate,
       lecturers,
@@ -46,7 +44,6 @@ export class GroupMapper {
       day,
       time,
       address,
-      room,
       startDate,
       endDate,
       lecturers,

@@ -5,16 +5,11 @@ export class SaveConsultationDto {
   @IsOptional()
   id?: string;
 
-  // Validation is done on values before they're casted to their go-to type
-  // thus why DateString instead of Date
   @IsDateString()
   datetime: Date;
 
   @IsString()
   address: string;
-
-  @IsString()
-  room: string;
 
   @IsString()
   description: string;

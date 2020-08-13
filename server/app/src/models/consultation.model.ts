@@ -21,9 +21,6 @@ export class Consultation {
   address: string;
 
   @Column()
-  room: string;
-
-  @Column()
   description: string;
 
   @ManyToMany(

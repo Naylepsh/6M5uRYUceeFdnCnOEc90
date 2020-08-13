@@ -21,7 +21,6 @@ interface IGroup {
   day: string;
   time: string;
   address: string;
-  room: string;
   startDate: string;
   endDate: string;
   lecturers: string[];
@@ -40,7 +39,6 @@ interface ILecturer {
 interface IConsultation {
   datetime: Date;
   address: string;
-  room: string;
   description: string;
   lecturers: string[];
   students: string[];
@@ -64,8 +62,7 @@ export function createSampleGroup(): IGroup {
   return {
     day: faker.date.weekday(),
     time: randomTime(),
-    address: faker.address.streetName(),
-    room: faker.random.number() + '',
+    address: `${faker.address.streetName()} ${faker.random.number()}`,
     startDate: formatDate(startDate),
     endDate: formatDate(endDate),
     lecturers: [],
@@ -111,8 +108,7 @@ function randomPhoneNumber(): string {
 export function createSampleConsultation(): IConsultation {
   return {
     datetime: faker.date.future(),
-    address: faker.address.streetName(),
-    room: faker.random.number() + '',
+    address: `${faker.address.streetName()} ${faker.random.number()}`,
     description: faker.commerce.product(),
     lecturers: [],
     students: [],

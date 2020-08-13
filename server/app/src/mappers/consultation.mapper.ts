@@ -15,11 +15,10 @@ export class ConsultationMapper {
   ): Consultation {
     this.ensureRepoIsInitialized();
 
-    const { datetime, address, room, description } = createConsultationDto;
+    const { datetime, address, description } = createConsultationDto;
     const obj = {
       datetime,
       address,
-      room,
       description,
       lecturers,
       students,
@@ -32,7 +31,6 @@ export class ConsultationMapper {
       id,
       datetime,
       address,
-      room,
       description,
       lecturers,
       students,
@@ -41,7 +39,6 @@ export class ConsultationMapper {
       id,
       datetime,
       address,
-      room,
       description,
       lecturers,
       students,
