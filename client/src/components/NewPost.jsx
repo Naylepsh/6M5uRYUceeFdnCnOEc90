@@ -21,13 +21,18 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
     getLocalStorageValue(makeNewPostKey(date)) || ""
   );
 
+  const [student, setStudent] = useState(
+    getLocalStorageValue(makeNewPostKey(date)) || ""
+  );
+
   const [saving, setSaving] = useState(false);
   const formRef = useRef();
   const messageRef = useRef();
   const placeRef = useRef();
+  const studentRef = useRef();
 
   useEffect(() => {
-    setLocalStorage(makeNewPostKey(date), message, place);
+    setLocalStorage(makeNewPostKey(date), message, place, student);
   });
 
   useEffect(() => {
@@ -44,6 +49,10 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
     setPlace(event.target.value);
   };
 
+  const handleAboutChangeStudent = (event) => {
+    setStudent(event.target.value);
+  };
+
   const tooMuchText = message.length > MAX_MESSAGE_LENGTH;
 
   const submit = (form) => {
@@ -52,6 +61,7 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
     createPost({
       message: messageRef.current.value,
       place: placeRef.current.value,
+      student: studentRef.current.value,
       date: formatDate(date, DATE_FORMAT),
       uid: auth.uid,
     }).then((post) => {
@@ -95,15 +105,15 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
           {message.length}/{MAX_MESSAGE_LENGTH}
         </div>
         <RecentPostsDropdown uid={auth.uid} onSelect={handleRecentSelect} />
-        {/* <textarea
-          ref={placeRef}
-          className="NewPost_input"
-          placeholder="Dodaj lokalizację"
-          value={place}
-          onChange={handleAboutChangePlace}
-          onKeyDown={handleMessageKeyDown}
-        /> */}
-        <label for="place">Wybierz lokalizację: </label>
+        <label for="student">Uczeń: </label>
+        <input
+          type="text"
+          id="student"
+          name="student"
+          ref={studentRef}
+          autoComplete="on"
+        />
+        <label for="place">Lokalizacja: </label>
         <select name="place" id="place" ref={placeRef}>
           <option value="Pl. Solidarności - Zielona">
             Pl. Solidarności - Zielona
