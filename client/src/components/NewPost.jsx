@@ -25,14 +25,19 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
     getLocalStorageValue(makeNewPostKey(date)) || ""
   );
 
+  const [lecturer, setLecturer] = useState(
+    getLocalStorageValue(makeNewPostKey(date)) || ""
+  );
+
   const [saving, setSaving] = useState(false);
   const formRef = useRef();
   const messageRef = useRef();
   const placeRef = useRef();
   const studentRef = useRef();
+  const lecturerRef = useRef();
 
   useEffect(() => {
-    setLocalStorage(makeNewPostKey(date), message, place, student);
+    setLocalStorage(makeNewPostKey(date), message, place, student, lecturer);
   });
 
   useEffect(() => {
@@ -53,6 +58,10 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
     setStudent(event.target.value);
   };
 
+  const handleAboutChangeLecturer = (event) => {
+    setLecturer(event.target.value);
+  };
+
   const tooMuchText = message.length > MAX_MESSAGE_LENGTH;
 
   const submit = (form) => {
@@ -62,6 +71,7 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
       message: messageRef.current.value,
       place: placeRef.current.value,
       student: studentRef.current.value,
+      lecturer: lecturerRef.current.value,
       date: formatDate(date, DATE_FORMAT),
       uid: auth.uid,
     }).then((post) => {
@@ -112,9 +122,25 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
           name="student"
           ref={studentRef}
           autoComplete="on"
+          onChange={handleAboutChangeStudent}
         />
-        <label for="place">Lokalizacja: </label>
-        <select name="place" id="place" ref={placeRef}>
+        <label for="lecturer"> Prowadzący: </label>
+        <input
+          type="text"
+          id="lecturer"
+          name="lecturer"
+          ref={lecturerRef}
+          autoComplete="on"
+          onChange={handleAboutChangeLecturer}
+        />
+        <br />
+        <label for="place"> Lokalizacja: </label>
+        <select
+          name="place"
+          id="place"
+          ref={placeRef}
+          onChange={handleAboutChangePlace}
+        >
           <option value="Pl. Solidarności - Zielona">
             Pl. Solidarności - Zielona
           </option>
