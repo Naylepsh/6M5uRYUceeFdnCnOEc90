@@ -1,56 +1,43 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
-import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { AppModule } from '../../../src/app.module';
 import { LecturerRepository } from '../../../src/repositories/lecturer.repository';
-import { GroupRepository } from '../../../src/repositories/group.repository';
 import {
   createSampleLecturer,
   createSampleGroup,
 } from '../../helpers/models.helpers';
-import { ValidationPipe } from '../../../src/pipes/validation.pipe';
+import { createTestApp } from '../../helpers/app.helper';
+import { DatabaseUtility } from '../../helpers/database.helper';
+import { getConnection } from 'typeorm';
 
 describe('LecturersController (e2e)', () => {
   let app: INestApplication;
   const apiEndpoint = '/lecturers';
   let lecturerRepository: LecturerRepository;
-  let groupRepository: GroupRepository;
   let sampleLecturer;
   let lecturerId: string;
+  let databaseUtility: DatabaseUtility;
 
   beforeAll(async () => {
-    await loadApp();
+    app = await createTestApp();
     loadRepositories();
+    databaseUtility = await DatabaseUtility.init();
   });
 
-  const loadApp = async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe());
-    await app.init();
-  };
-
   const loadRepositories = () => {
-    lecturerRepository = new LecturerRepository();
-    groupRepository = new GroupRepository();
+    lecturerRepository = new LecturerRepository(getConnection());
   };
 
-  beforeEach(async () => {
-    await cleanDatabase();
+  beforeEach(() => {
     loadSampleLecturer();
+  });
+
+  afterEach(async () => {
+    await databaseUtility.cleanDatabase();
   });
 
   const loadSampleLecturer = () => {
     sampleLecturer = createSampleLecturer();
-  };
-
-  const cleanDatabase = () => {
-    return getConnection().synchronize(true);
   };
 
   afterAll(async () => {
@@ -156,6 +143,14 @@ describe('LecturersController (e2e)', () => {
 
       it('should return 400 if invalid group ids were passed', async () => {
         sampleLecturer.groups = ['1', '2'];
+
+        const { status } = await createLecturer();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if ids of non-existing groups were passed', async () => {
+        sampleLecturer.groups = [uuidv4()];
 
         const { status } = await createLecturer();
 
@@ -350,6 +345,14 @@ describe('LecturersController (e2e)', () => {
 
         expect(status).toBe(400);
       });
+
+      it('should return 400 if ids of non-existing groups were passed', async () => {
+        lecturerDataToUpdate.groups = [uuidv4()];
+
+        const { status } = await updateLecturer();
+
+        expect(status).toBe(400);
+      });
     });
 
     const updateLecturer = () => {
@@ -375,7 +378,7 @@ describe('LecturersController (e2e)', () => {
         await deleteLecturer();
 
         const lecturer = await lecturerRepository.findById(lecturerId);
-        expect(lecturer).toBeNull();
+        expect(lecturer).toBeUndefined();
       });
 
       it('should remove only the lecturer from database', async () => {
@@ -427,9 +430,12 @@ describe('LecturersController (e2e)', () => {
     return request(app.getHttpServer()).get(`${apiEndpoint}/${lecturerId}`);
   };
 
-  const createGroup = () => {
+  const createGroup = async () => {
     const group = createSampleGroup();
-    return groupRepository.create(group);
+    const { body } = await request(app.getHttpServer())
+      .post('/groups')
+      .send(group);
+    return body;
   };
 
   const populateDatabase = async () => {

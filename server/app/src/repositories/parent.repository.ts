@@ -1,99 +1,48 @@
 import { Injectable } from '@nestjs/common';
 import { Parent } from '../models/parent.model';
-import { getConnection } from 'typeorm';
-import { SaveParentDto } from '../dtos/parents/save-parent.dto';
-import { ParentMapper } from '../mappers/parent.mapper';
-import { ParentDto } from '../dtos/parents/parent.dto';
-import { ParentPseudoPersistance } from './../mappers/parent.mapper';
-import { RelationManager } from './helpers/relation';
-import { Student } from '../models/student.model';
+import { Repository, Connection } from 'typeorm';
+import { IRepository } from './repository.interface';
 
 @Injectable()
-export class ParentRepository {
-  groupRelationManager: RelationManager;
-  constructor() {
-    this.groupRelationManager = new RelationManager(Parent, 'children');
+export class ParentRepository implements IRepository<Parent> {
+  repository: Repository<Parent>;
+
+  constructor(connection: Connection) {
+    this.repository = connection.getRepository(Parent);
   }
 
-  async findAll(): Promise<ParentDto[]> {
-    const parentss = await getConnection()
+  async findAll(): Promise<Parent[]> {
+    const parents = await this.repository.find({ relations: ['children'] });
+    return parents;
+  }
+
+  async findById(id: string): Promise<Parent> {
+    const parent = await this.repository.findOne({
+      where: { id },
+      relations: ['children'],
+    });
+    return parent;
+  }
+
+  async findByIds(ids: string[]): Promise<Parent[]> {
+    if (ids.length == 0) return [];
+    const parents = await this.repository
       .createQueryBuilder()
-      .select('parents')
-      .from(Parent, 'parents')
-      .leftJoinAndSelect('parents.children', 'children')
+      .where('id IN (:...ids)', { ids })
       .getMany();
-    return parentss.map(parents =>
-      ParentMapper.toDto(parents, parents.children),
-    );
+    return parents;
   }
 
-  async findById(id: string): Promise<ParentDto> {
-    const parents = await getConnection()
-      .createQueryBuilder()
-      .select('parents')
-      .from(Parent, 'parents')
-      .where('parents.id = :id', { id })
-      .leftJoinAndSelect('parents.children', 'children')
-      .getOne();
-    if (!parents) return null;
-    return ParentMapper.toDto(parents, parents.children);
+  async create(parent: Parent): Promise<Parent> {
+    const res = await this.repository.save(parent);
+    return res;
   }
 
-  async create(createParentDto: SaveParentDto): Promise<ParentDto> {
-    const parentsToSave = ParentMapper.toPersistance(createParentDto);
-    const id = await this.insertParentFields(parentsToSave);
-    await this.groupRelationManager.insertRelation(
-      id,
-      createParentDto.children,
-    );
-
-    return this.findById(id);
-  }
-
-  private async insertParentFields(
-    parentsToSave: ParentPseudoPersistance,
-  ): Promise<string> {
-    const parents = await getConnection()
-      .createQueryBuilder()
-      .insert()
-      .into(Parent)
-      .values([parentsToSave])
-      .execute();
-    const id = parents.identifiers[0]['id'];
-    return id;
-  }
-
-  async update(createParentDto: SaveParentDto): Promise<void> {
-    const id = createParentDto.id;
-    const parentsToSave = ParentMapper.toPersistance(createParentDto);
-    const parents = await this.findById(id);
-    await this.updateParentFields(id, parentsToSave);
-    const childrenToRemove = parents.children.map(group => group.id);
-    await this.groupRelationManager.updateRelation(
-      id,
-      createParentDto.children,
-      childrenToRemove,
-    );
-  }
-
-  private async updateParentFields(
-    id: string,
-    parentsToSave: ParentPseudoPersistance,
-  ): Promise<void> {
-    await getConnection()
-      .createQueryBuilder()
-      .update(Parent)
-      .set(parentsToSave)
-      .where('id = :id', { id })
-      .execute();
+  async update(parent: Parent): Promise<void> {
+    await this.repository.save(parent);
   }
 
   async delete(id: string): Promise<void> {
-    await getConnection()
-      .createQueryBuilder()
-      .delete()
-      .from(Parent)
-      .where('id = :id', { id })
-      .execute();
+    await this.repository.delete(id);
   }
 }

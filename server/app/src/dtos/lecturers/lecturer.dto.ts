@@ -1,4 +1,5 @@
 import { GroupDto } from '../groups/group.dto';
+import { ConsultationDto } from '../consultations/consultation.dto';
 
 export class LecturerDto {
   id: string;
@@ -7,4 +8,5 @@ export class LecturerDto {
   email: string;
   phoneNumber: string;
   groups: GroupDto[];
+  consultations: ConsultationDto[];
 }

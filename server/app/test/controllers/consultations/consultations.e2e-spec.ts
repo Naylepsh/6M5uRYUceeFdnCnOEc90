@@ -1,61 +1,46 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
-import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { AppModule } from '../../../src/app.module';
-import { LecturerRepository } from '../../../src/repositories/lecturer.repository';
 import { ConsultationRepository } from '../../../src/repositories/consultation.repository';
-import { StudentRepository } from '../../../src/repositories/student.repository';
 import {
   createSampleStudent,
   createSampleConsultation,
+  createSampleLecturer,
 } from '../../helpers/models.helpers';
 import { expectDatetimesToBeTheSame } from '../../helpers/date.helper';
 import '../../../src/utils/extensions/date.extentions';
-import { ValidationPipe } from '../../../src/pipes/validation.pipe';
+import { createTestApp } from '../../helpers/app.helper';
+import { DatabaseUtility } from '../../helpers/database.helper';
+import { getConnection } from 'typeorm';
 
 describe('ConsultationsController (e2e)', () => {
-  let app: INestApplication;
   const apiEndpoint = '/consultations';
-  let lecturerRepository: LecturerRepository;
-  let studentRepository: StudentRepository;
+  let app: INestApplication;
   let consultationRepository: ConsultationRepository;
   let sampleConsultation;
   let consultationId: string;
+  let databaseUtility: DatabaseUtility;
 
   beforeAll(async () => {
-    await loadApp();
+    app = await createTestApp();
     loadRepositories();
+    databaseUtility = await DatabaseUtility.init();
   });
 
-  const loadApp = async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe());
-    await app.init();
-  };
-
   const loadRepositories = () => {
-    lecturerRepository = new LecturerRepository();
-    studentRepository = new StudentRepository();
-    consultationRepository = new ConsultationRepository();
+    consultationRepository = new ConsultationRepository(getConnection());
   };
 
   beforeEach(async () => {
-    await cleanDatabase();
     loadSampleConsultation();
+  });
+
+  afterEach(async () => {
+    await databaseUtility.cleanDatabase();
   });
 
   const loadSampleConsultation = () => {
     sampleConsultation = createSampleConsultation();
-  };
-
-  const cleanDatabase = () => {
-    return getConnection().synchronize(true);
   };
 
   afterAll(async () => {
@@ -188,6 +173,14 @@ describe('ConsultationsController (e2e)', () => {
         expect(status).toBe(400);
       });
 
+      it('should return 400 if ids of non-existing students were passed', async () => {
+        sampleConsultation.students = [uuidv4()];
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
       it('should return 400 if lecturers were missing', async () => {
         delete sampleConsultation.lecturers;
 
@@ -198,6 +191,14 @@ describe('ConsultationsController (e2e)', () => {
 
       it('should return 400 if invalid lecturer ids were passed', async () => {
         sampleConsultation.lecturers = ['1', '2'];
+
+        const { status } = await createConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if ids of non-existing lecturers were passed', async () => {
+        sampleConsultation.lecturers = [uuidv4()];
 
         const { status } = await createConsultation();
 
@@ -232,6 +233,10 @@ describe('ConsultationsController (e2e)', () => {
         expect(body).toHaveProperty('hour', sampleConsultation.hour);
         expect(body).toHaveProperty('address', sampleConsultation.address);
         expect(body).toHaveProperty('room', sampleConsultation.room);
+        expect(body).toHaveProperty(
+          'description',
+          sampleConsultation.description,
+        );
         expect(body).toHaveProperty('datetime');
         expectDatetimesToBeTheSame(body.datetime, sampleConsultation.datetime);
       });
@@ -296,6 +301,10 @@ describe('ConsultationsController (e2e)', () => {
         expect(consultation).toHaveProperty(
           'address',
           consultationDataToUpdate.address,
+        );
+        expect(consultation).toHaveProperty(
+          'description',
+          consultationDataToUpdate.description,
         );
         expect(consultation).toHaveProperty(
           'room',
@@ -389,6 +398,14 @@ describe('ConsultationsController (e2e)', () => {
         expect(status).toBe(400);
       });
 
+      it('should return 400 if ids for non-existing students were passed', async () => {
+        consultationDataToUpdate.students = [uuidv4()];
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
       it('should return 400 if lecturers were missing', async () => {
         delete consultationDataToUpdate.lecturers;
 
@@ -399,6 +416,14 @@ describe('ConsultationsController (e2e)', () => {
 
       it('should return 400 if invalid lecturer ids were passed', async () => {
         consultationDataToUpdate.lecturers = ['1', '2'];
+
+        const { status } = await updateConsultation();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if ids for non-existing lecturers were passed', async () => {
+        consultationDataToUpdate.lecturers = [uuidv4()];
 
         const { status } = await updateConsultation();
 
@@ -428,8 +453,10 @@ describe('ConsultationsController (e2e)', () => {
       it('should remove consultation from database', async () => {
         await deleteConsultation();
 
-        const lecturer = await lecturerRepository.findById(consultationId);
-        expect(lecturer).toBeNull();
+        const consultation = await consultationRepository.findById(
+          consultationId,
+        );
+        expect(consultation).toBeUndefined();
       });
 
       it('should remove only the consultation from database', async () => {
@@ -481,21 +508,20 @@ describe('ConsultationsController (e2e)', () => {
     return request(app.getHttpServer()).get(`${apiEndpoint}/${consultationId}`);
   };
 
-  const createLecturer = () => {
-    const lecturer = {
-      firstName: 'john',
-      lastName: 'doe',
-      email: 'example@mail.com',
-      phoneNumber: '123456789',
-      consultations: [],
-      groups: [],
-    };
-    return lecturerRepository.create(lecturer);
+  const createLecturer = async () => {
+    const lecturer = createSampleLecturer();
+    const { body } = await request(app.getHttpServer())
+      .post('/lecturers')
+      .send(lecturer);
+    return body;
   };
 
-  const createStudent = () => {
+  const createStudent = async () => {
     const student = createSampleStudent();
-    return studentRepository.create(student);
+    const { body } = await request(app.getHttpServer())
+      .post('/students')
+      .send(student);
+    return body;
   };
 
   const populateDatabase = async () => {

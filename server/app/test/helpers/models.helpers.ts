@@ -6,6 +6,7 @@ interface IStudent {
   lastName: string;
   groups: string[];
   parents: string[];
+  consultations: string[];
 }
 
 interface IParent {
@@ -33,12 +34,14 @@ interface ILecturer {
   phoneNumber: string;
   email: string;
   groups: string[];
+  consultations: string[];
 }
 
 interface IConsultation {
   datetime: Date;
   address: string;
   room: string;
+  description: string;
   lecturers: string[];
   students: string[];
 }
@@ -49,6 +52,7 @@ export function createSampleStudent(): IStudent {
     lastName: faker.name.lastName(),
     groups: [],
     parents: [],
+    consultations: [],
   };
 }
 
@@ -82,9 +86,10 @@ export function createSampleLecturer(): ILecturer {
   return {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
-    phoneNumber: faker.phone.phoneNumber(),
+    phoneNumber: randomPhoneNumber(),
     email: faker.internet.email(),
     groups: [],
+    consultations: [],
   };
 }
 
@@ -92,17 +97,23 @@ export function createSampleParent(): IParent {
   return {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
-    phoneNumber: faker.phone.phoneNumber(),
+    phoneNumber: randomPhoneNumber(),
     email: faker.internet.email(),
     children: [],
   };
+}
+
+// actually not so random
+function randomPhoneNumber(): string {
+  return '123456789';
 }
 
 export function createSampleConsultation(): IConsultation {
   return {
     datetime: faker.date.future(),
     address: faker.address.streetName(),
-    room: faker.random.number + '',
+    room: faker.random.number() + '',
+    description: faker.commerce.product(),
     lecturers: [],
     students: [],
   };

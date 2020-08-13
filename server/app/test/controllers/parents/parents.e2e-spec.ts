@@ -1,56 +1,43 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
-import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { AppModule } from '../../../src/app.module';
 import { ParentRepository } from '../../../src/repositories/parent.repository';
-import { StudentRepository } from '../../../src/repositories/student.repository';
 import {
   createSampleStudent,
   createSampleParent,
 } from '../../helpers/models.helpers';
-import { ValidationPipe } from '../../../src/pipes/validation.pipe';
+import { createTestApp } from '../../helpers/app.helper';
+import { DatabaseUtility } from '../../helpers/database.helper';
+import { getConnection } from 'typeorm';
 
 describe('ParentsController (e2e)', () => {
   let app: INestApplication;
   const apiEndpoint = '/parents';
   let parentRepository: ParentRepository;
-  let studentRepository: StudentRepository;
   let sampleParent;
   let parentId: string;
+  let databaseUtility: DatabaseUtility;
 
   beforeAll(async () => {
-    await loadApp();
+    app = await createTestApp();
     loadRepositories();
+    databaseUtility = await DatabaseUtility.init();
   });
 
-  const loadApp = async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe());
-    await app.init();
-  };
-
   const loadRepositories = () => {
-    parentRepository = new ParentRepository();
-    studentRepository = new StudentRepository();
+    parentRepository = new ParentRepository(getConnection());
   };
 
-  beforeEach(async () => {
-    await cleanDatabase();
+  beforeEach(() => {
     loadSampleParent();
+  });
+
+  afterEach(async () => {
+    await databaseUtility.cleanDatabase();
   });
 
   const loadSampleParent = () => {
     sampleParent = createSampleParent();
-  };
-
-  const cleanDatabase = () => {
-    return getConnection().synchronize(true);
   };
 
   afterAll(async () => {
@@ -156,6 +143,14 @@ describe('ParentsController (e2e)', () => {
 
       it('should return 400 if invalid children ids were passed', async () => {
         sampleParent.children = ['1', '2'];
+
+        const { status } = await createParent();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if ids of non-existing children were passed', async () => {
+        sampleParent.children = [uuidv4()];
 
         const { status } = await createParent();
 
@@ -348,6 +343,14 @@ describe('ParentsController (e2e)', () => {
 
         expect(status).toBe(400);
       });
+
+      it('should return 400 if ids of non-existing children were passed', async () => {
+        parentDataToUpdate.children = [uuidv4()];
+
+        const { status } = await updateParent();
+
+        expect(status).toBe(400);
+      });
     });
 
     const updateParent = () => {
@@ -373,7 +376,7 @@ describe('ParentsController (e2e)', () => {
         await deleteParent();
 
         const parent = await parentRepository.findById(parentId);
-        expect(parent).toBeNull();
+        expect(parent).toBeUndefined();
       });
 
       it('should remove only the parent from database', async () => {
@@ -421,9 +424,12 @@ describe('ParentsController (e2e)', () => {
     return request(app.getHttpServer()).get(`${apiEndpoint}/${parentId}`);
   };
 
-  const createStudent = () => {
+  const createStudent = async () => {
     const student = createSampleStudent();
-    return studentRepository.create(student);
+    const { body } = await request(app.getHttpServer())
+      .post('/students')
+      .send(student);
+    return body;
   };
 
   const populateDatabase = async () => {

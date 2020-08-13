@@ -23,11 +23,22 @@ export class Consultation {
   @Column()
   room: string;
 
-  @ManyToMany(type => Lecturer)
+  @Column()
+  description: string;
+
+  @ManyToMany(
+    () => Lecturer,
+    lecturer => lecturer.consultations,
+    { cascade: true },
+  )
   @JoinTable()
   lecturers: Lecturer[];
 
-  @ManyToMany(type => Student)
+  @ManyToMany(
+    () => Student,
+    student => student.consultations,
+    { cascade: true },
+  )
   @JoinTable()
   students: Student[];
 }

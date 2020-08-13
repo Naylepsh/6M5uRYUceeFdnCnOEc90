@@ -21,11 +21,14 @@ export class Lecturer {
   email: string;
 
   @ManyToMany(
-    type => Group,
+    () => Group,
     group => group.lecturers,
   )
   groups: Group[];
 
-  @ManyToMany(type => Consultation)
+  @ManyToMany(
+    () => Consultation,
+    consultation => consultation.lecturers,
+  )
   consultations: Consultation[];
 }

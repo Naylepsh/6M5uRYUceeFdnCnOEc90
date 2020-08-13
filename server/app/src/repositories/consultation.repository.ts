@@ -1,160 +1,65 @@
-import { Injectable } from '@nestjs/common';
 import { ConsultationDto } from '../dtos/consultations/consultation.dto';
-import { SaveConsultationDto } from '../dtos/consultations/save-consultation.dto';
-import { getConnection } from 'typeorm';
+import { Repository, EntityRepository, Connection, Between } from 'typeorm';
 import { Consultation } from '../models/consultation.model';
-import { ConsultationMapper } from '../mappers/consultation.mapper';
-import { ConsultationPseudoPersistance } from './../mappers/consultation.mapper';
-import { RelationManager } from './helpers/relation';
+import { Injectable } from '@nestjs/common';
+import { IRepository } from './repository.interface';
 
 @Injectable()
-export class ConsultationRepository {
-  lecturerRelationManager: RelationManager;
-  studentsRelationManager: RelationManager;
+@EntityRepository(Consultation)
+export class ConsultationRepository implements IRepository<Consultation> {
+  consultationRepository: Repository<Consultation>;
 
-  constructor() {
-    this.lecturerRelationManager = new RelationManager(
-      Consultation,
-      'lecturers',
-    );
-    this.studentsRelationManager = new RelationManager(
-      Consultation,
-      'students',
-    );
+  constructor(connection: Connection) {
+    this.consultationRepository = connection.getRepository(Consultation);
   }
 
-  async findAll(): Promise<ConsultationDto[]> {
-    const consultations = await getConnection()
-      .createQueryBuilder()
-      .select('consultation')
-      .from(Consultation, 'consultation')
-      .leftJoinAndSelect('consultation.lecturers', 'lecturers')
-      .leftJoinAndSelect('consultation.students', 'students')
-      .leftJoinAndSelect('students.parents', 'parents')
-      .getMany();
-    return consultations.map(consultation =>
-      ConsultationMapper.toDto(
-        consultation,
-        consultation.lecturers,
-        consultation.students,
-      ),
-    );
+  async findAll(): Promise<Consultation[]> {
+    const consultations = await this.consultationRepository.find({
+      relations: ['lecturers', 'students', 'students.parents'],
+    });
+
+    return consultations;
   }
 
   async findAllBetween(
     startDatetime: string,
     endDatetime: string,
   ): Promise<ConsultationDto[]> {
-    const consultations = await getConnection()
+    return this.consultationRepository.find({
+      where: {
+        datetime: Between(startDatetime, endDatetime),
+      },
+      relations: ['lecturers', 'students', 'students.parents'],
+    });
+  }
+
+  async findById(id: string): Promise<Consultation> {
+    const consultation = await this.consultationRepository.findOne({
+      where: { id },
+      relations: ['lecturers', 'students', 'students.parents'],
+    });
+
+    return consultation;
+  }
+
+  async findByIds(ids: string[]): Promise<Consultation[]> {
+    if (ids.length == 0) return [];
+    const consultations = await this.consultationRepository
       .createQueryBuilder()
-      .select('consultation')
-      .from(Consultation, 'consultation')
-      .where('consultation.datetime BETWEEN :startDatetime AND :endDatetime', {
-        startDatetime,
-        endDatetime,
-      })
-      .leftJoinAndSelect('consultation.lecturers', 'lecturers')
-      .leftJoinAndSelect('consultation.students', 'students')
-      .leftJoinAndSelect('students.parents', 'parents')
+      .where('id IN (:...ids)', { ids })
       .getMany();
-    return consultations.map(consultation =>
-      ConsultationMapper.toDto(
-        consultation,
-        consultation.lecturers,
-        consultation.students,
-      ),
-    );
+    return consultations;
   }
 
-  async findById(id: string): Promise<ConsultationDto> {
-    const consultation = await getConnection()
-      .createQueryBuilder()
-      .select('consultation')
-      .from(Consultation, 'consultation')
-      .where('consultation.id = :id', { id })
-      .leftJoinAndSelect('consultation.lecturers', 'lecturers')
-      .leftJoinAndSelect('consultation.students', 'students')
-      .leftJoinAndSelect('students.parents', 'parents')
-      .getOne();
-    if (!consultation) return null;
-    return ConsultationMapper.toDto(
-      consultation,
-      consultation.lecturers,
-      consultation.students,
-    );
+  async create(consultation: Consultation): Promise<Consultation> {
+    return this.consultationRepository.save(consultation);
   }
 
-  async create(consultationDto: SaveConsultationDto): Promise<ConsultationDto> {
-    const consultationToSave = ConsultationMapper.toPersistance(
-      consultationDto,
-    );
-    const id = await this.insertConsultationFields(consultationToSave);
-    await this.lecturerRelationManager.insertRelation(
-      id,
-      consultationDto.lecturers,
-    );
-    await this.studentsRelationManager.insertRelation(
-      id,
-      consultationDto.students,
-    );
-    return this.findById(id);
-  }
-
-  private async insertConsultationFields(
-    consultationToSave: ConsultationPseudoPersistance,
-  ): Promise<string> {
-    const consultation = await getConnection()
-      .createQueryBuilder()
-      .insert()
-      .into(Consultation)
-      .values(consultationToSave)
-      .execute();
-
-    const id = consultation.identifiers[0]['id'];
-    return id;
-  }
-
-  async update(consultationDto: SaveConsultationDto): Promise<void> {
-    const id = consultationDto.id;
-    const consultationToSave = ConsultationMapper.toPersistance(
-      consultationDto,
-    );
-    await this.updateConsultationFields(id, consultationToSave);
-    const consultation = await this.findById(id);
-    const lecturersToRemove = consultation.lecturers.map(
-      lecturer => lecturer.id,
-    );
-    await this.lecturerRelationManager.updateRelation(
-      id,
-      consultationDto.lecturers,
-      lecturersToRemove,
-    );
-    const studentsToRemove = consultation.students.map(student => student.id);
-    await this.studentsRelationManager.updateRelation(
-      id,
-      consultationDto.students,
-      studentsToRemove,
-    );
-  }
-
-  private async updateConsultationFields(
-    id: string,
-    consultationToSave: ConsultationPseudoPersistance,
-  ): Promise<void> {
-    await getConnection()
-      .createQueryBuilder()
-      .update(Consultation)
-      .set(consultationToSave)
-      .where('id = :id', { id })
-      .execute();
+  async update(consultation: Consultation): Promise<void> {
+    await this.consultationRepository.save(consultation);
   }
 
   async delete(id: string): Promise<void> {
-    await getConnection()
-      .createQueryBuilder()
-      .delete()
-      .from(Consultation)
-      .where('id = :id', { id })
-      .execute();
+    await this.consultationRepository.delete(id);
   }
 }

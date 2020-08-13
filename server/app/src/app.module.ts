@@ -4,6 +4,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import controllers from './controllers/';
 import databaseConfiguration from './config/database.configuration';
 import { TasksService } from './services/tasks/task.service';
+import { Connection } from 'typeorm';
 
 @Module({
   imports: [
@@ -13,4 +14,6 @@ import { TasksService } from './services/tasks/task.service';
   controllers,
   providers: [TasksService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private connection: Connection) {}
+}

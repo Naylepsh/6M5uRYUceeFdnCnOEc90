@@ -16,4 +16,7 @@ export class SaveStudentDto {
 
   @IsUUID('4', { each: true })
   parents: string[];
+
+  @IsUUID('4', { each: true })
+  consultations: string[];
 }

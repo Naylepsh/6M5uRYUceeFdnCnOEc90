@@ -1,4 +1,10 @@
-import { IsUUID, IsOptional, IsString, IsEmail } from 'class-validator';
+import {
+  IsUUID,
+  IsOptional,
+  IsString,
+  IsEmail,
+  IsPhoneNumber,
+} from 'class-validator';
 
 export class SaveParentDto {
   @IsUUID('4')
@@ -12,8 +18,10 @@ export class SaveParentDto {
   lastName: string;
 
   @IsString()
+  @IsPhoneNumber('pl') // null for region doesnt matter
   phoneNumber: string;
 
+  @IsString()
   @IsEmail()
   email: string;
 

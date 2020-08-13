@@ -1,60 +1,44 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
-import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { AppModule } from '../../../src/app.module';
 import { StudentRepository } from '../../../src/repositories/student.repository';
-import { GroupRepository } from '../../../src/repositories/group.repository';
-import { ParentRepository } from '../../../src/repositories/parent.repository';
 import {
   createSampleParent,
   createSampleGroup,
   createSampleStudent,
 } from '../../helpers/models.helpers';
-import { ValidationPipe } from '../../../src/pipes/validation.pipe';
+import { createTestApp } from '../../helpers/app.helper';
+import { DatabaseUtility } from '../../helpers/database.helper';
+import { getConnection } from 'typeorm';
 
 describe('StudentsController (e2e)', () => {
   let app: INestApplication;
   const apiEndpoint = '/students';
   let studentRepository: StudentRepository;
-  let groupRepository: GroupRepository;
-  let parentRepository: ParentRepository;
   let sampleStudent;
   let studentId: string;
+  let databaseUtility: DatabaseUtility;
 
   beforeAll(async () => {
-    await loadApp();
+    app = await createTestApp();
     loadRepositories();
+    databaseUtility = await DatabaseUtility.init();
   });
 
-  const loadApp = async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe());
-    await app.init();
-  };
-
   const loadRepositories = () => {
-    studentRepository = new StudentRepository();
-    groupRepository = new GroupRepository();
-    parentRepository = new ParentRepository();
+    studentRepository = new StudentRepository(getConnection());
   };
 
-  beforeEach(async () => {
-    await cleanDatabase();
+  beforeEach(() => {
     loadSampleStudent();
+  });
+
+  afterEach(async () => {
+    await databaseUtility.cleanDatabase();
   });
 
   const loadSampleStudent = () => {
     sampleStudent = createSampleStudent();
-  };
-
-  const cleanDatabase = () => {
-    return getConnection().synchronize(true);
   };
 
   afterAll(async () => {
@@ -352,7 +336,7 @@ describe('StudentsController (e2e)', () => {
         await deleteStudent();
 
         const student = await studentRepository.findById(studentId);
-        expect(student).toBeNull();
+        expect(student).toBeUndefined();
       });
 
       it('should remove only the student from database', async () => {
@@ -402,14 +386,20 @@ describe('StudentsController (e2e)', () => {
     return request(app.getHttpServer()).get(`${apiEndpoint}/${studentId}`);
   };
 
-  const createGroup = () => {
+  const createGroup = async () => {
     const group = createSampleGroup();
-    return groupRepository.create(group);
+    const { body } = await request(app.getHttpServer())
+      .post('/groups')
+      .send(group);
+    return body;
   };
 
-  const createParent = () => {
+  const createParent = async () => {
     const parent = createSampleParent();
-    return parentRepository.create(parent);
+    const { body } = await request(app.getHttpServer())
+      .post('/parents')
+      .send(parent);
+    return body;
   };
 
   const populateDatabase = async () => {

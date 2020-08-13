@@ -1,33 +1,56 @@
 import { SaveLecturerDto } from '../dtos/lecturers/save-lecturer.dto';
 import { Lecturer } from '../models/lecturer.model';
 import { LecturerDto } from '../dtos/lecturers/lecturer.dto';
+import { Repository, getConnection } from 'typeorm';
 import { Group } from '../models/group.model';
-import { GroupMapper } from './group.mapper';
-
-export interface LecturerPseudoPersistance {
-  id?: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  email: string;
-}
+import { Consultation } from '../models/consultation.model';
 
 export class LecturerMapper {
+  private static lecturerRepository: Repository<Lecturer>;
+
   public static toPersistance(
     createLecturerDto: SaveLecturerDto,
-  ): LecturerPseudoPersistance {
+    groups: Group[],
+    consultations: Consultation[],
+  ): Lecturer {
+    this.ensureRepoIsInitialized();
+
     const { firstName, lastName, phoneNumber, email } = createLecturerDto;
-    return {
+    const obj = {
       firstName,
       lastName,
       phoneNumber,
       email,
+      groups,
+      consultations,
+    };
+    return this.lecturerRepository.create(obj);
+  }
+
+  public static toDto(lecturer: Lecturer): LecturerDto {
+    const {
+      id,
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      groups,
+      consultations,
+    } = lecturer;
+    return {
+      id,
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      groups,
+      consultations,
     };
   }
 
-  public static toDto(lecturer: Lecturer, groups: Group[] = []): LecturerDto {
-    const { id, firstName, lastName, phoneNumber, email } = lecturer;
-    const groupDtos = groups.map(group => GroupMapper.toDto(group));
-    return { id, firstName, lastName, phoneNumber, email, groups: groupDtos };
+  private static ensureRepoIsInitialized() {
+    if (!this.lecturerRepository) {
+      this.lecturerRepository = getConnection().getRepository(Lecturer);
+    }
   }
 }

@@ -1,57 +1,45 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
-import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { AppModule } from '../../../src/app.module';
-import { LecturerRepository } from '../../../src/repositories/lecturer.repository';
 import { GroupRepository } from '../../../src/repositories/group.repository';
-import { StudentRepository } from '../../../src/repositories/student.repository';
 import { expectDatesToBeTheSame } from '../../helpers/date.helper';
-import { createSampleGroup } from '../../helpers/models.helpers';
-import { ValidationPipe } from '../../../src/pipes/validation.pipe';
+import {
+  createSampleGroup,
+  createSampleStudent,
+  createSampleLecturer,
+} from '../../helpers/models.helpers';
+import { createTestApp } from '../../helpers/app.helper';
+import { DatabaseUtility } from '../../helpers/database.helper';
+import { getConnection } from 'typeorm';
 
 describe('GroupsController (e2e)', () => {
   let app: INestApplication;
   const apiEndpoint = '/groups';
-  let lecturerRepository: LecturerRepository;
-  let studentRepository: StudentRepository;
   let groupRepository: GroupRepository;
   let sampleGroup;
   let groupId: string;
+  let databaseUtility: DatabaseUtility;
 
   beforeAll(async () => {
-    await loadApp();
+    app = await createTestApp();
     loadRepositories();
+    databaseUtility = await DatabaseUtility.init();
   });
 
-  const loadApp = async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe());
-    await app.init();
-  };
-
   const loadRepositories = () => {
-    lecturerRepository = new LecturerRepository();
-    studentRepository = new StudentRepository();
-    groupRepository = new GroupRepository();
+    groupRepository = new GroupRepository(getConnection());
   };
 
-  beforeEach(async () => {
-    await cleanDatabase();
+  beforeEach(() => {
     loadSampleGroup();
+  });
+
+  afterEach(async () => {
+    await databaseUtility.cleanDatabase();
   });
 
   const loadSampleGroup = () => {
     sampleGroup = createSampleGroup();
-  };
-
-  const cleanDatabase = () => {
-    return getConnection().synchronize(true);
   };
 
   afterAll(async () => {
@@ -174,6 +162,14 @@ describe('GroupsController (e2e)', () => {
         expect(status).toBe(400);
       });
 
+      it('should return 400 if ids of non-existing lecturers were passed', async () => {
+        sampleGroup.lecturers = [uuidv4()];
+
+        const { status } = await createGroup();
+
+        expect(status).toBe(400);
+      });
+
       it('should return 400 if students were not passed', async () => {
         delete sampleGroup.students;
 
@@ -184,6 +180,14 @@ describe('GroupsController (e2e)', () => {
 
       it('should return 400 if invalid student ids was passed', async () => {
         sampleGroup.students = ['1', '2'];
+
+        const { status } = await createGroup();
+
+        expect(status).toBe(400);
+      });
+
+      it('should return 400 if ids of non-existing students were passed', async () => {
+        sampleGroup.students = [uuidv4()];
 
         const { status } = await createGroup();
 
@@ -201,6 +205,7 @@ describe('GroupsController (e2e)', () => {
   describe(`${apiEndpoint}/:id (GET)`, () => {
     describe('if group exists in database', () => {
       beforeEach(async () => {
+        loadSampleGroup();
         await populateDatabase();
       });
 
@@ -408,6 +413,7 @@ describe('GroupsController (e2e)', () => {
   describe(`${apiEndpoint}/:id (DELETE)`, () => {
     describe('if group exists in database', () => {
       beforeEach(async () => {
+        loadSampleGroup();
         await populateDatabase();
       });
 
@@ -420,8 +426,8 @@ describe('GroupsController (e2e)', () => {
       it('should remove group from database', async () => {
         await deleteGroup();
 
-        const lecturer = await lecturerRepository.findById(groupId);
-        expect(lecturer).toBeNull();
+        const group = await groupRepository.findById(groupId);
+        expect(group).toBeUndefined();
       });
 
       it('should remove only the group from database', async () => {
@@ -469,29 +475,26 @@ describe('GroupsController (e2e)', () => {
     return request(app.getHttpServer()).get(`${apiEndpoint}/${groupId}`);
   };
 
-  const createLecturer = () => {
-    const lecturer = {
-      firstName: 'john',
-      lastName: 'doe',
-      email: 'example@mail.com',
-      phoneNumber: '123456789',
-      groups: [],
-    };
-    return lecturerRepository.create(lecturer);
+  const createLecturer = async () => {
+    const lecturer = createSampleLecturer();
+    const { body } = await request(app.getHttpServer())
+      .post('/lecturers')
+      .send(lecturer);
+    return body;
   };
 
-  const createStudent = () => {
-    const student = {
-      firstName: 'john',
-      lastName: 'doe',
-      groups: [],
-      parents: [],
-    };
-    return studentRepository.create(student);
+  const createStudent = async () => {
+    const student = createSampleStudent();
+    const { body } = await request(app.getHttpServer())
+      .post('/students')
+      .send(student);
+    return body;
   };
 
   const populateDatabase = async () => {
-    const group = await groupRepository.create(sampleGroup);
+    const { body: group } = await request(app.getHttpServer())
+      .post(apiEndpoint)
+      .send(sampleGroup);
     groupId = group.id;
   };
 });

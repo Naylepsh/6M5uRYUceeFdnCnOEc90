@@ -39,7 +39,10 @@ export class Group {
   @JoinTable()
   lecturers: Lecturer[];
 
-  @ManyToMany(() => Student)
+  @ManyToMany(
+    () => Student,
+    student => student.groups,
+  )
   @JoinTable()
   students: Student[];
 }

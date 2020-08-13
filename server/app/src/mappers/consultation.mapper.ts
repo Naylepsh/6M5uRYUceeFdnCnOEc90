@@ -1,48 +1,56 @@
 import { Consultation } from '../models/consultation.model';
-import { Lecturer } from '../models/lecturer.model';
 import { ConsultationDto } from '../dtos/consultations/consultation.dto';
-import { LecturerMapper } from './lecturer.mapper';
 import { SaveConsultationDto } from '../dtos/consultations/save-consultation.dto';
+import { Repository, getConnection } from 'typeorm';
+import { Lecturer } from '../models/lecturer.model';
 import { Student } from '../models/student.model';
-import { StudentMapper } from './student.mapper';
-
-export interface ConsultationPseudoPersistance {
-  datetime: Date;
-  address: string;
-  room: string;
-}
 
 export class ConsultationMapper {
+  static consultationRepository: Repository<Consultation>;
+
   public static toPersistance(
     createConsultationDto: SaveConsultationDto,
-  ): ConsultationPseudoPersistance {
-    const { datetime, address, room } = createConsultationDto;
-    return {
+    lecturers: Lecturer[] = [],
+    students: Student[] = [],
+  ): Consultation {
+    this.ensureRepoIsInitialized();
+
+    const { datetime, address, room, description } = createConsultationDto;
+    const obj = {
       datetime,
       address,
       room,
+      description,
+      lecturers,
+      students,
     };
+    return this.consultationRepository.create(obj);
   }
 
-  public static toDto(
-    consultation: Consultation,
-    lecturers: Lecturer[] = [],
-    students: Student[] = [],
-  ): ConsultationDto {
-    const { id, datetime, address, room } = consultation;
-    const lecturerDtos = lecturers.map(lecturer =>
-      LecturerMapper.toDto(lecturer),
-    );
-    const studentDtos = students.map(student =>
-      StudentMapper.toDto(student, [], student.parents),
-    );
+  public static toDto(consultation: Consultation): ConsultationDto {
+    const {
+      id,
+      datetime,
+      address,
+      room,
+      description,
+      lecturers,
+      students,
+    } = consultation;
     return {
       id,
       datetime,
       address,
       room,
-      lecturers: lecturerDtos,
-      students: studentDtos,
+      description,
+      lecturers,
+      students,
     };
+  }
+
+  private static ensureRepoIsInitialized() {
+    if (!this.consultationRepository) {
+      this.consultationRepository = getConnection().getRepository(Consultation);
+    }
   }
 }

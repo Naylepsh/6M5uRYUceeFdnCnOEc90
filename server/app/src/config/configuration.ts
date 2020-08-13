@@ -8,7 +8,7 @@ const dev = () => ({
     name: process.env.DEV_DATABASE_NAME,
     username: process.env.DEV_DATABASE_USERNAME,
     password: process.env.DEV_DATABASE_PASSWORD,
-    synchronize: false,
+    synchronize: true,
   },
   smptTransport: {
     service: 'ethereal',

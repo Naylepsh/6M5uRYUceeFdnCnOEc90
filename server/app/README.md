@@ -84,9 +84,10 @@ Nest is [MIT licensed](LICENSE).
   {
     "firstName": <some-string>,
     "lastName": <some-string>,
-    "phoneNumber": <some-string-(schema-not-yet-specified)>,
+    "phoneNumber": <valid-in-polish-region-9-digits-no-other-characters>
     "email": <valid-email>,
-    "groups": <array-of-group-ids>
+    "groups": <array-of-group-ids>,
+    "consultations": <array-of-consultation-ids>
   }
   ```
 - lecturers/:`UUIDv4` (GET)
@@ -95,9 +96,10 @@ Nest is [MIT licensed](LICENSE).
   {
     "firstName": <some-string>,
     "lastName": <some-string>,
-    "phoneNumber": <some-string-(schema-not-yet-specified)>,
+    "phoneNumber": <valid-in-polish-region-9-digits-no-other-characters>
     "email": <valid-email>,
-    "groups": <array-of-group-ids>
+    "groups": <array-of-group-ids>,
+    "consultations": <array-of-consultation-ids>
   }
   ```
 - lecturers/:`UUIDv4` (DELETE)
@@ -112,6 +114,7 @@ Nest is [MIT licensed](LICENSE).
     "lastName": <some-string>,
     "groups": <array-of-group-ids>,
     "parents": <array-of-parent-ids>,
+    "consultations": <array-of-consultation-ids>
   }
   ```
 - students/:`UUIDv4` (GET)
@@ -122,6 +125,7 @@ Nest is [MIT licensed](LICENSE).
     "lastName": <some-string>,
     "groups": <array-of-group-ids>,
     "parents": <array-of-parent-ids>,
+    "consultations": <array-of-consultation-ids>
   }
   ```
 - students/:`UUIDv4` (DELETE)
@@ -134,7 +138,7 @@ Nest is [MIT licensed](LICENSE).
   {
     "firstName": <some-string>,
     "lastName": <some-string>,
-    "phoneNumber": <some-string-(schema-not-yet-specified)>,
+    "phoneNumber": <valid-in-polish-region-9-digits-no-other-characters>
     "email": <valid-email>,
     "children": <array-of-student-ids>
   }
@@ -145,7 +149,7 @@ Nest is [MIT licensed](LICENSE).
   {
     "firstName": <some-string>,
     "lastName": <some-string>,
-    "phoneNumber": <some-string-(schema-not-yet-specified)>,
+    "phoneNumber": <valid-in-polish-region-9-digits-no-other-characters>
     "email": <valid-email>,
     "children": <array-of-student-ids>
   }
@@ -194,6 +198,7 @@ Nest is [MIT licensed](LICENSE).
     "datetime": <utc-datetime>,
     "address": <some-string>,
     "room": <some-string>,
+    "description": <some-string>,
     "lecturers": <array-of-lecturer-ids>,
     "students": <array-of-student-ids>
   }
@@ -205,6 +210,7 @@ Nest is [MIT licensed](LICENSE).
     "datetime": <utc-datetime>,
     "address": <some-string>,
     "room": <some-string>,
+    "description": <some-string>,
     "lecturers": <array-of-lecturer-ids>,
     "students": <array-of-student-ids>
   }
