@@ -3,9 +3,8 @@ import { useAppState } from "./../states/AppState";
 import { createPost, DATE_FORMAT } from "./../tools";
 import { format as formatDate } from "date-fns";
 import Avatar from "./Avatar";
-import { FaHome, FaChevronDown } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 import RecentPostsDropdown from "./RecentPostsDropdown";
-import { Menu, MenuItem, MenuButton, MenuList } from "@reach/menu-button";
 import "./NewPost.css";
 
 const MAX_MESSAGE_LENGTH = 200;
@@ -29,15 +28,27 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
     getLocalStorageValue(makeNewPostKey(date)) || ""
   );
 
+  const [group, setGroup] = useState(
+    getLocalStorageValue(makeNewPostKey(date)) || ""
+  );
+
   const [saving, setSaving] = useState(false);
   const formRef = useRef();
   const messageRef = useRef();
   const placeRef = useRef();
   const studentRef = useRef();
   const lecturerRef = useRef();
+  const groupRef = useRef();
 
   useEffect(() => {
-    setLocalStorage(makeNewPostKey(date), message, place, student, lecturer);
+    setLocalStorage(
+      makeNewPostKey(date),
+      message,
+      place,
+      student,
+      lecturer,
+      group
+    );
   });
 
   useEffect(() => {
@@ -62,6 +73,10 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
     setLecturer(event.target.value);
   };
 
+  const handleAboutChangeGroup = (event) => {
+    setGroup(event.target.value);
+  };
+
   const tooMuchText = message.length > MAX_MESSAGE_LENGTH;
 
   const submit = (form) => {
@@ -72,6 +87,7 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
       place: placeRef.current.value,
       student: studentRef.current.value,
       lecturer: lecturerRef.current.value,
+      group: groupRef.current.value,
       date: formatDate(date, DATE_FORMAT),
       uid: auth.uid,
     }).then((post) => {
@@ -134,6 +150,15 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
           onChange={handleAboutChangeLecturer}
         />
         <br />
+        <label for="group"> Grupa: </label>
+        <input
+          type="text"
+          id="group"
+          name="group"
+          ref={groupRef}
+          autoComplete="on"
+          onChange={handleAboutChangeGroup}
+        />
         <label for="place"> Lokalizacja: </label>
         <select
           name="place"

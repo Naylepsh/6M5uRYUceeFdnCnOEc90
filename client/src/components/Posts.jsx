@@ -113,6 +113,7 @@ function Post({ post }) {
       <div className="Post_message">{post.message}</div>
       <div className="Post_student">Uczeń: {post.student}</div>
       <div className="Post_lecturer">Prowadzący: {post.lecturer}</div>
+      <div className="Post_group">Grupa: {post.group}</div>
       <div className="Post_place">Lokalizacja: {post.place}</div>
     </div>
   );
