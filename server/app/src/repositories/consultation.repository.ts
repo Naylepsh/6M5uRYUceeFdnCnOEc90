@@ -3,6 +3,7 @@ import { Repository, EntityRepository, Connection, Between } from 'typeorm';
 import { Consultation } from '../models/consultation.model';
 import { Injectable } from '@nestjs/common';
 import { IRepository } from './repository.interface';
+import { IQuery } from './query.interface';
 
 @Injectable()
 @EntityRepository(Consultation)
@@ -13,8 +14,9 @@ export class ConsultationRepository implements IRepository<Consultation> {
     this.consultationRepository = connection.getRepository(Consultation);
   }
 
-  async findAll(): Promise<Consultation[]> {
+  async findAll(query?: IQuery): Promise<Consultation[]> {
     const consultations = await this.consultationRepository.find({
+      ...query,
       relations: ['lecturers', 'students', 'students.parents'],
     });
 
