@@ -8,25 +8,26 @@ import {
   Delete,
   Put,
 } from '@nestjs/common';
+import { Connection } from 'typeorm';
 import { StudentRepository } from '../repositories/student.repository';
+import { IRepository } from '../repositories/repository.interface';
 import { StudentDto } from '../dtos/students/student.dto';
 import { SaveStudentDto } from '../dtos/students/save-student.dto';
 import { IdDto } from '../dtos/id/id.dto';
-import { Connection } from 'typeorm';
 import { StudentMapper } from '../mappers/student.mapper';
 import { Student } from './../models/student.model';
-import { ParentsByIdsPipe } from '../pipes/parents-by-ids.pipe';
 import { Parent } from '../models/parent.model';
-import { GroupsByIdsPipe } from '../pipes/groups-by-ids.pipe';
 import { Group } from '../models/group.model';
-import { ConsultationsByIdsPipe } from '../pipes/consultations-by-ids.pipe';
 import { Consultation } from '../models/consultation.model';
+import { ConsultationsByIdsPipe } from '../pipes/consultations-by-ids.pipe';
+import { ParentsByIdsPipe } from '../pipes/parents-by-ids.pipe';
+import { GroupsByIdsPipe } from '../pipes/groups-by-ids.pipe';
 
 const apiEndpoint = '/students';
 
 @Controller()
 export class StudentsController {
-  studentRepository: StudentRepository;
+  studentRepository: IRepository<Student>;
 
   constructor(private readonly connection: Connection) {
     this.studentRepository = new StudentRepository(connection);

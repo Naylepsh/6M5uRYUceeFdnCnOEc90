@@ -9,23 +9,24 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { Connection, Between } from 'typeorm';
 import { ConsultationRepository } from '../repositories/consultation.repository';
+import { IRepository } from '../repositories/repository.interface';
 import { ConsultationDto } from '../dtos/consultations/consultation.dto';
 import { SaveConsultationDto } from '../dtos/consultations/save-consultation.dto';
 import { IdDto } from '../dtos/id/id.dto';
 import { ConsultationMapper } from '../mappers/consultation.mapper';
 import { Consultation } from '../models/consultation.model';
-import { Connection } from 'typeorm';
-import { LecturersByIdsPipe } from '../pipes/lecturers-by-ids.pipe';
 import { Lecturer } from '../models/lecturer.model';
-import { StudentsByIdsPipe } from '../pipes/students-by-ids.pipe';
 import { Student } from '../models/student.model';
+import { StudentsByIdsPipe } from '../pipes/students-by-ids.pipe';
+import { LecturersByIdsPipe } from '../pipes/lecturers-by-ids.pipe';
 
 const apiEndpoint = '/consultations';
 
 @Controller()
 export class ConsultationsController {
-  consultationRepository: ConsultationRepository;
+  consultationRepository: IRepository<Consultation>;
 
   constructor(private readonly connection: Connection) {
     this.consultationRepository = new ConsultationRepository(connection);
@@ -41,10 +42,9 @@ export class ConsultationsController {
       consultations = await this.consultationRepository.findAll();
     } else {
       const dates = between.map(date => new Date(date).toISOString());
-      consultations = await this.consultationRepository.findAllBetween(
-        dates[0],
-        dates[1],
-      );
+      consultations = await this.consultationRepository.findAll({
+        where: { datetime: Between(dates[0], dates[1]) },
+      });
     }
     return consultations.map(ConsultationMapper.toDto);
   }

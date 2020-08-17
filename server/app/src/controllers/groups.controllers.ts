@@ -8,23 +8,24 @@ import {
   Delete,
   Put,
 } from '@nestjs/common';
+import { Connection } from 'typeorm';
 import { GroupRepository } from '../repositories/group.repository';
+import { IRepository } from '../repositories/repository.interface';
 import { GroupDto } from '../dtos/groups/group.dto';
 import { SaveGroupDto } from '../dtos/groups/save-group.dto';
 import { IdDto } from '../dtos/id/id.dto';
-import { Connection } from 'typeorm';
 import { GroupMapper } from '../mappers/group.mapper';
 import { Group } from '../models/group.model';
-import { LecturersByIdsPipe } from '../pipes/lecturers-by-ids.pipe';
 import { Lecturer } from '../models/lecturer.model';
-import { StudentsByIdsPipe } from '../pipes/students-by-ids.pipe';
 import { Student } from '../models/student.model';
+import { StudentsByIdsPipe } from '../pipes/students-by-ids.pipe';
+import { LecturersByIdsPipe } from '../pipes/lecturers-by-ids.pipe';
 
 const apiEndpoint = '/groups';
 
 @Controller()
 export class GroupsController {
-  groupRepository: GroupRepository;
+  groupRepository: IRepository<Group>;
 
   constructor(private readonly connection: Connection) {
     this.groupRepository = new GroupRepository(connection);

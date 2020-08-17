@@ -1,8 +1,8 @@
-import { ConsultationDto } from '../dtos/consultations/consultation.dto';
-import { Repository, EntityRepository, Connection, Between } from 'typeorm';
+import { Repository, EntityRepository, Connection } from 'typeorm';
 import { Consultation } from '../models/consultation.model';
 import { Injectable } from '@nestjs/common';
 import { IRepository } from './repository.interface';
+import { IQuery } from './query.interface';
 
 @Injectable()
 @EntityRepository(Consultation)
@@ -13,24 +13,13 @@ export class ConsultationRepository implements IRepository<Consultation> {
     this.consultationRepository = connection.getRepository(Consultation);
   }
 
-  async findAll(): Promise<Consultation[]> {
+  async findAll(query?: IQuery): Promise<Consultation[]> {
     const consultations = await this.consultationRepository.find({
+      ...query,
       relations: ['lecturers', 'students', 'students.parents'],
     });
 
     return consultations;
-  }
-
-  async findAllBetween(
-    startDatetime: string,
-    endDatetime: string,
-  ): Promise<ConsultationDto[]> {
-    return this.consultationRepository.find({
-      where: {
-        datetime: Between(startDatetime, endDatetime),
-      },
-      relations: ['lecturers', 'students', 'students.parents'],
-    });
   }
 
   async findById(id: string): Promise<Consultation> {

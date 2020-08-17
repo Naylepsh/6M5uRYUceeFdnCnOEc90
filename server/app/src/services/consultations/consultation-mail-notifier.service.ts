@@ -8,7 +8,7 @@ import {
 } from './consultation-mail-notifier.interfaces';
 import { ConsultationRepository } from '../../repositories/consultation.repository';
 import '../../utils/extensions/date.extentions';
-import { getConnection } from 'typeorm';
+import { getConnection, Between } from 'typeorm';
 
 export class ConsultationNotifier {
   notificationsSentInPreviousRound = new Map();
@@ -50,11 +50,17 @@ export class ConsultationNotifier {
       const repo = new ConsultationRepository(connection);
 
       // some dirty mumbo jumbo with dates cause without it database has problem comparing the dates?!
-      res = await repo.findAllBetween(
-        new Date(timeFrame.startDatetime.toUTCString()).toISOString(),
-        new Date(timeFrame.endDatetime.toUTCString()).toISOString(),
-      );
+      const query = {
+        where: {
+          datetime: Between(
+            new Date(timeFrame.startDatetime.toUTCString()).toISOString(),
+            new Date(timeFrame.endDatetime.toUTCString()).toISOString(),
+          ),
+        },
+      };
+      res = await repo.findAll(query);
     } catch (err) {
+      console.error(err);
       res = [];
     } finally {
       return res;
