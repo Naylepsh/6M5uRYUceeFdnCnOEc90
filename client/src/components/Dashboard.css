@@ -36,7 +36,7 @@
   flex-direction: column;
   height: 5rem;
   min-width: 90px;
-  background: rgb(209, 190, 190);
+  background: rgb(236, 220, 205);
   margin: 2px;
 }
 
@@ -123,7 +123,7 @@
 }
 
 .Day_is_today {
-  background-color: rgb(249, 73, 73);
+  background-color: #f2d398;
 }
 
 .Day_link {
@@ -170,7 +170,7 @@
   height: 8px;
   min-width: 60px;
   border-radius: 8px;
-  background-color: rgb(30, 180, 16);
+  background-color: rgb(149, 51, 142);
 }
 
 .secondNote {
@@ -180,7 +180,7 @@
   height: 8px;
   min-width: 60px;
   border-radius: 8px;
-  background-color: rgb(28, 145, 13);
+  background-color: rgb(176, 60, 168);
 }
 
 .thirdNote {
@@ -190,7 +190,7 @@
   height: 8px;
   min-width: 60px;
   border-radius: 8px;
-  background-color: rgb(13, 145, 112);
+  background-color: rgb(179, 63, 170);
 }
 
 .fourthNote {
@@ -200,7 +200,7 @@
   height: 8px;
   min-width: 60px;
   border-radius: 8px;
-  background-color: rgb(13, 97, 145);
+  background-color: rgb(206, 73, 196);
 }
 
 .fifthNote {
@@ -210,7 +210,7 @@
   height: 8px;
   min-width: 60px;
   border-radius: 8px;
-  background-color: rgb(13, 37, 145);
+  background-color: rgb(230, 82, 218);
 }
 
 .more {
