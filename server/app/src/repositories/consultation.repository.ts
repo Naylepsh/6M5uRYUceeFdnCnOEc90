@@ -1,5 +1,4 @@
-import { ConsultationDto } from '../dtos/consultations/consultation.dto';
-import { Repository, EntityRepository, Connection, Between } from 'typeorm';
+import { Repository, EntityRepository, Connection } from 'typeorm';
 import { Consultation } from '../models/consultation.model';
 import { Injectable } from '@nestjs/common';
 import { IRepository } from './repository.interface';
@@ -21,18 +20,6 @@ export class ConsultationRepository implements IRepository<Consultation> {
     });
 
     return consultations;
-  }
-
-  async findAllBetween(
-    startDatetime: string,
-    endDatetime: string,
-  ): Promise<ConsultationDto[]> {
-    return this.consultationRepository.find({
-      where: {
-        datetime: Between(startDatetime, endDatetime),
-      },
-      relations: ['lecturers', 'students', 'students.parents'],
-    });
   }
 
   async findById(id: string): Promise<Consultation> {
