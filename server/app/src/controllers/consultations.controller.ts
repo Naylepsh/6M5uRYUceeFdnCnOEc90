@@ -9,18 +9,18 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { Connection, Between } from 'typeorm';
 import { ConsultationRepository } from '../repositories/consultation.repository';
+import { IRepository } from '../repositories/repository.interface';
 import { ConsultationDto } from '../dtos/consultations/consultation.dto';
 import { SaveConsultationDto } from '../dtos/consultations/save-consultation.dto';
 import { IdDto } from '../dtos/id/id.dto';
 import { ConsultationMapper } from '../mappers/consultation.mapper';
 import { Consultation } from '../models/consultation.model';
-import { Connection, Between } from 'typeorm';
-import { LecturersByIdsPipe } from '../pipes/lecturers-by-ids.pipe';
 import { Lecturer } from '../models/lecturer.model';
-import { StudentsByIdsPipe } from '../pipes/students-by-ids.pipe';
 import { Student } from '../models/student.model';
-import { IRepository } from '../repositories/repository.interface';
+import { StudentsByIdsPipe } from '../pipes/students-by-ids.pipe';
+import { LecturersByIdsPipe } from '../pipes/lecturers-by-ids.pipe';
 
 const apiEndpoint = '/consultations';
 

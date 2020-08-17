@@ -8,16 +8,16 @@ import {
   Delete,
   Put,
 } from '@nestjs/common';
+import { Connection } from 'typeorm';
 import { ParentRepository } from '../repositories/parent.repository';
+import { IRepository } from '../repositories/repository.interface';
 import { ParentDto } from '../dtos/parents/parent.dto';
 import { SaveParentDto } from '../dtos/parents/save-parent.dto';
 import { IdDto } from '../dtos/id/id.dto';
-import { Connection } from 'typeorm';
 import { ParentMapper } from '../mappers/parent.mapper';
 import { Parent } from '../models/parent.model';
-import { StudentsByIdsPipe } from '../pipes/students-by-ids.pipe';
 import { Student } from '../models/student.model';
-import { IRepository } from '../repositories/repository.interface';
+import { StudentsByIdsPipe } from '../pipes/students-by-ids.pipe';
 
 const apiEndpoint = '/parents';
 

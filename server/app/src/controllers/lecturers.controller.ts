@@ -8,18 +8,18 @@ import {
   Delete,
   Put,
 } from '@nestjs/common';
+import { Connection } from 'typeorm';
 import { LecturerRepository } from '../repositories/lecturer.repository';
+import { IRepository } from '../repositories/repository.interface';
 import { LecturerDto } from '../dtos/lecturers/lecturer.dto';
 import { SaveLecturerDto } from '../dtos/lecturers/save-lecturer.dto';
 import { IdDto } from '../dtos/id/id.dto';
-import { Connection } from 'typeorm';
 import { LecturerMapper } from '../mappers/lecturer.mapper';
 import { Lecturer } from '../models/lecturer.model';
-import { GroupsByIdsPipe } from '../pipes/groups-by-ids.pipe';
 import { Group } from '../models/group.model';
-import { ConsultationsByIdsPipe } from '../pipes/consultations-by-ids.pipe';
 import { Consultation } from '../models/consultation.model';
-import { IRepository } from '../repositories/repository.interface';
+import { ConsultationsByIdsPipe } from '../pipes/consultations-by-ids.pipe';
+import { GroupsByIdsPipe } from '../pipes/groups-by-ids.pipe';
 
 const apiEndpoint = '/lecturers';
 
