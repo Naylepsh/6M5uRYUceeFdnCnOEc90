@@ -17,12 +17,13 @@ import { ParentMapper } from '../mappers/parent.mapper';
 import { Parent } from '../models/parent.model';
 import { StudentsByIdsPipe } from '../pipes/students-by-ids.pipe';
 import { Student } from '../models/student.model';
+import { IRepository } from '../repositories/repository.interface';
 
 const apiEndpoint = '/parents';
 
 @Controller()
 export class ParentsController {
-  parentRepository: ParentRepository;
+  parentRepository: IRepository<Parent>;
 
   constructor(private readonly connection: Connection) {
     this.parentRepository = new ParentRepository(connection);

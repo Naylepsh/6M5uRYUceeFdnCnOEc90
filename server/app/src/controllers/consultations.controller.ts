@@ -20,12 +20,13 @@ import { LecturersByIdsPipe } from '../pipes/lecturers-by-ids.pipe';
 import { Lecturer } from '../models/lecturer.model';
 import { StudentsByIdsPipe } from '../pipes/students-by-ids.pipe';
 import { Student } from '../models/student.model';
+import { IRepository } from '../repositories/repository.interface';
 
 const apiEndpoint = '/consultations';
 
 @Controller()
 export class ConsultationsController {
-  consultationRepository: ConsultationRepository;
+  consultationRepository: IRepository<Consultation>;
 
   constructor(private readonly connection: Connection) {
     this.consultationRepository = new ConsultationRepository(connection);

@@ -19,12 +19,13 @@ import { GroupsByIdsPipe } from '../pipes/groups-by-ids.pipe';
 import { Group } from '../models/group.model';
 import { ConsultationsByIdsPipe } from '../pipes/consultations-by-ids.pipe';
 import { Consultation } from '../models/consultation.model';
+import { IRepository } from '../repositories/repository.interface';
 
 const apiEndpoint = '/lecturers';
 
 @Controller()
 export class LecturersController {
-  lecturerRepository: LecturerRepository;
+  lecturerRepository: IRepository<Lecturer>;
 
   constructor(private readonly connection: Connection) {
     this.lecturerRepository = new LecturerRepository(connection);
