@@ -10,100 +10,72 @@ export function Day({ user, day, showMonth, isOwner, onNewPost }) {
   const dayIsToday = isToday(day.date);
   const dayIsFuture = isFuture(day.date);
   const { location } = useLocation();
-  const isAnyPost = day.posts.length === 0 ? 0 : 1;
 
-  // console.log("Tutaj dzień: " + day + " a tu posty: " + day.posts);
   return (
-    <div
-      className={
-        "Day" +
-        (dayIsToday ? " Day_is_today" : "") +
-        (dayIsFuture ? " Day_is_future" : "")
-      }
-    >
-      <div className="Day_date">
-        {showMonth && (
-          <div className="Day_month">
-            {translateMonths(formatDate(day.date, "MMM"))}
-          </div>
-        )}
-        <div className="Day_number">{formatDate(day.date, "DD")}</div>
-      </div>
+    <div className={getDayClasses(dayIsToday, dayIsFuture)}>
       <div className="Day_minutes">
-        {isAnyPost ? (
-          <Link
-            className="Day_link"
-            href={`/${user.uid}/${formatDate(day.date, DATE_FORMAT)}`}
-            state={{
-              fromCalendar: true,
-              ...location.state,
-            }}
-          >
-            {NotesElements(day.posts.length)}
-          </Link>
-        ) : isOwner ? (
-          <button onClick={onNewPost} className="Calendar_add_post_button">
-            <FaPlus />
-          </button>
-        ) : null}
+        {getDayDate(showMonth, day.date)}
+        {getDayDetails(user, day, location, isOwner, onNewPost)}
       </div>
     </div>
   );
 }
 
+function getDayDate(showMonth, date) {
+  return (
+    <div className="Day_date">
+      {showMonth && (
+        <div className="Day_month">
+          {translateMonths(formatDate(date, "MMM"))}
+        </div>
+      )}
+      <div className="Day_number">{formatDate(date, "DD")}</div>
+    </div>
+  );
+}
+
+function getDayDetails(user, day, location, isOwner, onNewPost) {
+  const isAnyPost = day.posts.length === 0 ? 0 : 1;
+
+  return isAnyPost ? (
+    <Link
+      className="Day_link"
+      href={`/${user.uid}/${formatDate(day.date, DATE_FORMAT)}`}
+      state={{
+        fromCalendar: true,
+        ...location.state,
+      }}
+    >
+      {createNotes(day.posts.length)}
+    </Link>
+  ) : isOwner ? (
+    <button onClick={onNewPost} className="Calendar_add_post_button">
+      <FaPlus />
+    </button>
+  ) : null;
+}
+
+function getDayClasses(dayIsToday, dayIsFuture) {
+  return (
+    "Day" +
+    (dayIsToday ? " Day_is_today" : "") +
+    (dayIsFuture ? " Day_is_future" : "")
+  );
+}
+
 //depending of amount of posts, function returns some divs representing number of notes
-function NotesElements(posts) {
-  if (posts === 1) {
-    return <div className="firstNote"></div>;
-  }
-  if (posts === 2) {
-    return (
-      <Fragment>
-        <div className="firstNote"></div>
-        <div className="secondNote"></div>
-      </Fragment>
-    );
-  }
-  if (posts === 3) {
-    return (
-      <Fragment>
-        <div className="firstNote"></div>
-        <div className="secondNote"></div>
-        <div className="thirdNote"></div>
-      </Fragment>
-    );
-  }
-  if (posts === 4) {
-    return (
-      <Fragment>
-        <div className="firstNote"></div>
-        <div className="secondNote"></div>
-        <div className="thirdNote"></div>
-        <div className="fourthNote"></div>
-      </Fragment>
-    );
-  }
-  if (posts === 5) {
-    return (
-      <Fragment>
-        <div className="firstNote"></div>
-        <div className="secondNote"></div>
-        <div className="thirdNote"></div>
-        <div className="fourthNote"></div>
-        <div className="fifthNote"></div>
-      </Fragment>
-    );
-  }
-  if (posts >= 5) {
-    return (
-      <Fragment>
-        <div className="firstNote"></div>
-        <div className="secondNote"></div>
-        <div className="thirdNote"></div>
-        <div className="fourthNote"></div>
-        <div className="fifthNote"></div>
-        <div className="more">...</div>
-      </Fragment>
-    );
-  }
+function createNotes(posts) {
+  const allPossibleNotes = [
+    <div key="firstNote" className="firstNote"></div>,
+    <div key="secondNote" className="secondNote"></div>,
+    <div key="thirdNote" className="thirdNote"></div>,
+    <div key="fourthNote" className="fourthNote"></div>,
+    <div key="fifthNote" className="fifthNote"></div>,
+    <div key="moreNotes" className="more">
+      ...
+    </div>,
+  ];
+  const numberOfNotesToDisplay = posts < 6 ? posts : 6;
+  const notesToDisplay = allPossibleNotes.slice(0, numberOfNotesToDisplay);
+  return <Fragment>{notesToDisplay}</Fragment>;
 }
