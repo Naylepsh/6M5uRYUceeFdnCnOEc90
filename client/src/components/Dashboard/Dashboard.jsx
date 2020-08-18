@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useCallback } from "react";
-import { useLocation, useParams, Link } from "./../utils/react-router-next";
+import { useLocation, useParams, Link } from "../../utils/react-router-next";
 import { FaChevronDown, FaChevronUp, FaPlus } from "react-icons/fa";
 import { useTransition, animated } from "react-spring";
 import {
@@ -11,12 +11,12 @@ import {
   isFuture,
 } from "date-fns";
 
-import AnimatedDialog from "./AnimatedDialog";
-import Posts from "./Posts";
-import usePosts from "./use-posts";
-import { DATE_FORMAT, calculateWeeks, translateMonths } from "./../tools";
-import { useAppState } from "./../states/AppState";
-import NewPost from "./NewPost";
+import AnimatedDialog from "../AnimatedDialog";
+import Posts from "../Posts";
+import usePosts from "../use-posts";
+import { DATE_FORMAT, calculateWeeks, translateMonths } from "../../tools";
+import { useAppState } from "../../states/AppState";
+import NewPost from "../NewPost";
 import "./Dashboard.css";
 
 //This component is responsible for
