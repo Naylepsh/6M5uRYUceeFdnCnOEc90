@@ -1,0 +1,69 @@
+.Calendar_add_post_button {
+  border: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.Calendar_week {
+  display: flex;
+}
+
+.Calendar_minutes_text {
+  font-size: 200%;
+  padding: 0.25rem 0.5rem;
+  border-radius: 99999px;
+  /* font-family: Audiowide, sans-serif; */
+  font-variant-numeric: tabular-nums;
+}
+
+.Calendar_add_post_button {
+  color: var(--black);
+  flex: 1;
+  height: 100%;
+}
+
+.Calendar_add_post_button:hover {
+  background: rgb(248, 248, 248);
+  cursor: pointer;
+}
+
+.Calendar_add_post_button:focus {
+  outline: none;
+}
+
+.Calendar_add_post_button:hover {
+  background: rgb(248, 248, 248);
+}
+
+.Calendar_add_post_button:focus {
+  outline: none;
+  border: var(--focus-border);
+  box-shadow: var(--focus-shadow);
+}
+
+.Calendar_add_post_button:active {
+  color: var(--accent);
+}
+
+.Calendar_earlier:hover,
+.Calendar_later:hover {
+  background: white;
+}
+
+.Calendar_animation_overflow {
+  overflow: hidden;
+  position: relative;
+  height: calc(25rem + 12px);
+}
+
+.Calendar_animation_wrapper {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
