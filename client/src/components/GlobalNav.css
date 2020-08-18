@@ -1,3 +1,8 @@
+@font-face {
+  font-family: Montserrat;
+  src: url(./../utils/Montserrat-Regular.ttf);
+}
+
 .GlobalNav {
   display: flex;
 }
@@ -10,7 +15,17 @@
   align-items: center;
   padding: 0.5rem;
   border-radius: 9999px;
-  border: var(--focus-border-inactive);
+  /* border: var(--focus-border-inactive); */
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 40px;
+  line-height: 49px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+
+  color: #c8553d;
 }
 
 .GlobalNav a:first-child {

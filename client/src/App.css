@@ -2,7 +2,7 @@
   --black: hsl(0, 0%, 0%);
   --middle-gray: hsl(240, 6%, 92%);
   --light-gray: hsl(300, 7%, 97%);
-  --accent: hsl(300, 89%, 35%);
+  --accent:#FBC26D;
   --accent-hover: hsl(300, 61%, 74%);
   --accent-active: hsl(308, 97%, 26%);
   --focus-shadow: 0px 0px 2px var(--accent);
