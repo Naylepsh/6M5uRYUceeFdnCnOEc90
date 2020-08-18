@@ -4,10 +4,10 @@ import { fetchDoc, isValidDate } from "./../tools";
 import { useAppState } from "./AppState";
 import UserDatePosts from "./../components/Posts";
 import Feed from "./../components/Feed";
-import Dashboard from "./../components/Dashboard";
 import TopBar from "./../components/TopBar";
 import User from "./../components/User";
 import NotFound from "./../components/NotFound";
+import Dashboard from "../components/Dashboard/Dashboard";
 
 export default function LoggedIn() {
   const [{ auth, user }, dispatch] = useAppState();
