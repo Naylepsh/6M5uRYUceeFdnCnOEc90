@@ -1,20 +1,26 @@
+@font-face {
+  font-family: Montserrat;
+  src: url(./../../utils/Montserrat-Regular.ttf);
+}
+
 .Day {
   position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: 5rem;
-  min-width: 90px;
-  background: rgb(236, 220, 205);
-  margin: 2px;
+  min-height: 8rem;
+  min-width: 80px;
+  max-width: 210px;
+  background: #fbc26d;
+  margin: 5px;
 }
 
 .Day:hover {
-  background: rgb(248, 248, 248);
+  background: #ebad50;
 }
 
 .Day_no_minutes {
-  background: rgb(231, 238, 241);
+  background: #ebad50;
 }
 
 .Day_date {
@@ -36,11 +42,16 @@
 }
 
 .Day_month {
+  flex: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-transform: uppercase;
   font-weight: bold;
   font-size: smaller;
   margin: 0.1rem;
   color: var(--red);
+  font-family: Montserrat;
 }
 
 .Day_minutes {
@@ -51,11 +62,11 @@
 }
 
 .Day_is_future {
-  background-color: rgb(255, 255, 255);
+  background-color: #fbc26d;
 }
 
 .Day_is_today {
-  background-color: #f2d398;
+  background-color: #e89c2b;
 }
 
 .Day_link {

@@ -1,5 +1,13 @@
+@font-face {
+  font-family: Montserrat;
+  src: url(./../../utils/Montserrat-Regular.ttf);
+}
+
 .Calendar_nav {
   display: flex;
+  position: relative;
   margin: 1rem;
   font-size: 85%;
+  font-family: Montserrat;
+  color: #E89C2B;
 }

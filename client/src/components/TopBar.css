@@ -1,3 +1,8 @@
+@font-face {
+  font-family: Montserrat;
+  src: url(./../utils/Montserrat-Regular.ttf);
+}
+
 .TopBar {
   background: var(--transparent-white);
   border-bottom: solid 1px var(--middle-gray);
@@ -27,4 +32,10 @@
 
 .Account_user_name {
   font-weight: bold;
+  font-family: Montserrat;
+  color: #c8553d;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 40px;
+  line-height: 49px;
 }

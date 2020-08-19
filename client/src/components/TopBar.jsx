@@ -22,13 +22,13 @@ function Account() {
 
   return user ? (
     <div className="Account">
-      <Avatar uid={user.uid} />
       <div className="Account_user_name">{user.displayName}</div>
       <button
         aria-label="Log out"
         title="Log out"
         className="Account_logout icon_button"
         onClick={logout}
+        color="black"
       >
         <FaPowerOff />
       </button>
