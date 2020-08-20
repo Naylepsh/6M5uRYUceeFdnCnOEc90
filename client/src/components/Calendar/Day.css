@@ -8,11 +8,14 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 8rem;
+  min-height: 6.5rem;
   min-width: 80px;
-  max-width: 210px;
+  max-width: 150px;
   background: #fbc26d;
-  margin: 5px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .Day:hover {
@@ -30,7 +33,8 @@
   right: 0;
   display: flex;
   justify-content: space-between;
-  color: var(--black);
+  font-family: Montserrat;
+  color: white;
   font-size: 85%;
   pointer-events: none;
 }

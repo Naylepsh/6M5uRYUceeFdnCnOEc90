@@ -4,9 +4,10 @@
 }
 
 .Weekdays {
+  width: 80%;
   display: flex;
   flex: 1;
-  margin: 2px;
+  margin: 0 auto;
 }
 
 .Weekdays > * {
