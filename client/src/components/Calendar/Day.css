@@ -51,10 +51,9 @@
   justify-content: center;
   align-items: center;
   text-transform: uppercase;
-  font-weight: bold;
-  font-size: smaller;
-  margin: 0.1rem;
-  color: var(--red);
+  font-size: 15px;
+  margin-left: 1rem;
+  color: white;
   font-family: Montserrat;
 }
 
@@ -74,72 +73,68 @@
 }
 
 .Day_link {
-  color: var(--black);
+  font-family: Montserrat;
+  color: white;
   text-decoration: none;
   flex: 1;
+  font-size: 35px;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.Day_link_one_post {
+  font-family: Montserrat;
+  background-color: #7dcca3;
+  color: white;
+  text-decoration: none;
+  flex: 1;
+  font-size: 35px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Day_link_one_post:hover {
+  background-color: #59bd89;
+}
+
+.Day_link_two_and_more_posts {
+  font-family: Montserrat;
+  background-color: #2acab7;
+  color: white;
+  text-decoration: none;
+  flex: 1;
+  font-size: 35px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Day_link_two_and_more_posts:hover {
+  background-color: #098b7c;
+}
+
+.Day_link_today {
+  font-family: Montserrat;
+  color: white;
+  background-color: #e89c2b;
+  text-decoration: none;
+  flex: 1;
+  font-size: 35px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Day_link_today:hover {
+  background-color: #c0801f;
+}
+
 .Day_link:hover {
   color: var(--accent);
-}
-
-.firstNote {
-  position: absolute;
-  top: 17px;
-  left: 5px;
-  height: 8px;
-  min-width: 60px;
-  border-radius: 8px;
-  background-color: rgb(149, 51, 142);
-}
-
-.secondNote {
-  position: absolute;
-  top: 28px;
-  left: 5px;
-  height: 8px;
-  min-width: 60px;
-  border-radius: 8px;
-  background-color: rgb(176, 60, 168);
-}
-
-.thirdNote {
-  position: absolute;
-  top: 38px;
-  left: 5px;
-  height: 8px;
-  min-width: 60px;
-  border-radius: 8px;
-  background-color: rgb(179, 63, 170);
-}
-
-.fourthNote {
-  position: absolute;
-  top: 49px;
-  left: 5px;
-  height: 8px;
-  min-width: 60px;
-  border-radius: 8px;
-  background-color: rgb(206, 73, 196);
-}
-
-.fifthNote {
-  position: absolute;
-  top: 60px;
-  left: 5px;
-  height: 8px;
-  min-width: 60px;
-  border-radius: 8px;
-  background-color: rgb(230, 82, 218);
-}
-
-.more {
-  position: absolute;
-  top: 55px;
-  left: 20px;
-  font-size: large;
 }
