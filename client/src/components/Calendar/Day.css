@@ -1,20 +1,29 @@
+@font-face {
+  font-family: Montserrat;
+  src: url(./../../utils/Montserrat-Regular.ttf);
+}
+
 .Day {
   position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: 5rem;
-  min-width: 90px;
-  background: rgb(236, 220, 205);
-  margin: 2px;
+  min-height: 6.5rem;
+  min-width: 80px;
+  max-width: 150px;
+  background: #fbc26d;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .Day:hover {
-  background: rgb(248, 248, 248);
+  background: #ebad50;
 }
 
 .Day_no_minutes {
-  background: rgb(231, 238, 241);
+  background: #ebad50;
 }
 
 .Day_date {
@@ -24,7 +33,8 @@
   right: 0;
   display: flex;
   justify-content: space-between;
-  color: var(--black);
+  font-family: Montserrat;
+  color: white;
   font-size: 85%;
   pointer-events: none;
 }
@@ -36,11 +46,15 @@
 }
 
 .Day_month {
+  flex: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-transform: uppercase;
-  font-weight: bold;
-  font-size: smaller;
-  margin: 0.1rem;
-  color: var(--red);
+  font-size: 15px;
+  margin-left: 1rem;
+  color: white;
+  font-family: Montserrat;
 }
 
 .Day_minutes {
@@ -51,80 +65,76 @@
 }
 
 .Day_is_future {
-  background-color: rgb(255, 255, 255);
+  background-color: #fbc26d;
 }
 
 .Day_is_today {
-  background-color: #f2d398;
+  background-color: #e89c2b;
 }
 
 .Day_link {
-  color: var(--black);
+  font-family: Montserrat;
+  color: white;
   text-decoration: none;
   flex: 1;
+  font-size: 35px;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.Day_link_one_post {
+  font-family: Montserrat;
+  background-color: #7dcca3;
+  color: white;
+  text-decoration: none;
+  flex: 1;
+  font-size: 35px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Day_link_one_post:hover {
+  background-color: #59bd89;
+}
+
+.Day_link_two_and_more_posts {
+  font-family: Montserrat;
+  background-color: #2acab7;
+  color: white;
+  text-decoration: none;
+  flex: 1;
+  font-size: 35px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Day_link_two_and_more_posts:hover {
+  background-color: #098b7c;
+}
+
+.Day_link_today {
+  font-family: Montserrat;
+  color: white;
+  background-color: #e89c2b;
+  text-decoration: none;
+  flex: 1;
+  font-size: 35px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Day_link_today:hover {
+  background-color: #c0801f;
+}
+
 .Day_link:hover {
   color: var(--accent);
-}
-
-.firstNote {
-  position: absolute;
-  top: 17px;
-  left: 5px;
-  height: 8px;
-  min-width: 60px;
-  border-radius: 8px;
-  background-color: rgb(149, 51, 142);
-}
-
-.secondNote {
-  position: absolute;
-  top: 28px;
-  left: 5px;
-  height: 8px;
-  min-width: 60px;
-  border-radius: 8px;
-  background-color: rgb(176, 60, 168);
-}
-
-.thirdNote {
-  position: absolute;
-  top: 38px;
-  left: 5px;
-  height: 8px;
-  min-width: 60px;
-  border-radius: 8px;
-  background-color: rgb(179, 63, 170);
-}
-
-.fourthNote {
-  position: absolute;
-  top: 49px;
-  left: 5px;
-  height: 8px;
-  min-width: 60px;
-  border-radius: 8px;
-  background-color: rgb(206, 73, 196);
-}
-
-.fifthNote {
-  position: absolute;
-  top: 60px;
-  left: 5px;
-  height: 8px;
-  min-width: 60px;
-  border-radius: 8px;
-  background-color: rgb(230, 82, 218);
-}
-
-.more {
-  position: absolute;
-  top: 55px;
-  left: 20px;
-  font-size: large;
 }

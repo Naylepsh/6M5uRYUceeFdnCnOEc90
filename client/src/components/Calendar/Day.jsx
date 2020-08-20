@@ -36,17 +36,18 @@ function getDayDate(showMonth, date) {
 
 function getDayDetails(user, day, location, isOwner, onNewPost) {
   const isAnyPost = day.posts.length === 0 ? 0 : 1;
+  const dayIsToday = isToday(day.date);
 
   return isAnyPost ? (
     <Link
-      className="Day_link"
+      className={renderProperColor(day.posts.length, dayIsToday)}
       href={`/${user.uid}/${formatDate(day.date, DATE_FORMAT)}`}
       state={{
         fromCalendar: true,
         ...location.state,
       }}
     >
-      {createNotes(day.posts.length)}
+      {day.posts.length}
     </Link>
   ) : isOwner ? (
     <button onClick={onNewPost} className="Calendar_add_post_button">
@@ -63,19 +64,18 @@ function getDayClasses(dayIsToday, dayIsFuture) {
   );
 }
 
-//depending of amount of posts, function returns some divs representing number of notes
-function createNotes(posts) {
-  const allPossibleNotes = [
-    <div key="firstNote" className="firstNote"></div>,
-    <div key="secondNote" className="secondNote"></div>,
-    <div key="thirdNote" className="thirdNote"></div>,
-    <div key="fourthNote" className="fourthNote"></div>,
-    <div key="fifthNote" className="fifthNote"></div>,
-    <div key="moreNotes" className="more">
-      ...
-    </div>,
-  ];
-  const numberOfNotesToDisplay = posts < 6 ? posts : 6;
-  const notesToDisplay = allPossibleNotes.slice(0, numberOfNotesToDisplay);
-  return <Fragment>{notesToDisplay}</Fragment>;
+//depending of amount of posts, function returns some classNames with different colors
+function renderProperColor(posts, dayIsToday) {
+  if (dayIsToday) {
+    return "Day_link_today";
+  }
+  if (posts === 0) {
+    return "Day_link";
+  }
+  if (posts === 1) {
+    return "Day_link_one_post";
+  }
+  if (posts >= 2) {
+    return "Day_link_two_and_more_posts";
+  }
 }

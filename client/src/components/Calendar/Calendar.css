@@ -1,3 +1,8 @@
+@font-face {
+  font-family: Montserrat;
+  src: url(./../../utils/Montserrat-Regular.ttf);
+}
+
 .Calendar_add_post_button {
   border: none;
   margin: 0;
@@ -23,13 +28,17 @@
 }
 
 .Calendar_add_post_button {
-  color: var(--black);
+  color: white;
   flex: 1;
   height: 100%;
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
 }
 
 .Calendar_add_post_button:hover {
-  background: rgb(248, 248, 248);
+  background: #ebad50;
   cursor: pointer;
 }
 
@@ -38,7 +47,7 @@
 }
 
 .Calendar_add_post_button:hover {
-  background: rgb(248, 248, 248);
+  background: #ebad50;
 }
 
 .Calendar_add_post_button:focus {
@@ -53,13 +62,15 @@
 
 .Calendar_earlier:hover,
 .Calendar_later:hover {
-  background: white;
+  background: #ebad50;
 }
 
 .Calendar_animation_overflow {
   overflow: hidden;
   position: relative;
-  height: calc(25rem + 12px);
+  height: calc(33rem + 12px);
+  width: 80%;
+  margin: 0 auto;
 }
 
 .Calendar_animation_wrapper {

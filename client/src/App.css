@@ -2,13 +2,13 @@
   --black: hsl(0, 0%, 0%);
   --middle-gray: hsl(240, 6%, 92%);
   --light-gray: hsl(300, 7%, 97%);
-  --accent: hsl(300, 89%, 35%);
+  --accent: #fbc26d;
   --accent-hover: hsl(300, 61%, 74%);
   --accent-active: hsl(308, 97%, 26%);
   --focus-shadow: 0px 0px 2px var(--accent);
   --focus-border: solid 1px var(--accent);
   --focus-border-inactive: solid 1px transparent;
-  --max-width: 1000px;
+  --max-width: 1450px;
   --transparent-white: hsla(0, 100%, 100%, 1);
   --red: rgb(249, 73, 73);
   --green: hsl(170, 90%, 44%);
@@ -43,7 +43,7 @@ body {
   font-size: 125%;
   display: flex;
   align-items: center;
-  color: var(--black);
+  color: #c8553d;
   border-radius: 50%;
   border: var(--focus-border-inactive);
   padding: 0.5rem;
@@ -71,12 +71,13 @@ body {
 
 .Layout {
   min-height: 100vh;
-  background-color: #edf4f7;
+  background: linear-gradient(243.86deg, #f9f8f6 0%, #f9f8f6 100%), #c4c4c4;
+  /* background-color: #edf4f7;
   background-image: url("./utils/Sun-Tornado.svg"),
     url("./utils/Sun-Tornado.svg"), url("./utils/Sun-Tornado.svg");
   background-position: vw 0, 25vw -10vw, 50vw -10vw;
   background-size: 110vw, 110vw, 140vw;
-  background-repeat: repeat;
+  background-repeat: repeat; */
 }
 
 .TabsButton {
@@ -124,8 +125,9 @@ body {
 }
 
 .UserCalendar {
-  padding: 0.75rem;
-  margin: 50px;
+  position: relative;
+  min-height: 1rem;
+  margin-top: -20px;
 }
 
 .icon_button.cta {
