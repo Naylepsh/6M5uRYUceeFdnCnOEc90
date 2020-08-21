@@ -32,7 +32,8 @@ async function getConsultations(initialDate, lastDate) {
 function tidyUpConsultations(consultations) {
   const dates = {};
   for (const consultation of consultations) {
-    const date = getDate(consultation.datetime);
+    const datetime = new Date(consultation.datetime);
+    const date = getDate(datetime);
     if (!dates[date]) {
       dates[date] = [];
     }
@@ -61,12 +62,18 @@ function createWeekData(initialDate, consultations) {
   const days = [];
   for (let day = 0; day < 7; day++) {
     const date = new Date(initialDate).addDays(day);
-    setDateToBeginningOfTheDay(date);
-    const posts = [];
-    const dayData = { date, posts };
+    const dayData = createDayData(date, consultations);
     days.push(dayData);
   }
   return days;
+}
+
+function createDayData(initialDate, consultations) {
+  const datetime = new Date(initialDate);
+  setDateToBeginningOfTheDay(datetime);
+  const posts = consultations[getDate(datetime)] || [];
+  const dayData = { date: datetime, posts };
+  return dayData;
 }
 
 function setDateToBeginningOfTheDay(date) {
