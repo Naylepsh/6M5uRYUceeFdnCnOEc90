@@ -19,7 +19,6 @@ import { CalendarService } from "../../services/calendar-service";
 
 export function Calendar({ user, posts, modalIsOpen }) {
   const [{ auth }] = useAppState();
-  // const weeks = createCalendarData(new Date());
   const [weeks, setWeeks] = useState([]);
   useEffect(() => {
     if (weeks.length === 0) {
@@ -29,7 +28,7 @@ export function Calendar({ user, posts, modalIsOpen }) {
 
   const getWeeks = async () => {
     const dataLoader = new CalendarService(new Date());
-    const data = await dataLoader.loadData();
+    const data = await dataLoader.getCalendar();
     setWeeks(data);
   };
 

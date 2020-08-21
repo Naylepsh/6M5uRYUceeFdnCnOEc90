@@ -5,6 +5,7 @@ import {
   setDateToBeginningOfTheDay,
 } from "./../utils/date";
 import { ConsultationsService } from "./consultations-service";
+import { ConsultationMapper } from "../utils/mappers/consultation-mapper";
 
 export class CalendarService {
   constructor(startDate) {
@@ -21,13 +22,14 @@ export class CalendarService {
     return new Date(initialDate).addDays(pagesInTheCalendar);
   }
 
+  async getCalendar() {
+    await this.loadData();
+    return this.calendar;
+  }
+
   async loadData() {
     await this.loadConsultations();
-    const calendar = this.createAndFillCalendar(
-      this.initialDate,
-      this.consultations
-    );
-    return calendar;
+    this.calendar = this.fillCalendar(this.initialDate, this.consultations);
   }
 
   async loadConsultations() {
@@ -36,10 +38,12 @@ export class CalendarService {
       this.lastDate
     );
     const rawConsultations = res.data;
-    this.consultations = tidyUpConsultations(rawConsultations);
+    this.consultations = ConsultationMapper.fromConsAPIToCalendarCons(
+      rawConsultations
+    );
   }
 
-  createAndFillCalendar(initialDate) {
+  fillCalendar(initialDate) {
     const calendar = [];
     for (let week = 0; week < 5; week++) {
       const weekInitialDate = new Date(initialDate).addDays(week * 7);
@@ -71,17 +75,4 @@ export class CalendarService {
   getConsultationsOfTheDate(date) {
     return this.consultations[date] || [];
   }
-}
-
-function tidyUpConsultations(consultations) {
-  const dates = {};
-  for (const consultation of consultations) {
-    const datetime = new Date(consultation.datetime);
-    const date = getDate(datetime);
-    if (!dates[date]) {
-      dates[date] = [];
-    }
-    dates[date].push(consultation);
-  }
-  return dates;
 }
