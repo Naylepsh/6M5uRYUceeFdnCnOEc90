@@ -20,16 +20,19 @@ import { CalendarService } from "../../services/calendar-service";
 export function Calendar({ user, posts, modalIsOpen }) {
   const [{ auth }] = useAppState();
   const [weeks, setWeeks] = useState([]);
+  const postCount = countAllPosts(weeks);
   useEffect(() => {
-    if (weeks.length === 0) {
-      getWeeks();
+    async function fetchConsultations() {
+      const data = await getWeeks();
+      setWeeks(data);
+      console.log("sent request for new weeks value");
     }
-  });
+    fetchConsultations();
+  }, [postCount]);
 
-  const getWeeks = async () => {
+  const getWeeks = () => {
     const dataLoader = new CalendarService(new Date());
-    const data = await dataLoader.getCalendar();
-    setWeeks(data);
+    return dataLoader.getCalendar();
   };
 
   const [newPostDate, setNewPostDate] = useState(null);
@@ -147,4 +150,14 @@ export function Calendar({ user, posts, modalIsOpen }) {
       </div>
     </Fragment>
   );
+}
+
+function countAllPosts(weeks) {
+  let count = 0;
+  for (const week of weeks) {
+    for (const day of week) {
+      count += day.posts.length;
+    }
+  }
+  return count;
 }

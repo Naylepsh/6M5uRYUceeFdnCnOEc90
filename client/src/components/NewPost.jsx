@@ -5,6 +5,7 @@ import { format as formatDate } from "date-fns";
 import { FaHome } from "react-icons/fa";
 import RecentPostsDropdown from "./RecentPostsDropdown";
 import "./NewPost.css";
+import { ConsultationsService } from "../services/consultations-service";
 
 const MAX_MESSAGE_LENGTH = 200;
 
@@ -78,22 +79,48 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
 
   const tooMuchText = message.length > MAX_MESSAGE_LENGTH;
 
-  const submit = (form) => {
+  const submit = async (form) => {
+    function createUUUIDArray(value) {
+      return value ? [value] : [];
+    }
     setSaving(true);
 
-    createPost({
-      message: messageRef.current.value,
-      place: placeRef.current.value,
-      student: studentRef.current.value,
-      lecturer: lecturerRef.current.value,
-      group: groupRef.current.value,
-      date: formatDate(date, DATE_FORMAT),
-      uid: auth.uid,
-    }).then((post) => {
-      setSaving(false);
-      setMessage("");
-      onSuccess(post);
-    });
+    const address = placeRef.current.value;
+    const datetime = date;
+    const description = messageRef.current.value;
+    const students = createUUUIDArray(studentRef.current.value);
+    const lecturers = createUUUIDArray(lecturerRef.current.value);
+    const groups = createUUUIDArray(groupRef.current.value);
+    const consultationSerivce = new ConsultationsService();
+
+    try {
+      await consultationSerivce.saveConsultation({
+        address,
+        datetime,
+        description,
+        students,
+        lecturers,
+        groups,
+      });
+
+      createPost({
+        message: messageRef.current.value,
+        place: placeRef.current.value,
+        student: studentRef.current.value,
+        lecturer: lecturerRef.current.value,
+        group: groupRef.current.value,
+        date: formatDate(date, DATE_FORMAT),
+        uid: auth.uid,
+      }).then((post) => {
+        setSaving(false);
+        setMessage("");
+        onSuccess(post);
+      });
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        console.log(error.response);
+      }
+    }
   };
 
   const handleSubmit = (event) => {
