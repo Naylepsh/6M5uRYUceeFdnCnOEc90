@@ -82,6 +82,7 @@ export function Calendar({ user, posts, modalIsOpen }) {
   const closeDialog = () => setNewPostDate(null);
 
   const handleNewPostSuccess = () => {
+    setWeeks([]); // force request for new weeks
     setDayWithNewPost(formatDate(newPostDate, DATE_FORMAT));
     closeDialog();
   };
