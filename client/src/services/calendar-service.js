@@ -1,32 +1,77 @@
 import "../utils/date-extentions";
-import { getConsultationsBetween } from "./consultations-service";
+import {
+  getFirstDayOfTheWeek,
+  getDate,
+  setDateToBeginningOfTheDay,
+} from "./../utils/date";
+import { ConsultationsService } from "./consultations-service";
 
-export async function createCalendarData(startDate) {
-  const initialDate = getFirstDayOfTheWeek(startDate);
-  const lastDate = getLastDateOfTheCalendarPage(initialDate);
-  const consultations = await getConsultations(initialDate, lastDate);
-  const calendar = createAndFillCalendar(initialDate, consultations);
-  return calendar;
-}
+export class CalendarDataLoader {
+  constructor(startDate) {
+    const initialDate = getFirstDayOfTheWeek(startDate);
+    this.initialDate = initialDate;
+    this.lastDate = this.getLastDateOfTheCalendarPage(this.initialDate);
+    this.consultationService = new ConsultationsService();
+    this.calendar = [];
+    this.consultations = [];
+  }
 
-// surprisingly it's Sunday that is considered first day of the week, not Monday :shrug:
-function getFirstDayOfTheWeek(date) {
-  const currentDay = date.getDay();
-  const daysToSubtract = currentDay;
-  const firstDayOfTheWeek = new Date().subtractDays(daysToSubtract);
-  return firstDayOfTheWeek;
-}
+  getLastDateOfTheCalendarPage(initialDate) {
+    const pagesInTheCalendar = 35;
+    return new Date(initialDate).addDays(pagesInTheCalendar);
+  }
 
-function getLastDateOfTheCalendarPage(initialDate) {
-  const pagesInTheCalendar = 35;
-  return new Date(initialDate).addDays(pagesInTheCalendar);
-}
+  async loadData() {
+    await this.loadConsultations();
+    console.log("consul", this.consultations);
+    const calendar = this.createAndFillCalendar(
+      this.initialDate,
+      this.consultations
+    );
+    return calendar;
+  }
 
-async function getConsultations(initialDate, lastDate) {
-  const res = await getConsultationsBetween(initialDate, lastDate);
-  const rawConsultations = res.data;
-  const cleanedUpConsultations = tidyUpConsultations(rawConsultations);
-  return cleanedUpConsultations;
+  async loadConsultations() {
+    const res = await this.consultationService.getConsultationsBetween(
+      this.initialDate,
+      this.lastDate
+    );
+    const rawConsultations = res.data;
+    this.consultations = tidyUpConsultations(rawConsultations);
+  }
+
+  createAndFillCalendar(initialDate) {
+    const calendar = [];
+    for (let week = 0; week < 5; week++) {
+      const weekInitialDate = new Date(initialDate).addDays(week * 7);
+      const dates = this.createWeekData(weekInitialDate);
+      calendar.push(dates);
+    }
+    return calendar;
+  }
+
+  createWeekData(initialDate) {
+    const days = [];
+    for (let day = 0; day < 7; day++) {
+      const date = new Date(initialDate).addDays(day);
+      const dayData = this.createDayData(date);
+      days.push(dayData);
+    }
+    return days;
+  }
+
+  createDayData(initialDate) {
+    const datetime = new Date(initialDate);
+    setDateToBeginningOfTheDay(datetime);
+    const date = getDate(datetime);
+    const posts = this.getConsultationsOfTheDate(date);
+    const dayData = { date: datetime, posts };
+    return dayData;
+  }
+
+  getConsultationsOfTheDate(date) {
+    return this.consultations[date] || [];
+  }
 }
 
 function tidyUpConsultations(consultations) {
@@ -40,44 +85,4 @@ function tidyUpConsultations(consultations) {
     dates[date].push(consultation);
   }
   return dates;
-}
-
-function getDate(datetime) {
-  return `${datetime.getDate()}-${
-    datetime.getMonth() + 1
-  }-${datetime.getYear()}`;
-}
-
-function createAndFillCalendar(initialDate, consultations) {
-  const calendar = [];
-  for (let week = 0; week < 5; week++) {
-    const weekInitialDate = new Date(initialDate).addDays(week * 7);
-    const dates = createWeekData(weekInitialDate, consultations);
-    calendar.push(dates);
-  }
-  return calendar;
-}
-
-function createWeekData(initialDate, consultations) {
-  const days = [];
-  for (let day = 0; day < 7; day++) {
-    const date = new Date(initialDate).addDays(day);
-    const dayData = createDayData(date, consultations);
-    days.push(dayData);
-  }
-  return days;
-}
-
-function createDayData(initialDate, consultations) {
-  const datetime = new Date(initialDate);
-  setDateToBeginningOfTheDay(datetime);
-  const posts = consultations[getDate(datetime)] || [];
-  const dayData = { date: datetime, posts };
-  return dayData;
-}
-
-function setDateToBeginningOfTheDay(date) {
-  date.setHours(0);
-  date.setMinutes(0);
-  date.setSeconds(0);
 }
