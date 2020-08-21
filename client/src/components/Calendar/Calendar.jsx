@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useCallback } from "react";
+import React, { Fragment, useState, useCallback, useEffect } from "react";
 import { useLocation } from "../../utils/react-router-next";
 import { useTransition, animated } from "react-spring";
 import {
@@ -19,7 +19,18 @@ import { createCalendarData } from "../../services/calendar-service";
 
 export function Calendar({ user, posts, modalIsOpen }) {
   const [{ auth }] = useAppState();
-  const weeks = createCalendarData(new Date());
+  // const weeks = createCalendarData(new Date());
+  const [weeks, setWeeks] = useState([]);
+  useEffect(() => {
+    if (weeks.length === 0) {
+      getWeeks();
+    }
+  });
+
+  const getWeeks = async () => {
+    const data = await createCalendarData(new Date());
+    setWeeks(data);
+  };
 
   const [newPostDate, setNewPostDate] = useState(null);
   const [dayWithNewPost, setDayWithNewPost] = useState(null);
