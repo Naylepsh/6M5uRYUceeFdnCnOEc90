@@ -8,16 +8,18 @@ import {
   isFirstDayOfMonth,
 } from "date-fns";
 import AnimatedDialog from "../AnimatedDialog";
-import { DATE_FORMAT, calculateWeeks } from "../../tools";
+import { DATE_FORMAT } from "../../tools";
 import { useAppState } from "../../states/AppState";
 import NewPost from "../NewPost";
 import { Day } from "./Day";
 import { Weekdays } from "./Weekdays";
 import { CalendarNav } from "./CalendarNav";
 import "./Calendar.css";
+import { createCalendarData } from "../../services/calendar-service";
 
 export function Calendar({ user, posts, modalIsOpen }) {
   const [{ auth }] = useAppState();
+  const weeks = createCalendarData(new Date());
 
   const [newPostDate, setNewPostDate] = useState(null);
   const [dayWithNewPost, setDayWithNewPost] = useState(null);
@@ -35,7 +37,6 @@ export function Calendar({ user, posts, modalIsOpen }) {
   const isOwner = auth.uid === user.uid;
   const numWeeks = 5;
 
-  const weeks = calculateWeeks(posts, startDate, numWeeks);
   const [prevStart, setPrevStart] = useState(startDate);
   const [transitionDirection, setTransitionDirection] = useState();
   if (prevStart !== startDate) {
