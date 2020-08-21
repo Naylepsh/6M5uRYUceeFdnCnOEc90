@@ -1,10 +1,10 @@
 import "../utils/date-extentions";
 import { getConsultationsBetween } from "./consultations-service";
 
-export function createCalendarData(startDate) {
+export async function createCalendarData(startDate) {
   const initialDate = getFirstDayOfTheWeek(startDate);
   const lastDate = getLastDateOfTheCalendarPage(initialDate);
-  const consultations = getConsultations(initialDate, lastDate);
+  const consultations = await getConsultations(initialDate, lastDate);
   const calendar = createAndFillCalendar(initialDate, consultations);
   return calendar;
 }
@@ -22,10 +22,10 @@ function getLastDateOfTheCalendarPage(initialDate) {
   return new Date(initialDate).addDays(pagesInTheCalendar);
 }
 
-function getConsultations(initialDate, lastDate) {
-  // const rawConsulations = getConsultationsBetween(initialDate, lastDate);
-  const rawConsulations = [];
-  const cleanedUpConsultations = tidyUpConsultations(rawConsulations);
+async function getConsultations(initialDate, lastDate) {
+  const res = await getConsultationsBetween(initialDate, lastDate);
+  const rawConsultations = res.data;
+  const cleanedUpConsultations = tidyUpConsultations(rawConsultations);
   return cleanedUpConsultations;
 }
 
