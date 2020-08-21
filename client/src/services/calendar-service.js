@@ -6,7 +6,7 @@ import {
 } from "./../utils/date";
 import { ConsultationsService } from "./consultations-service";
 
-export class CalendarDataLoader {
+export class CalendarService {
   constructor(startDate) {
     const initialDate = getFirstDayOfTheWeek(startDate);
     this.initialDate = initialDate;

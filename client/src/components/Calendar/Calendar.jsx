@@ -15,7 +15,7 @@ import { Day } from "./Day";
 import { Weekdays } from "./Weekdays";
 import { CalendarNav } from "./CalendarNav";
 import "./Calendar.css";
-import { CalendarDataLoader } from "../../services/calendar-service";
+import { CalendarService } from "../../services/calendar-service";
 
 export function Calendar({ user, posts, modalIsOpen }) {
   const [{ auth }] = useAppState();
@@ -28,7 +28,7 @@ export function Calendar({ user, posts, modalIsOpen }) {
   });
 
   const getWeeks = async () => {
-    const dataLoader = new CalendarDataLoader(new Date());
+    const dataLoader = new CalendarService(new Date());
     const data = await dataLoader.loadData();
     setWeeks(data);
   };
