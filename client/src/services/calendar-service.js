@@ -23,7 +23,6 @@ export class CalendarService {
 
   async loadData() {
     await this.loadConsultations();
-    console.log("consul", this.consultations);
     const calendar = this.createAndFillCalendar(
       this.initialDate,
       this.consultations
