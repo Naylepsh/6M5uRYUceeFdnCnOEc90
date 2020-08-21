@@ -175,7 +175,9 @@ export function calculateWeeks(posts, startDate, numWeeks) {
     postsByDay[post.date].push(post);
   });
 
-  const startDay = startOfWeek(subDays(startDate, (numWeeks - 1) * 7));
+  const startDay = startOfWeek(subDays(startDate, (numWeeks - 5) * 7), {
+    //weekStartsOn: 1,
+  });
   let weekCursor = -1;
   Array.from({ length: numWeeks * 7 }).forEach((_, index) => {
     const date = addDays(startDay, index);

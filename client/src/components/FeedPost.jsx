@@ -1,14 +1,11 @@
 import React from "react";
 import useDocWithCache from "./../use-doc-with-cache";
-import { Link, useLocation } from "./../utils/react-router-next";
-import Avatar from "./Avatar";
+import { useLocation } from "./../utils/react-router-next";
 import { format as formatDate, distanceInWordsToNow } from "date-fns";
 import { translateMonths, translateWeekdays } from "./../tools";
 import "./FeedPost.css";
 
 const plLocale = require("date-fns/locale/pl");
-
-const stopPropagation = (event) => event.stopPropagation();
 
 //Provides feed of recently created/editet posts
 
@@ -18,22 +15,15 @@ export default function FeedPost({ post }) {
 
   return user ? (
     <div className="FeedPost" {...ariaLink}>
-      <Avatar uid={post.uid} size={100} />
       <div className="FeedPost_about">
-        <Link
-          onClick={stopPropagation}
-          className="FeedPost_date"
-          href={`/${post.uid}/${post.date}`}
-        >
+        <div className="FeedPost_date">
           {`${translateWeekdays(formatDate(post.date, "dddd"))}, ${formatDate(
             post.date,
             "DD"
           )} ${translateMonths(formatDate(post.date, "MMM")).toLowerCase()}`}
-        </Link>
+        </div>
         <div className="FeedPost_user_name">
-          <Link onClick={stopPropagation} href={`/${user.uid}`}>
-            {user.displayName}
-          </Link>{" "}
+          <span>{user.displayName}</span>{" "}
           <span className="FeedPost_created_at">
             {distanceInWordsToNow(post.createdAt, {
               addSuffix: true,

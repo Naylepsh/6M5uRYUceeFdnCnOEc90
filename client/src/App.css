@@ -33,7 +33,7 @@ body {
 
 .icon_button {
   border: none;
-  margin: 0;
+  margin: 0 auto;
   background: none;
   color: inherit;
   font: inherit;

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "./../utils/react-router-next";
-import { FaCalendarAlt, FaHotjar } from "react-icons/fa";
+import { FaCalendarAlt, FaBell } from "react-icons/fa";
 import "./GlobalNav.css";
 
 export default function GlobalNav() {
@@ -10,7 +10,7 @@ export default function GlobalNav() {
         <FaCalendarAlt /> <span>Kalendarz</span>
       </Link>
       <Link href="/feed">
-        <FaHotjar /> <span>Ostatnie notatki</span>
+        <FaBell /> <span>Ostatnie notatki</span>
       </Link>
     </nav>
   );

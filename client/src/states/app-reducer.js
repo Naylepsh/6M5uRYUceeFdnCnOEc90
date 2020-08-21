@@ -1,5 +1,3 @@
-const { act } = require("react-dom/test-utils");
-
 const initialState = { authAttempted: false, auth: null, user: null };
 
 const appStateReducer = (state, action) => {
