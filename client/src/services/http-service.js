@@ -1,5 +1,5 @@
 import axios from "axios";
-import logger from "./logService";
+import logger from "./log-service";
 
 axios.interceptors.response.use(null, (error) => {
   const expectedError =
@@ -18,5 +18,4 @@ export default {
   post: axios.post,
   put: axios.put,
   delete: axios.delete,
-  setJwt,
 };

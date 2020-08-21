@@ -1,8 +1,11 @@
 import "../utils/date-extentions";
+import { getConsultationsBetween } from "./consultations-service";
 
 export function createCalendarData(startDate) {
   const initialDate = getFirstDayOfTheWeek(startDate);
-  const calendar = createAndFillCalendar(initialDate);
+  const lastDate = getLastDateOfTheCalendarPage(initialDate);
+  const consultations = getConsultations(initialDate, lastDate);
+  const calendar = createAndFillCalendar(initialDate, consultations);
   return calendar;
 }
 
@@ -14,29 +17,56 @@ function getFirstDayOfTheWeek(date) {
   return firstDayOfTheWeek;
 }
 
-function createAndFillCalendar(initialDate) {
+function getLastDateOfTheCalendarPage(initialDate) {
+  const pagesInTheCalendar = 35;
+  return new Date(initialDate).addDays(pagesInTheCalendar);
+}
+
+function getConsultations(initialDate, lastDate) {
+  // const rawConsulations = getConsultationsBetween(initialDate, lastDate);
+  const rawConsulations = [];
+  const cleanedUpConsultations = tidyUpConsultations(rawConsulations);
+  return cleanedUpConsultations;
+}
+
+function tidyUpConsultations(consultations) {
+  const dates = {};
+  for (const consultation of consultations) {
+    const date = getDate(consultation.datetime);
+    if (!dates[date]) {
+      dates[date] = [];
+    }
+    dates[date].push(consultation);
+  }
+  return dates;
+}
+
+function getDate(datetime) {
+  return `${datetime.getDate()}-${
+    datetime.getMonth() + 1
+  }-${datetime.getYear()}`;
+}
+
+function createAndFillCalendar(initialDate, consultations) {
   const calendar = [];
   for (let week = 0; week < 5; week++) {
-    const dates = createWeekData(initialDate, week);
+    const weekInitialDate = new Date(initialDate).addDays(week * 7);
+    const dates = createWeekData(weekInitialDate, consultations);
     calendar.push(dates);
   }
   return calendar;
 }
 
-function createWeekData(initialDate, week) {
-  const dates = [];
+function createWeekData(initialDate, consultations) {
+  const days = [];
   for (let day = 0; day < 7; day++) {
-    const dateData = createDateData(initialDate, week, day);
-    dates.push(dateData);
+    const date = new Date(initialDate).addDays(day);
+    setDateToBeginningOfTheDay(date);
+    const posts = [];
+    const dayData = { date, posts };
+    days.push(dayData);
   }
-  return dates;
-}
-
-function createDateData(initialDate, week, day) {
-  const date = new Date(initialDate).addDays(week * 7 + day);
-  setDateToBeginningOfTheDay(date);
-  const posts = [];
-  return { date, posts };
+  return days;
 }
 
 function setDateToBeginningOfTheDay(date) {
