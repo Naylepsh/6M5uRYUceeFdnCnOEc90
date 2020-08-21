@@ -1,4 +1,4 @@
-import http from "./httpService";
+import http from "./http-service";
 
 const apiEndpoint = "http://localhost:3333/consultations";
 
