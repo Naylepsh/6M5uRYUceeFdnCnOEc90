@@ -3,7 +3,7 @@ import { Router, Route, DefaultRoute } from "./../utils/react-router-next";
 import { fetchDoc, isValidDate } from "./../tools";
 import { useAppState } from "./AppState";
 import UserDatePosts from "./../components/Posts";
-import Feed from "./../components/Feed";
+import Feed from "./../components/Feed/Feed";
 import TopBar from "./../components/TopBar";
 import User from "./../components/User";
 import NotFound from "./../components/NotFound";

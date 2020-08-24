@@ -1,6 +1,6 @@
 import React from "react";
 import { sortByCreatedAtDescending } from "./../tools";
-import FeedPost from "./FeedPost";
+import FeedPost from "./Feed/FeedPost";
 import usePosts from "./use-posts";
 import { useParams } from "./../utils/react-router-next";
 import useDocWithCache from "./../use-doc-with-cache";
