@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "./utils/react-router-next";
-import Posts from "./posts";
+import Posts from "./Post/Posts";
 
 export default function UserDatePosts() {
   const params = useParams();

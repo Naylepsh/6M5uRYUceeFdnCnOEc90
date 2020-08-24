@@ -4,7 +4,7 @@ import { useAppState } from "./../states/AppState";
 import useDocWithCache from "./../use-doc-with-cache";
 import NewPost from "./NewPost";
 import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
-import { deletePost, translateMonths } from "./../tools";
+import { deletePost, translateMonths } from "../../tools";
 import usePosts from "./use-posts";
 import "./Posts.css";
 

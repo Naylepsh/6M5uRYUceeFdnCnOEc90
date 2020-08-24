@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { subscribeToPosts, fetchPosts } from "./../tools";
+import { subscribeToPosts, fetchPosts } from "../../tools";
 
 const cache = {};
 

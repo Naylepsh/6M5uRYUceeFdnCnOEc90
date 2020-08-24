@@ -1,6 +1,6 @@
 import React from "react";
 import useDocWithCache from "../../use-doc-with-cache";
-import usePosts from "../use-posts";
+import usePosts from "../Post/use-posts";
 import "./Avatar.css";
 
 //Provides all features of user avatar

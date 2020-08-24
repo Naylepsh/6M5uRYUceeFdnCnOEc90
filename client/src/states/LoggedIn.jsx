@@ -2,7 +2,7 @@ import React, { useEffect, Fragment } from "react";
 import { Router, Route, DefaultRoute } from "./../utils/react-router-next";
 import { fetchDoc, isValidDate } from "./../tools";
 import { useAppState } from "./AppState";
-import UserDatePosts from "./../components/Posts";
+import UserDatePosts from "./../components/Post/Posts";
 import Feed from "./../components/Feed/Feed";
 import TopBar from "./../components/TopBar";
 import User from "./../components/User";
