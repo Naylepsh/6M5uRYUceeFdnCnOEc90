@@ -14,8 +14,8 @@ import NewPost from "../NewPost";
 import { Day } from "./Day";
 import { Weekdays } from "./Weekdays";
 import { CalendarNav } from "./CalendarNav";
-import "./Calendar.css";
 import { CalendarService } from "../../services/calendar-service";
+import "./Calendar.css";
 
 export function Calendar({ user, posts, modalIsOpen }) {
   const [{ auth }] = useAppState();
