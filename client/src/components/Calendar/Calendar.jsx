@@ -10,7 +10,7 @@ import {
 import AnimatedDialog from "../AnimatedDialog";
 import { DATE_FORMAT } from "../../tools";
 import { useAppState } from "../../states/AppState";
-import NewPost from "../NewPost";
+import NewPost from "../Post/NewPost";
 import { Day } from "./Day";
 import { Weekdays } from "./Weekdays";
 import { CalendarNav } from "./CalendarNav";

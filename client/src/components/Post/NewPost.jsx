@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useAppState } from "./../states/AppState";
-import { createPost, DATE_FORMAT } from "./../tools";
+import { useAppState } from "../../states/AppState";
+import { createPost, DATE_FORMAT } from "../../tools";
 import { format as formatDate } from "date-fns";
-import Avatar from "./Avatar/Avatar";
+import Avatar from "../Avatar/Avatar";
 import { FaHome } from "react-icons/fa";
 import RecentPostsDropdown from "./RecentPostsDropdown";
+import { ConsultationsService } from "../../services/consultations-service";
 import "./NewPost.css";
-import { ConsultationsService } from "../services/consultations-service";
 
 const MAX_MESSAGE_LENGTH = 200;
 

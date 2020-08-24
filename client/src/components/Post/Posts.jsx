@@ -1,12 +1,12 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Link } from "./../utils/react-router-next";
+import { Link } from "../../utils/react-router-next";
 import { format as formatDate } from "date-fns";
-import { useAppState } from "./../states/AppState";
-import useDocWithCache from "./../use-doc-with-cache";
-import Avatar from "./Avatar/Avatar";
+import { useAppState } from "../../states/AppState";
+import useDocWithCache from "../../use-doc-with-cache";
+import Avatar from "../Avatar/Avatar";
 import NewPost from "./NewPost";
 import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
-import { deletePost, translateMonths } from "./../tools";
+import { deletePost, translateMonths } from "../../tools";
 import usePosts from "./use-posts";
 import "./Posts.css";
 
