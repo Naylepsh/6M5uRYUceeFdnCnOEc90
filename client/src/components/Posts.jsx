@@ -3,7 +3,7 @@ import { Link } from "./../utils/react-router-next";
 import { format as formatDate } from "date-fns";
 import { useAppState } from "./../states/AppState";
 import useDocWithCache from "./../use-doc-with-cache";
-import Avatar from "./Avatar";
+import Avatar from "./Avatar/Avatar";
 import NewPost from "./NewPost";
 import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import { deletePost, translateMonths } from "./../tools";

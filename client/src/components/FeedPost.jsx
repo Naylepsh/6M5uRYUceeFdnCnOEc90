@@ -1,7 +1,7 @@
 import React from "react";
 import useDocWithCache from "./../use-doc-with-cache";
 import { Link, useLocation } from "./../utils/react-router-next";
-import Avatar from "./Avatar";
+import Avatar from "./Avatar/Avatar";
 import { format as formatDate, distanceInWordsToNow } from "date-fns";
 import { translateMonths, translateWeekdays } from "./../tools";
 import "./FeedPost.css";

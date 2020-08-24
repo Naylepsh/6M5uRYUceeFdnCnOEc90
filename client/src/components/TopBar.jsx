@@ -1,7 +1,7 @@
 import React from "react";
 import { logout } from "./../tools";
 import { useAppState } from "./../states/AppState";
-import Avatar from "./Avatar";
+import Avatar from "./Avatar/Avatar";
 import { FaPowerOff } from "react-icons/fa";
 import GlobalNav from "./GlobalNav";
 import "./TopBar.css";
