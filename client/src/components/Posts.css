@@ -1,3 +1,8 @@
+@font-face {
+  font-family: Montserrat;
+  src: url(./../utils/Montserrat-Regular.ttf);
+}
+
 .Posts {
   position: relative;
   display: flex;
@@ -5,7 +10,7 @@
   padding: 2rem;
   box-shadow: 1px 1px 5px hsla(0, 0%, 0%, 0.25);
   border-radius: 0.8rem;
-  margin: auto;
+  margin: 100px 100px;
   flex-shrink: 1;
 }
 
@@ -20,11 +25,6 @@
   flex-wrap: "wrap";
   flex-shrink: 1;
   overflow-y: scroll;
-}
-
-.Posts .Avatar {
-  margin-right: 2rem;
-  width: 200px;
 }
 
 .Posts_content {
@@ -42,27 +42,16 @@ h2 {
   font: inherit;
 }
 
-.Posts_user_name {
-  font-size: 150%;
-  margin-top: 0.5rem;
-}
-
-.Posts_user_name a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.Posts_user_name a:hover {
-  text-decoration: underline;
-}
-
 .Posts_date {
+  font-family: Montserrat;
   font-size: 200%;
   font-weight: bold;
+  margin: 20px;
+  color: #c8553d;
 }
 
 .Posts_posts {
-  margin: 2rem 0 0.25rem 0;
+  margin: 20px;
 }
 
 .Post {
@@ -70,10 +59,11 @@ h2 {
 }
 
 .Post_message {
+  font-family: Montserrat;
   font-size: 150%;
 }
 
-.Post_title {
+.Post_delete {
   display: flex;
   align-items: center;
   justify-content: space-between;

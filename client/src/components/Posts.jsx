@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Link } from "./../utils/react-router-next";
 import { format as formatDate } from "date-fns";
 import { useAppState } from "./../states/AppState";
 import useDocWithCache from "./../use-doc-with-cache";
@@ -43,9 +42,6 @@ export default function Posts({ params }) {
   return posts && user ? (
     <div className="Posts">
       <div className="Post_content">
-        <h1 className="Post_user_name">
-          <Link href={`/${user.uid}`}>{user.displayName}</Link>
-        </h1>
         <h2 className="Posts_date">{`${formatDate(
           date,
           "DD"
@@ -98,7 +94,12 @@ function Post({ post }) {
 
   return (
     <div className="Post">
-      <div className="Post_title">
+      <div className="Post_message">{post.message}</div>
+      <div className="Post_student">Uczeń: {post.student}</div>
+      <div className="Post_lecturer">Prowadzący: {post.lecturer}</div>
+      <div className="Post_group">Grupa: {post.group}</div>
+      <div className="Post_place">Lokalizacja: {post.place}</div>
+      <div className="Post_delete">
         {canDelete && (
           <button
             className="Post_delete_button icon_button"
@@ -108,11 +109,6 @@ function Post({ post }) {
           </button>
         )}
       </div>
-      <div className="Post_message">{post.message}</div>
-      <div className="Post_student">Uczeń: {post.student}</div>
-      <div className="Post_lecturer">Prowadzący: {post.lecturer}</div>
-      <div className="Post_group">Grupa: {post.group}</div>
-      <div className="Post_place">Lokalizacja: {post.place}</div>
     </div>
   );
 }
