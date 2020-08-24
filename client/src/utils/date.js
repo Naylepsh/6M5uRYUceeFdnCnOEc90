@@ -1,8 +1,10 @@
+import { subDays } from "date-fns";
+
 // surprisingly it's Sunday that is considered first day of the week, not Monday :shrug:
 export function getFirstDayOfTheWeek(date) {
   const currentDay = date.getDay();
   const daysToSubtract = currentDay;
-  const firstDayOfTheWeek = new Date().subtractDays(daysToSubtract);
+  const firstDayOfTheWeek = subDays(new Date(), daysToSubtract);
   return firstDayOfTheWeek;
 }
 

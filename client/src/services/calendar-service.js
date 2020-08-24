@@ -1,4 +1,3 @@
-import "../utils/date-extentions";
 import {
   getFirstDayOfTheWeek,
   getDate,
@@ -6,6 +5,7 @@ import {
 } from "./../utils/date";
 import { ConsultationsService } from "./consultations-service";
 import { ConsultationMapper } from "../utils/mappers/consultation-mapper";
+import { addDays } from "date-fns";
 
 export class CalendarService {
   constructor(startDate) {
@@ -19,7 +19,7 @@ export class CalendarService {
 
   getLastDateOfTheCalendarPage(initialDate) {
     const pagesInTheCalendar = 35;
-    return new Date(initialDate).addDays(pagesInTheCalendar);
+    return addDays(new Date(initialDate), pagesInTheCalendar);
   }
 
   async getCalendar() {
@@ -46,7 +46,7 @@ export class CalendarService {
   fillCalendar(initialDate) {
     const calendar = [];
     for (let week = 0; week < 5; week++) {
-      const weekInitialDate = new Date(initialDate).addDays(week * 7);
+      const weekInitialDate = addDays(new Date(initialDate), week * 7);
       const dates = this.createWeekData(weekInitialDate);
       calendar.push(dates);
     }
@@ -56,7 +56,7 @@ export class CalendarService {
   createWeekData(initialDate) {
     const days = [];
     for (let day = 0; day < 7; day++) {
-      const date = new Date(initialDate).addDays(day);
+      const date = addDays(new Date(initialDate), day);
       const dayData = this.createDayData(date);
       days.push(dayData);
     }
