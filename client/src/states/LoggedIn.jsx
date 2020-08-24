@@ -6,7 +6,7 @@ import UserDatePosts from "./../components/Post/Posts";
 import Feed from "./../components/Feed/Feed";
 import TopBar from "./../components/TopBar";
 import User from "./../components/User";
-import NotFound from "./../components/NotFound";
+import NotFound from "../components/common/NotFound";
 import Dashboard from "../components/Dashboard/Dashboard";
 
 export default function LoggedIn() {
