@@ -1,31 +1,35 @@
 import http from "./httpService";
 
-const apiEndpoint = "http://localhost:3333/lecturers";
-
-export function getLecturers() {
-  return http.get(apiEndpoint);
-}
-
-export function getLecturer(id) {
-  return http.get(`${apiEndpoint}/${id}`);
-}
-
-export function saveLecturer(lecturer) {
-  if (lecturer.id) {
-    return putLecturer(lecturer.id, lecturer);
-  } else {
-    return postLecturer(lecturer);
+export class LecturersService {
+  constructor() {
+    this.apiEndpoint = "http://localhost:3333/lecturers";
   }
-}
 
-export function postLecturer(lecturer) {
-  return http.post(`${apiEndpoint}`, lecturer);
-}
+  getLecturers() {
+    return http.get(this.apiEndpoint);
+  }
 
-export function putLecturer(id, lecturer) {
-  return http.put(`${apiEndpoint}/${id}`, lecturer);
-}
+  getLecturer(id) {
+    return http.get(`${this.apiEndpoint}/${id}`);
+  }
 
-export function deleteLecturer(id) {
-  return http.delete(`${apiEndpoint}/${id}`);
+  saveLecturer(lecturer) {
+    if (lecturer.id) {
+      return this.putLecturer(lecturer.id, lecturer);
+    } else {
+      return this.postLecturer(lecturer);
+    }
+  }
+
+  postLecturer(lecturer) {
+    return http.post(`${this.apiEndpoint}`, lecturer);
+  }
+
+  putLecturer(id, lecturer) {
+    return http.put(`${this.apiEndpoint}/${id}`, lecturer);
+  }
+
+  deleteLecturer(id) {
+    return http.delete(`${this.apiEndpoint}/${id}`);
+  }
 }

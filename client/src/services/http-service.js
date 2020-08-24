@@ -13,9 +13,33 @@ axios.interceptors.response.use(null, (error) => {
   return Promise.reject(error);
 });
 
-export default {
-  get: axios.get,
-  post: axios.post,
-  put: axios.put,
-  delete: axios.delete,
-};
+export class HttpService {
+  constructor(apiEndpoint) {
+    this.apiEndpoint = apiEndpoint;
+  }
+
+  getAll(query) {
+    const endpoint = query ? `${this.apiEndpoint}?${query}` : this.apiEndpoint;
+    return axios.get(endpoint);
+  }
+
+  getOneById(id) {
+    return axios.get(this.getUrlWithId(id));
+  }
+
+  save(object) {
+    if (object.id) {
+      return axios.put(this.getUrlWithId(object.id), object);
+    } else {
+      return axios.post(this.apiEndpoint, object);
+    }
+  }
+
+  delete(id) {
+    return axios.delete(this.getUrlWithId(id));
+  }
+
+  getUrlWithId(id) {
+    return `${this.apiEndpoint}/${id}`;
+  }
+}
