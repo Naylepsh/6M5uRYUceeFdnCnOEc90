@@ -3,7 +3,6 @@ import { Link } from "./../utils/react-router-next";
 import { format as formatDate } from "date-fns";
 import { useAppState } from "./../states/AppState";
 import useDocWithCache from "./../use-doc-with-cache";
-import Avatar from "./Avatar";
 import NewPost from "./NewPost";
 import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import { deletePost, translateMonths } from "./../tools";
@@ -43,7 +42,6 @@ export default function Posts({ params }) {
 
   return posts && user ? (
     <div className="Posts">
-      <Avatar uid={user.uid} size={100} />
       <div className="Post_content">
         <h1 className="Post_user_name">
           <Link href={`/${user.uid}`}>{user.displayName}</Link>

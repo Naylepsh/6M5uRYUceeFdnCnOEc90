@@ -2,14 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import { useAppState } from "./../states/AppState";
 import { createPost, DATE_FORMAT } from "./../tools";
 import { format as formatDate } from "date-fns";
-import Avatar from "./Avatar";
 import { FaHome } from "react-icons/fa";
 import RecentPostsDropdown from "./RecentPostsDropdown";
 import "./NewPost.css";
 
 const MAX_MESSAGE_LENGTH = 200;
 
-export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
+export default function NewPost({ takeFocus, date, onSuccess }) {
   const [{ auth }] = useAppState();
 
   const [message, setMessage] = useState(
@@ -117,7 +116,6 @@ export default function NewPost({ takeFocus, date, onSuccess, showAvatar }) {
       className={"NewPost" + (tooMuchText ? " NewPost_error" : "")}
       style={{ opacity: saving ? 0.25 : 1 }}
     >
-      {showAvatar && <Avatar uid={auth.uid} size={70} />}
       <form ref={formRef} className="NewPost_form" onSubmit={handleSubmit}>
         <textarea
           ref={messageRef}

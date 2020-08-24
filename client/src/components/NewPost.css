@@ -40,10 +40,6 @@
   font-size: 1.2em;
 }
 
-.NewPost .Avatar {
-  margin-right: 1rem;
-}
-
 .NewPost_buttons {
   display: flex;
   align-items: center;

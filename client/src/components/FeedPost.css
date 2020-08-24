@@ -42,7 +42,7 @@
 
 .FeedPost_message {
   font-family: Montserrat;
-  font-size: 125%;
+  font-size: 140%;
   margin: 1rem 0;
 }
 
@@ -73,4 +73,10 @@
   font-size: 80%;
   font-style: italic;
   color: black;
+}
+
+.FeedPost_info {
+  font-family: Montserrat;
+  font-size: 80%;
+  margin: 1rem 0;
 }

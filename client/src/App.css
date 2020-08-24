@@ -27,8 +27,11 @@ body {
   border: solid 2px hsla(240, 6%, 70%);
   background-color: rgb(245, 245, 245);
   border-radius: 0.8rem;
-  width: 800px;
   padding: 2.5rem;
+  position: absolute;
+  width: 900px;
+  height: 320px;
+  margin: -55px 0 0 -55px;
 }
 
 .icon_button {
