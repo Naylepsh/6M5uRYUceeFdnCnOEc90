@@ -95,10 +95,10 @@ function Post({ post }) {
   return (
     <div className="Post">
       <div className="Post_message">{post.message}</div>
-      <div className="Post_student">Uczeń: {post.student}</div>
-      <div className="Post_lecturer">Prowadzący: {post.lecturer}</div>
-      <div className="Post_group">Grupa: {post.group}</div>
-      <div className="Post_place">Lokalizacja: {post.place}</div>
+      <div className="Post_info">Uczeń: {post.student}</div>
+      <div className="Post_info">Prowadzący: {post.lecturer}</div>
+      <div className="Post_info">Grupa: {post.group}</div>
+      <div className="Post_info">Lokalizacja: {post.place}</div>
       <div className="Post_delete">
         {canDelete && (
           <button

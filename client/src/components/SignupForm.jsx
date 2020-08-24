@@ -26,13 +26,12 @@ export default function SignupForm() {
   const handleSignup = async (event) => {
     event.preventDefault();
     setLoading(true);
-    const [displayName, photoURL, email, password] = event.target.elements;
+    const [displayName, email, password] = event.target.elements;
     try {
       await signup({
         displayName: displayName.value,
         email: email.value,
         password: password.value,
-        photoURL: photoURL.value,
         startDate,
       });
     } catch (error) {
@@ -54,7 +53,6 @@ export default function SignupForm() {
 
       <form onSubmit={handleSignup}>
         <TextInput id="displayName" label="imię i nazwisko" />
-        <TextInput id="photoURL" label="avatar URL" />
         <TextInput id="email" label="email" />
         <TextInput id="password" type="password" label="hasło" />
         <TabsButton>

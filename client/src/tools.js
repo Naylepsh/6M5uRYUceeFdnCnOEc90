@@ -25,7 +25,6 @@ export async function signup({
   email,
   password,
   displayName = "No Name",
-  photoURL = "https://placekitten.com/200/200",
   startDate,
 }) {
   try {
@@ -33,11 +32,10 @@ export async function signup({
       email,
       password
     );
-    await user.updateProfile({ displayName, photoURL });
+    await user.updateProfile({ displayName });
     await db.doc(`users/${user.uid}`).set({
       displayName: displayName,
       uid: user.uid,
-      photoURL: photoURL,
       started: formatDate(startDate, DATE_FORMAT),
     });
   } catch (e) {

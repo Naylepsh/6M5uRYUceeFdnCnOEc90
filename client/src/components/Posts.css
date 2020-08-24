@@ -63,6 +63,11 @@ h2 {
   font-size: 150%;
 }
 
+.Post_info {
+  font-family: Montserrat;
+  font-size: 90%;
+}
+
 .Post_delete {
   display: flex;
   align-items: center;
