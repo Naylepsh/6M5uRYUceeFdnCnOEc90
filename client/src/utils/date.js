@@ -4,7 +4,7 @@ import { subDays } from "date-fns";
 export function getFirstDayOfTheWeek(date) {
   const currentDay = date.getDay();
   const daysToSubtract = currentDay;
-  const firstDayOfTheWeek = subDays(new Date(), daysToSubtract);
+  const firstDayOfTheWeek = subDays(new Date(date), daysToSubtract);
   return firstDayOfTheWeek;
 }
 
