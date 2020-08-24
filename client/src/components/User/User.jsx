@@ -1,9 +1,9 @@
 import React from "react";
-import { sortByCreatedAtDescending } from "./../tools";
-import FeedPost from "./Feed/FeedPost";
-import usePosts from "./Post/use-posts";
-import { useParams } from "./../utils/react-router-next";
-import useDocWithCache from "./../use-doc-with-cache";
+import { sortByCreatedAtDescending } from "../../tools";
+import FeedPost from "../Feed/FeedPost";
+import usePosts from "../Post/use-posts";
+import { useParams } from "../../utils/react-router-next";
+import useDocWithCache from "../../use-doc-with-cache";
 
 export default function User() {
   const { uid } = useParams();

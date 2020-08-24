@@ -1,7 +1,7 @@
 import React from "react";
 import { Tabs, TabList, Tab, TabPanel, TabPanels } from "@reach/tabs";
-import LoginForm from "./../components/LoginForm";
-import SignupForm from "./../components/SignupForm";
+import LoginForm from "../components/common/LoginForm";
+import SignupForm from "./../components/common/SignupForm";
 import "./LoggedOut.css";
 
 // Main component for login/signup screen

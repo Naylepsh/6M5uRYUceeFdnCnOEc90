@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { login } from "./../tools";
+import { login } from "../../tools";
 import VisuallyHidden from "@reach/visually-hidden";
 import { FaSignInAlt } from "react-icons/fa";
 import TabsButton from "./TabsButton";
