@@ -131,6 +131,7 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
         <RecentPostsDropdown uid={auth.uid} onSelect={handleRecentSelect} />
         <label for="student">Uczeń: </label>
         <input
+          className="NewPost_fields"
           type="text"
           id="student"
           name="student"
@@ -140,6 +141,7 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
         />
         <label for="lecturer"> Prowadzący: </label>
         <input
+          className="NewPost_fields"
           type="text"
           id="lecturer"
           name="lecturer"
@@ -150,6 +152,7 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
         <br />
         <label for="group"> Grupa: </label>
         <input
+          className="NewPost_fields"
           type="text"
           id="group"
           name="group"
@@ -159,6 +162,7 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
         />
         <label for="place"> Lokalizacja: </label>
         <select
+          className="NewPost_fields"
           name="place"
           id="place"
           ref={placeRef}

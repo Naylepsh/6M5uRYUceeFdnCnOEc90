@@ -1,9 +1,15 @@
+@font-face {
+  font-family: Montserrat;
+  src: url(./../utils/Montserrat-Regular.ttf);
+}
+
 .NewPost {
   display: flex;
   align-items: top;
 }
 
 .NewPost_form {
+  font-family: Montserrat;
   position: relative;
   margin: 0;
   flex: 1;
@@ -21,6 +27,7 @@
   resize: none;
   font: inherit;
   font-size: 125%;
+  font-family: Montserrat;
   padding: 0.75rem;
   padding-top: 1.5rem;
   height: 8.5rem;
@@ -34,6 +41,10 @@
   border-bottom-color: var(--accent);
 }
 
+.NewPost_fields {
+  font-family: Montserrat;
+}
+
 .NewPost_char_count {
   color: var(--black);
   text-align: right;
@@ -43,6 +54,7 @@
 .NewPost_buttons {
   display: flex;
   align-items: center;
+  margin: 15px 0px;
 }
 
 .NewPost_error .NewPost_input {

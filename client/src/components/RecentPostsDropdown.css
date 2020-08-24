@@ -1,6 +1,15 @@
+@font-face {
+  font-family: Montserrat;
+  src: url(./../utils/Montserrat-Regular.ttf);
+}
+
 .RecentPostsDropdownButton {
   position: absolute;
   top: 0;
   right: 0;
   font-size: 100%;
+}
+
+.RecentPostsDropdownButton_span {
+  font-family: Montserrat;
 }
