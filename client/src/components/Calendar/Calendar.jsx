@@ -17,9 +17,12 @@ import { CalendarNav } from "./CalendarNav";
 import { CalendarService } from "../../services/calendar-service";
 import "./Calendar.css";
 
+const pagesInCalendar = 5 * 7;
+
 export function Calendar({ user, posts, modalIsOpen }) {
   const [{ auth }] = useAppState();
   const [weeks, setWeeks] = useState([]);
+  const [date, setDate] = useState(new Date());
   const postCount = countAllPosts(weeks);
   useEffect(() => {
     async function fetchConsultations() {
@@ -28,10 +31,10 @@ export function Calendar({ user, posts, modalIsOpen }) {
       console.log("sent request for new weeks value");
     }
     fetchConsultations();
-  }, [postCount]);
+  }, [postCount, date]);
 
   const getWeeks = () => {
-    const dataLoader = new CalendarService(new Date());
+    const dataLoader = new CalendarService(date);
     return dataLoader.getCalendar();
   };
 
@@ -76,8 +79,16 @@ export function Calendar({ user, posts, modalIsOpen }) {
     navigate(".", { state: { startDate: date, direction } });
   };
 
-  const handleEarlierClick = () => handleNav(subDays, "earlier");
-  const handleLaterClick = () => handleNav(addDays, "later");
+  const handleEarlierClick = () => {
+    const newDate = subDays(date, pagesInCalendar);
+    setDate(newDate);
+    handleNav(subDays, "earlier");
+  };
+  const handleLaterClick = () => {
+    const newDate = addDays(date, pagesInCalendar);
+    setDate(newDate);
+    handleNav(addDays, "later");
+  };
 
   const closeDialog = () => setNewPostDate(null);
 
