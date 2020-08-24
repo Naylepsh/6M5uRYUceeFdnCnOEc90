@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import VisuallyHidden from "@reach/visually-hidden";
-import { signup } from "./../tools";
+import { signup } from "../../tools";
 import TabsButton from "./TabsButton";
 import { FaRegSmileBeam } from "react-icons/fa";
 
