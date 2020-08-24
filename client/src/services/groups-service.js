@@ -1,31 +1,8 @@
-import http from "./httpService";
+import { HttpService } from "./http-service";
 
-const apiEndpoint = "http://localhost:3333/groups";
-
-export function getGroups() {
-  return http.get(apiEndpoint);
-}
-
-export function getGroup(id) {
-  return http.get(`${apiEndpoint}/${id}`);
-}
-
-export function saveGroup(group) {
-  if (group.id) {
-    return putGroup(group.id, group);
-  } else {
-    return postGroup(group);
+export class GroupsService extends HttpService {
+  constructor() {
+    const apiEndpoint = "http://localhost:3333/groups";
+    super(apiEndpoint);
   }
-}
-
-export function postGroup(group) {
-  return http.post(`${apiEndpoint}`, group);
-}
-
-export function putGroup(id, group) {
-  return http.put(`${apiEndpoint}/${id}`, group);
-}
-
-export function deleteGroup(id) {
-  return http.delete(`${apiEndpoint}/${id}`);
 }
