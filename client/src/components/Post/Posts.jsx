@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { format as formatDate } from "date-fns";
-import { useAppState } from "./../states/AppState";
-import useDocWithCache from "./../use-doc-with-cache";
+import { useAppState } from "../../states/AppState";
+import useDocWithCache from "../../use-doc-with-cache";
 import NewPost from "./NewPost";
 import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import { deletePost, translateMonths } from "../../tools";
