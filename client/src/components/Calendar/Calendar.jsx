@@ -78,7 +78,12 @@ export function Calendar({ user, modalIsOpen }) {
         <CalendarAnimation>
           {weeks.map((week, weekIndex) => {
             return (
-              <Week {...weekDefaultProps} weekIndex={weekIndex} week={week} />
+              <Week
+                key={weekIndex}
+                {...weekDefaultProps}
+                weekIndex={weekIndex}
+                week={week}
+              />
             );
           })}
         </CalendarAnimation>
