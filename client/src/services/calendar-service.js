@@ -33,14 +33,20 @@ export class CalendarService {
   }
 
   async loadConsultations() {
-    const res = await this.consultationService.getConsultationsBetween(
-      this.initialDate,
-      this.lastDate
-    );
-    const rawConsultations = res.data;
-    this.consultations = ConsultationMapper.fromConsAPIToCalendarCons(
-      rawConsultations
-    );
+    let rawConsultations;
+    try {
+      const res = await this.consultationService.getConsultationsBetween(
+        this.initialDate,
+        this.lastDate
+      );
+      rawConsultations = res.data;
+    } catch (err) {
+      rawConsultations = [];
+    } finally {
+      this.consultations = ConsultationMapper.fromConsAPIToCalendarCons(
+        rawConsultations
+      );
+    }
   }
 
   fillCalendar(initialDate) {
