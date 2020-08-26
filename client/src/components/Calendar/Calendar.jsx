@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useCallback, useEffect } from "react";
+import React, { Fragment, useState, useCallback } from "react";
 import { useLocation } from "../../utils/react-router-next";
 import { format as formatDate, subDays, addDays } from "date-fns";
 import AnimatedDialog from "../AnimatedDialog";
@@ -6,34 +6,14 @@ import { DATE_FORMAT } from "../../tools";
 import NewPost from "../Post/NewPost";
 import { Weekdays } from "./Weekdays";
 import { CalendarNav } from "./CalendarNav";
-import { CalendarService } from "../../services/calendar-service";
 import { CalendarAnimation } from "./CalendarAnimation";
 import { Week } from "./Week";
-import "./Calendar.css";
 import { getStartDate } from "./use-start-date";
+import { getWeeks } from "./get-weeks";
+import { useConsultations } from "./use-consultations";
+import "./Calendar.css";
 
 const pagesInCalendar = 5 * 7;
-
-function getWeeks(date) {
-  const dataLoader = new CalendarService(date);
-  return dataLoader.getCalendar();
-}
-
-function useConsultations(date) {
-  const [weeks, setWeeks] = useState([]);
-
-  useEffect(() => {
-    async function fetchConsultations() {
-      const data = await getWeeks(date);
-      setWeeks(data);
-      console.log("sent request for new weeks value");
-    }
-
-    fetchConsultations();
-  }, [date]);
-
-  return [weeks, setWeeks];
-}
 
 export function Calendar({ user, modalIsOpen }) {
   const [calendarDate, setCalendarDate] = useState(new Date());
