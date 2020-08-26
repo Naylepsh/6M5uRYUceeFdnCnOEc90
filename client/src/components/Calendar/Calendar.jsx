@@ -1,15 +1,16 @@
 import React, { Fragment, useState, useCallback, useEffect } from "react";
 import { useLocation } from "../../utils/react-router-next";
-import { useTransition, animated } from "react-spring";
+import { useTransition } from "react-spring";
 import { format as formatDate, subDays, addDays } from "date-fns";
 import AnimatedDialog from "../AnimatedDialog";
 import { DATE_FORMAT } from "../../tools";
 import NewPost from "../Post/NewPost";
 import { Weekdays } from "./Weekdays";
-import { Week } from "./Week";
 import { CalendarNav } from "./CalendarNav";
 import { CalendarService } from "../../services/calendar-service";
 import "./Calendar.css";
+import { CalendarAnimation } from "./CalendarAnimation";
+import { Week } from "./Week";
 
 const pagesInCalendar = 5 * 7;
 
@@ -103,6 +104,14 @@ export function Calendar({ user, modalIsOpen }) {
     setDayWithNewPost(null);
   }, [setDayWithNewPost]);
 
+  const weekProps = {
+    modalIsOpen,
+    user,
+    setNewPostDate,
+    dayWithNewPost,
+    handleAnimationRest,
+  };
+
   return (
     <Fragment>
       <AnimatedDialog isOpen={!!newPostDate} onDismiss={closeDialog}>
@@ -110,32 +119,20 @@ export function Calendar({ user, modalIsOpen }) {
       </AnimatedDialog>
       <div className="Calendar">
         <Weekdays />
-        <div className="Calendar_animation_overflow">
-          {transitions.map(({ item, props: { y }, key }, index) => {
-            if (!item) return null;
-            let transform = getTransformProperty(y, transitionDirection);
-            return (
-              <animated.div
-                key={key}
-                className="Calendar_animation_wrapper"
-                style={{ transform, zIndex: index }}
-              >
-                {item.weeks.map((week, weekIndex) => {
-                  const props = {
-                    weekIndex,
-                    week,
-                    modalIsOpen,
-                    user,
-                    setNewPostDate,
-                    dayWithNewPost,
-                    handleAnimationRest,
-                  };
-                  return <Week {...props} />;
-                })}
-              </animated.div>
-            );
+        <CalendarAnimation
+          transitions={transitions}
+          transitionDirection={transitionDirection}
+          {...weekProps}
+        >
+          {weeks.map((week, weekIndex) => {
+            const props = {
+              weekIndex,
+              week,
+              ...weekProps,
+            };
+            return <Week {...props} />;
           })}
-        </div>
+        </CalendarAnimation>
         <CalendarNav
           showLater={showLater}
           onEarlier={handleEarlierClick}
@@ -144,14 +141,4 @@ export function Calendar({ user, modalIsOpen }) {
       </div>
     </Fragment>
   );
-}
-
-function getTransformProperty(y, transitionDirection) {
-  let transform = "translate3d(0px, 0%, 0px)";
-  if (transitionDirection === "earlier") {
-    transform = y.interpolate((y) => `translate3d(0px, ${y}%, 0px)`);
-  } else if (transitionDirection === "later") {
-    transform = y.interpolate((y) => `translate3d(0px, ${-y}%, 0px)`);
-  }
-  return transform;
 }
