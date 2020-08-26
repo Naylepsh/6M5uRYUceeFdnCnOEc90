@@ -19,27 +19,31 @@ import "./Calendar.css";
 
 const pagesInCalendar = 5 * 7;
 
-export function Calendar({ user, posts, modalIsOpen }) {
-  const [{ auth }] = useAppState();
+function getWeeks(date) {
+  const dataLoader = new CalendarService(date);
+  return dataLoader.getCalendar();
+}
+
+function useConsultations(date) {
   const [weeks, setWeeks] = useState([]);
-  const [date, setDate] = useState(new Date());
-  const postCount = countAllPosts(weeks);
 
   useEffect(() => {
-    function getWeeks() {
-      const dataLoader = new CalendarService(date);
-      return dataLoader.getCalendar();
-    }
-
     async function fetchConsultations() {
-      const data = await getWeeks();
+      const data = await getWeeks(date);
       setWeeks(data);
       console.log("sent request for new weeks value");
     }
 
     fetchConsultations();
-  }, [postCount, date]);
+  }, [date]);
 
+  return [weeks, setWeeks];
+}
+
+export function Calendar({ user, posts, modalIsOpen }) {
+  const [{ auth }] = useAppState();
+  const [calendarDate, setCalendarDate] = useState(new Date());
+  const [weeks, setWeeks] = useConsultations(calendarDate);
   const [newPostDate, setNewPostDate] = useState(null);
   const [dayWithNewPost, setDayWithNewPost] = useState(null);
 
@@ -54,7 +58,6 @@ export function Calendar({ user, posts, modalIsOpen }) {
   const showLater = 1;
 
   const isOwner = auth.uid === user.uid;
-  const numWeeks = 5;
 
   const [prevStart, setPrevStart] = useState(startDate);
   const [transitionDirection, setTransitionDirection] = useState();
@@ -77,25 +80,30 @@ export function Calendar({ user, posts, modalIsOpen }) {
 
   const handleNav = (addOrSubDays, direction) => {
     //counts days after swiping
-    const date = formatDate(addOrSubDays(startDate, 7 * numWeeks), DATE_FORMAT);
+    const date = formatDate(
+      addOrSubDays(startDate, pagesInCalendar),
+      DATE_FORMAT
+    );
     navigate(".", { state: { startDate: date, direction } });
   };
 
   const handleEarlierClick = () => {
-    const newDate = subDays(date, pagesInCalendar);
-    setDate(newDate);
+    const newDate = subDays(calendarDate, pagesInCalendar);
+    setCalendarDate(newDate);
     handleNav(subDays, "earlier");
   };
   const handleLaterClick = () => {
-    const newDate = addDays(date, pagesInCalendar);
-    setDate(newDate);
+    const newDate = addDays(calendarDate, pagesInCalendar);
+    setCalendarDate(newDate);
     handleNav(addDays, "later");
   };
 
   const closeDialog = () => setNewPostDate(null);
 
-  const handleNewPostSuccess = () => {
-    setWeeks([]); // force request for new weeks
+  const handleNewPostSuccess = async () => {
+    const newWeeks = await getWeeks(calendarDate);
+    setWeeks(newWeeks);
+
     setDayWithNewPost(formatDate(newPostDate, DATE_FORMAT));
     closeDialog();
   };
