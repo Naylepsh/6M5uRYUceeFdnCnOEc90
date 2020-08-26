@@ -173,13 +173,3 @@ export function Calendar({ user, posts, modalIsOpen }) {
     </Fragment>
   );
 }
-
-function countAllPosts(weeks) {
-  let count = 0;
-  for (const week of weeks) {
-    for (const day of week) {
-      count += day.posts.length;
-    }
-  }
-  return count;
-}
