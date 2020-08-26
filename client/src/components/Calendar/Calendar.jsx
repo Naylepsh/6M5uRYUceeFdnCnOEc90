@@ -1,18 +1,12 @@
 import React, { Fragment, useState, useCallback, useEffect } from "react";
 import { useLocation } from "../../utils/react-router-next";
 import { useTransition, animated } from "react-spring";
-import {
-  format as formatDate,
-  subDays,
-  addDays,
-  isFirstDayOfMonth,
-} from "date-fns";
+import { format as formatDate, subDays, addDays } from "date-fns";
 import AnimatedDialog from "../AnimatedDialog";
 import { DATE_FORMAT } from "../../tools";
-import { useAppState } from "../../states/AppState";
 import NewPost from "../Post/NewPost";
-import { Day } from "./Day";
 import { Weekdays } from "./Weekdays";
+import { Week } from "./Week";
 import { CalendarNav } from "./CalendarNav";
 import { CalendarService } from "../../services/calendar-service";
 import "./Calendar.css";
@@ -40,8 +34,7 @@ function useConsultations(date) {
   return [weeks, setWeeks];
 }
 
-export function Calendar({ user, posts, modalIsOpen }) {
-  const [{ auth }] = useAppState();
+export function Calendar({ user, modalIsOpen }) {
   const [calendarDate, setCalendarDate] = useState(new Date());
   const [weeks, setWeeks] = useConsultations(calendarDate);
   const [newPostDate, setNewPostDate] = useState(null);
@@ -56,8 +49,6 @@ export function Calendar({ user, posts, modalIsOpen }) {
       : today;
 
   const showLater = 1;
-
-  const isOwner = auth.uid === user.uid;
 
   const [prevStart, setPrevStart] = useState(startDate);
   const [transitionDirection, setTransitionDirection] = useState();
@@ -122,39 +113,25 @@ export function Calendar({ user, posts, modalIsOpen }) {
         <div className="Calendar_animation_overflow">
           {transitions.map(({ item, props: { y }, key }, index) => {
             if (!item) return null;
-            let transform = getTransformProperty(y);
+            let transform = getTransformProperty(y, transitionDirection);
             return (
               <animated.div
                 key={key}
                 className="Calendar_animation_wrapper"
                 style={{ transform, zIndex: index }}
               >
-                {item.weeks.map((week, weekIndex) => (
-                  <div key={weekIndex} className="Calendar_week">
-                    {week.map((day, dayIndex) => {
-                      const showMonth = shouldShowMonth(
-                        day.date,
-                        dayIndex,
-                        weekIndex
-                      );
-                      return (
-                        <Day
-                          modalIsOpen={modalIsOpen}
-                          user={user}
-                          key={dayIndex}
-                          showMonth={showMonth}
-                          day={day}
-                          isOwner={isOwner}
-                          onNewPost={() => setNewPostDate(day.date)}
-                          hasNewPost={
-                            dayWithNewPost === formatDate(day.date, DATE_FORMAT)
-                          }
-                          onAnimatedTextRest={handleAnimationRest}
-                        />
-                      );
-                    })}
-                  </div>
-                ))}
+                {item.weeks.map((week, weekIndex) => {
+                  const props = {
+                    weekIndex,
+                    week,
+                    modalIsOpen,
+                    user,
+                    setNewPostDate,
+                    dayWithNewPost,
+                    handleAnimationRest,
+                  };
+                  return <Week {...props} />;
+                })}
               </animated.div>
             );
           })}
@@ -167,22 +144,14 @@ export function Calendar({ user, posts, modalIsOpen }) {
       </div>
     </Fragment>
   );
+}
 
-  function shouldShowMonth(date, day, week) {
-    function isFirstPageOfCalendar(day, week) {
-      return week + day === 0;
-    }
-
-    return isFirstPageOfCalendar(day, week) || isFirstDayOfMonth(date);
+function getTransformProperty(y, transitionDirection) {
+  let transform = "translate3d(0px, 0%, 0px)";
+  if (transitionDirection === "earlier") {
+    transform = y.interpolate((y) => `translate3d(0px, ${y}%, 0px)`);
+  } else if (transitionDirection === "later") {
+    transform = y.interpolate((y) => `translate3d(0px, ${-y}%, 0px)`);
   }
-
-  function getTransformProperty(y) {
-    let transform = "translate3d(0px, 0%, 0px)";
-    if (transitionDirection === "earlier") {
-      transform = y.interpolate((y) => `translate3d(0px, ${y}%, 0px)`);
-    } else if (transitionDirection === "later") {
-      transform = y.interpolate((y) => `translate3d(0px, ${-y}%, 0px)`);
-    }
-    return transform;
-  }
+  return transform;
 }
