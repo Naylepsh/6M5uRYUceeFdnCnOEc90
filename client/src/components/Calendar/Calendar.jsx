@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useCallback, useEffect } from "react";
-import { format as formatDate, subDays, addDays } from "date-fns";
 import { useLocation } from "../../utils/react-router-next";
+import { format as formatDate, subDays, addDays } from "date-fns";
 import AnimatedDialog from "../AnimatedDialog";
 import { DATE_FORMAT } from "../../tools";
 import NewPost from "../Post/NewPost";
