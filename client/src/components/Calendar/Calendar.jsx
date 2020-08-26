@@ -19,27 +19,31 @@ import "./Calendar.css";
 
 const pagesInCalendar = 5 * 7;
 
-export function Calendar({ user, posts, modalIsOpen }) {
-  const [{ auth }] = useAppState();
+function getWeeks(date) {
+  const dataLoader = new CalendarService(date);
+  return dataLoader.getCalendar();
+}
+
+function useConsultations(date) {
   const [weeks, setWeeks] = useState([]);
-  const [date, setDate] = useState(new Date());
-  const postCount = countAllPosts(weeks);
 
   useEffect(() => {
-    function getWeeks() {
-      const dataLoader = new CalendarService(date);
-      return dataLoader.getCalendar();
-    }
-
     async function fetchConsultations() {
-      const data = await getWeeks();
+      const data = await getWeeks(date);
       setWeeks(data);
       console.log("sent request for new weeks value");
     }
 
     fetchConsultations();
-  }, [postCount, date]);
+  }, [date]);
 
+  return [weeks, setWeeks];
+}
+
+export function Calendar({ user, posts, modalIsOpen }) {
+  const [{ auth }] = useAppState();
+  const [calendarDate, setCalendarDate] = useState(new Date());
+  const [weeks, setWeeks] = useConsultations(calendarDate);
   const [newPostDate, setNewPostDate] = useState(null);
   const [dayWithNewPost, setDayWithNewPost] = useState(null);
 
@@ -54,7 +58,6 @@ export function Calendar({ user, posts, modalIsOpen }) {
   const showLater = 1;
 
   const isOwner = auth.uid === user.uid;
-  const numWeeks = 5;
 
   const [prevStart, setPrevStart] = useState(startDate);
   const [transitionDirection, setTransitionDirection] = useState();
@@ -77,25 +80,30 @@ export function Calendar({ user, posts, modalIsOpen }) {
 
   const handleNav = (addOrSubDays, direction) => {
     //counts days after swiping
-    const date = formatDate(addOrSubDays(startDate, 7 * numWeeks), DATE_FORMAT);
+    const date = formatDate(
+      addOrSubDays(startDate, pagesInCalendar),
+      DATE_FORMAT
+    );
     navigate(".", { state: { startDate: date, direction } });
   };
 
   const handleEarlierClick = () => {
-    const newDate = subDays(date, pagesInCalendar);
-    setDate(newDate);
+    const newDate = subDays(calendarDate, pagesInCalendar);
+    setCalendarDate(newDate);
     handleNav(subDays, "earlier");
   };
   const handleLaterClick = () => {
-    const newDate = addDays(date, pagesInCalendar);
-    setDate(newDate);
+    const newDate = addDays(calendarDate, pagesInCalendar);
+    setCalendarDate(newDate);
     handleNav(addDays, "later");
   };
 
   const closeDialog = () => setNewPostDate(null);
 
-  const handleNewPostSuccess = () => {
-    setWeeks([]); // force request for new weeks
+  const handleNewPostSuccess = async () => {
+    const newWeeks = await getWeeks(calendarDate);
+    setWeeks(newWeeks);
+
     setDayWithNewPost(formatDate(newPostDate, DATE_FORMAT));
     closeDialog();
   };
@@ -103,8 +111,6 @@ export function Calendar({ user, posts, modalIsOpen }) {
   const handleAnimationRest = useCallback(() => {
     setDayWithNewPost(null);
   }, [setDayWithNewPost]);
-
-  if (!auth) return null;
 
   return (
     <Fragment>
@@ -116,12 +122,7 @@ export function Calendar({ user, posts, modalIsOpen }) {
         <div className="Calendar_animation_overflow">
           {transitions.map(({ item, props: { y }, key }, index) => {
             if (!item) return null;
-            let transform = "translate3d(0px, 0%, 0px)";
-            if (transitionDirection === "earlier") {
-              transform = y.interpolate((y) => `translate3d(0px, ${y}%, 0px)`);
-            } else if (transitionDirection === "later") {
-              transform = y.interpolate((y) => `translate3d(0px, ${-y}%, 0px)`);
-            }
+            let transform = getTransformProperty(y);
             return (
               <animated.div
                 key={key}
@@ -131,9 +132,11 @@ export function Calendar({ user, posts, modalIsOpen }) {
                 {item.weeks.map((week, weekIndex) => (
                   <div key={weekIndex} className="Calendar_week">
                     {week.map((day, dayIndex) => {
-                      const showMonth =
-                        weekIndex + dayIndex === 0 ||
-                        isFirstDayOfMonth(day.date);
+                      const showMonth = shouldShowMonth(
+                        day.date,
+                        dayIndex,
+                        weekIndex
+                      );
                       return (
                         <Day
                           modalIsOpen={modalIsOpen}
@@ -164,14 +167,22 @@ export function Calendar({ user, posts, modalIsOpen }) {
       </div>
     </Fragment>
   );
-}
 
-function countAllPosts(weeks) {
-  let count = 0;
-  for (const week of weeks) {
-    for (const day of week) {
-      count += day.posts.length;
+  function shouldShowMonth(date, day, week) {
+    function isFirstPageOfCalendar(day, week) {
+      return week + day === 0;
     }
+
+    return isFirstPageOfCalendar(day, week) || isFirstDayOfMonth(date);
   }
-  return count;
+
+  function getTransformProperty(y) {
+    let transform = "translate3d(0px, 0%, 0px)";
+    if (transitionDirection === "earlier") {
+      transform = y.interpolate((y) => `translate3d(0px, ${y}%, 0px)`);
+    } else if (transitionDirection === "later") {
+      transform = y.interpolate((y) => `translate3d(0px, ${-y}%, 0px)`);
+    }
+    return transform;
+  }
 }

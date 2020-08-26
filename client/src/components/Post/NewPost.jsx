@@ -94,7 +94,7 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
     const consultationSerivce = new ConsultationsService();
 
     try {
-      await consultationSerivce.saveConsultation({
+      await consultationSerivce.save({
         address,
         datetime,
         description,
@@ -117,6 +117,7 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
         onSuccess(post);
       });
     } catch (error) {
+      console.log("something went wrong", error);
       if (error.response && error.response.status === 400) {
         console.log(error.response);
       }
