@@ -3,7 +3,7 @@ import { format as formatDate, isFirstDayOfMonth } from "date-fns";
 import { DATE_FORMAT } from "../../tools";
 import { useAppState } from "../../states/AppState";
 import { Day } from "./Day";
-import "./Calendar.css";
+import "./Week.css";
 
 export function Week({
   weekIndex,
