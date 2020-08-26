@@ -35,6 +35,7 @@ export default function AnimatedDialog(props) {
           onDismiss={item.onDismiss}
         >
           <animated.DialogContent
+            aria-label="animated-dialog"
             style={{
               transform: y.interpolate(
                 (y) => `translate3d(320px, ${y}px, 0px)`

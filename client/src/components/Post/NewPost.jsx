@@ -156,7 +156,7 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
           {message.length}/{MAX_MESSAGE_LENGTH}
         </div>
         <RecentPostsDropdown uid={auth.uid} onSelect={handleRecentSelect} />
-        <label for="student">Uczeń: </label>
+        <label htmlFor="student">Uczeń: </label>
         <input
           className="NewPost_fields"
           type="text"
@@ -166,7 +166,7 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
           autoComplete="on"
           onChange={handleAboutChangeStudent}
         />
-        <label for="lecturer"> Prowadzący: </label>
+        <label htmlFor="lecturer"> Prowadzący: </label>
         <input
           className="NewPost_fields"
           type="text"
@@ -177,7 +177,7 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
           onChange={handleAboutChangeLecturer}
         />
         <br />
-        <label for="group"> Grupa: </label>
+        <label htmlFor="group"> Grupa: </label>
         <input
           className="NewPost_fields"
           type="text"
@@ -187,7 +187,7 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
           autoComplete="on"
           onChange={handleAboutChangeGroup}
         />
-        <label for="place"> Lokalizacja: </label>
+        <label htmlFor="place"> Lokalizacja: </label>
         <select
           className="NewPost_fields"
           name="place"
