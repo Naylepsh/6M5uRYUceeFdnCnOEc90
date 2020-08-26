@@ -112,8 +112,6 @@ export function Calendar({ user, posts, modalIsOpen }) {
     setDayWithNewPost(null);
   }, [setDayWithNewPost]);
 
-  if (!auth) return null;
-
   return (
     <Fragment>
       <AnimatedDialog isOpen={!!newPostDate} onDismiss={closeDialog}>
@@ -124,12 +122,7 @@ export function Calendar({ user, posts, modalIsOpen }) {
         <div className="Calendar_animation_overflow">
           {transitions.map(({ item, props: { y }, key }, index) => {
             if (!item) return null;
-            let transform = "translate3d(0px, 0%, 0px)";
-            if (transitionDirection === "earlier") {
-              transform = y.interpolate((y) => `translate3d(0px, ${y}%, 0px)`);
-            } else if (transitionDirection === "later") {
-              transform = y.interpolate((y) => `translate3d(0px, ${-y}%, 0px)`);
-            }
+            let transform = getTransformProperty(y);
             return (
               <animated.div
                 key={key}
@@ -139,9 +132,11 @@ export function Calendar({ user, posts, modalIsOpen }) {
                 {item.weeks.map((week, weekIndex) => (
                   <div key={weekIndex} className="Calendar_week">
                     {week.map((day, dayIndex) => {
-                      const showMonth =
-                        weekIndex + dayIndex === 0 ||
-                        isFirstDayOfMonth(day.date);
+                      const showMonth = shouldShowMonth(
+                        day.date,
+                        dayIndex,
+                        weekIndex
+                      );
                       return (
                         <Day
                           modalIsOpen={modalIsOpen}
@@ -172,4 +167,22 @@ export function Calendar({ user, posts, modalIsOpen }) {
       </div>
     </Fragment>
   );
+
+  function shouldShowMonth(date, day, week) {
+    function isFirstPageOfCalendar(day, week) {
+      return week + day === 0;
+    }
+
+    return isFirstPageOfCalendar(day, week) || isFirstDayOfMonth(date);
+  }
+
+  function getTransformProperty(y) {
+    let transform = "translate3d(0px, 0%, 0px)";
+    if (transitionDirection === "earlier") {
+      transform = y.interpolate((y) => `translate3d(0px, ${y}%, 0px)`);
+    } else if (transitionDirection === "later") {
+      transform = y.interpolate((y) => `translate3d(0px, ${-y}%, 0px)`);
+    }
+    return transform;
+  }
 }
