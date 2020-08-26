@@ -1,16 +1,15 @@
 import React, { Fragment, useState, useCallback, useEffect } from "react";
-import { useLocation } from "../../utils/react-router-next";
-import { useTransition } from "react-spring";
 import { format as formatDate, subDays, addDays } from "date-fns";
+import { useLocation } from "../../utils/react-router-next";
 import AnimatedDialog from "../AnimatedDialog";
 import { DATE_FORMAT } from "../../tools";
 import NewPost from "../Post/NewPost";
 import { Weekdays } from "./Weekdays";
 import { CalendarNav } from "./CalendarNav";
 import { CalendarService } from "../../services/calendar-service";
-import "./Calendar.css";
 import { CalendarAnimation } from "./CalendarAnimation";
 import { Week } from "./Week";
+import "./Calendar.css";
 
 const pagesInCalendar = 5 * 7;
 
@@ -51,25 +50,6 @@ export function Calendar({ user, modalIsOpen }) {
 
   const showLater = 1;
 
-  const [prevStart, setPrevStart] = useState(startDate);
-  const [transitionDirection, setTransitionDirection] = useState();
-  if (prevStart !== startDate) {
-    setTransitionDirection(startDate < prevStart ? "earlier" : "later");
-    setPrevStart(startDate);
-  }
-
-  const transitions = useTransition(
-    //gives informations for swiping calendar up/down
-    { weeks, startDate },
-    (item) => item.startDate,
-    {
-      from: { y: -105 },
-      enter: { y: 0 },
-      leave: { y: 105 },
-      initial: null,
-    }
-  );
-
   const handleNav = (addOrSubDays, direction) => {
     //counts days after swiping
     const date = formatDate(
@@ -104,7 +84,7 @@ export function Calendar({ user, modalIsOpen }) {
     setDayWithNewPost(null);
   }, [setDayWithNewPost]);
 
-  const weekProps = {
+  const weekDefaultProps = {
     modalIsOpen,
     user,
     setNewPostDate,
@@ -119,18 +99,11 @@ export function Calendar({ user, modalIsOpen }) {
       </AnimatedDialog>
       <div className="Calendar">
         <Weekdays />
-        <CalendarAnimation
-          transitions={transitions}
-          transitionDirection={transitionDirection}
-          {...weekProps}
-        >
+        <CalendarAnimation>
           {weeks.map((week, weekIndex) => {
-            const props = {
-              weekIndex,
-              week,
-              ...weekProps,
-            };
-            return <Week {...props} />;
+            return (
+              <Week {...weekDefaultProps} weekIndex={weekIndex} week={week} />
+            );
           })}
         </CalendarAnimation>
         <CalendarNav
