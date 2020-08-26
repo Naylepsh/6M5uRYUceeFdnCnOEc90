@@ -24,19 +24,21 @@ export function Calendar({ user, posts, modalIsOpen }) {
   const [weeks, setWeeks] = useState([]);
   const [date, setDate] = useState(new Date());
   const postCount = countAllPosts(weeks);
+
   useEffect(() => {
+    function getWeeks() {
+      const dataLoader = new CalendarService(date);
+      return dataLoader.getCalendar();
+    }
+
     async function fetchConsultations() {
       const data = await getWeeks();
       setWeeks(data);
       console.log("sent request for new weeks value");
     }
+
     fetchConsultations();
   }, [postCount, date]);
-
-  const getWeeks = () => {
-    const dataLoader = new CalendarService(date);
-    return dataLoader.getCalendar();
-  };
 
   const [newPostDate, setNewPostDate] = useState(null);
   const [dayWithNewPost, setDayWithNewPost] = useState(null);
