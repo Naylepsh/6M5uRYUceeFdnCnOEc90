@@ -10,6 +10,7 @@ import { CalendarService } from "../../services/calendar-service";
 import { CalendarAnimation } from "./CalendarAnimation";
 import { Week } from "./Week";
 import "./Calendar.css";
+import { getStartDate } from "./use-start-date";
 
 const pagesInCalendar = 5 * 7;
 
@@ -40,13 +41,8 @@ export function Calendar({ user, modalIsOpen }) {
   const [newPostDate, setNewPostDate] = useState(null);
   const [dayWithNewPost, setDayWithNewPost] = useState(null);
 
-  const today = formatDate(new Date(), DATE_FORMAT);
   const { navigate, location } = useLocation();
-
-  const startDate =
-    location.state && location.state.startDate
-      ? location.state.startDate
-      : today;
+  const startDate = getStartDate(location);
 
   const showLater = 1;
 

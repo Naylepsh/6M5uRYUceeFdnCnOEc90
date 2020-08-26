@@ -1,17 +1,11 @@
 import React, { useState } from "react";
 import { useTransition, animated } from "react-spring";
-import { format as formatDate } from "date-fns";
 import { useLocation } from "../../utils/react-router-next";
-import { DATE_FORMAT } from "../../tools";
+import { getStartDate } from "./use-start-date";
 
 export function CalendarAnimation({ children }) {
-  const today = formatDate(new Date(), DATE_FORMAT);
   const { location } = useLocation();
-
-  const startDate =
-    location.state && location.state.startDate
-      ? location.state.startDate
-      : today;
+  const startDate = getStartDate(location);
 
   const [prevStart, setPrevStart] = useState(startDate);
   const [transitionDirection, setTransitionDirection] = useState();
