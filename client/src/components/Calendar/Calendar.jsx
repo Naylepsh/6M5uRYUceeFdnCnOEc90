@@ -1,82 +1,30 @@
-import React, { Fragment, useState, useCallback, useEffect } from "react";
+import React, { Fragment, useState, useCallback } from "react";
 import { useLocation } from "../../utils/react-router-next";
-import { useTransition, animated } from "react-spring";
-import {
-  format as formatDate,
-  subDays,
-  addDays,
-  isFirstDayOfMonth,
-} from "date-fns";
+import { format as formatDate, subDays, addDays } from "date-fns";
 import AnimatedDialog from "../AnimatedDialog";
 import { DATE_FORMAT } from "../../tools";
-import { useAppState } from "../../states/AppState";
 import NewPost from "../Post/NewPost";
-import { Day } from "./Day";
 import { Weekdays } from "./Weekdays";
 import { CalendarNav } from "./CalendarNav";
-import { CalendarService } from "../../services/calendar-service";
+import { CalendarAnimation } from "./CalendarAnimation";
+import { Week } from "./Week";
+import { getStartDate } from "./use-start-date";
+import { getWeeks } from "./get-weeks";
+import { useConsultations } from "./use-consultations";
 import "./Calendar.css";
 
 const pagesInCalendar = 5 * 7;
 
-function getWeeks(date) {
-  const dataLoader = new CalendarService(date);
-  return dataLoader.getCalendar();
-}
-
-function useConsultations(date) {
-  const [weeks, setWeeks] = useState([]);
-
-  useEffect(() => {
-    async function fetchConsultations() {
-      const data = await getWeeks(date);
-      setWeeks(data);
-      console.log("sent request for new weeks value");
-    }
-
-    fetchConsultations();
-  }, [date]);
-
-  return [weeks, setWeeks];
-}
-
-export function Calendar({ user, posts, modalIsOpen }) {
-  const [{ auth }] = useAppState();
+export function Calendar({ user, modalIsOpen }) {
   const [calendarDate, setCalendarDate] = useState(new Date());
   const [weeks, setWeeks] = useConsultations(calendarDate);
   const [newPostDate, setNewPostDate] = useState(null);
   const [dayWithNewPost, setDayWithNewPost] = useState(null);
 
-  const today = formatDate(new Date(), DATE_FORMAT);
   const { navigate, location } = useLocation();
-
-  const startDate =
-    location.state && location.state.startDate
-      ? location.state.startDate
-      : today;
+  const startDate = getStartDate(location);
 
   const showLater = 1;
-
-  const isOwner = auth.uid === user.uid;
-
-  const [prevStart, setPrevStart] = useState(startDate);
-  const [transitionDirection, setTransitionDirection] = useState();
-  if (prevStart !== startDate) {
-    setTransitionDirection(startDate < prevStart ? "earlier" : "later");
-    setPrevStart(startDate);
-  }
-
-  const transitions = useTransition(
-    //gives informations for swiping calendar up/down
-    { weeks, startDate },
-    (item) => item.startDate,
-    {
-      from: { y: -105 },
-      enter: { y: 0 },
-      leave: { y: 105 },
-      initial: null,
-    }
-  );
 
   const handleNav = (addOrSubDays, direction) => {
     //counts days after swiping
@@ -112,6 +60,14 @@ export function Calendar({ user, posts, modalIsOpen }) {
     setDayWithNewPost(null);
   }, [setDayWithNewPost]);
 
+  const weekDefaultProps = {
+    modalIsOpen,
+    user,
+    setNewPostDate,
+    dayWithNewPost,
+    handleAnimationRest,
+  };
+
   return (
     <Fragment>
       <AnimatedDialog isOpen={!!newPostDate} onDismiss={closeDialog}>
@@ -119,46 +75,18 @@ export function Calendar({ user, posts, modalIsOpen }) {
       </AnimatedDialog>
       <div className="Calendar">
         <Weekdays />
-        <div className="Calendar_animation_overflow">
-          {transitions.map(({ item, props: { y }, key }, index) => {
-            if (!item) return null;
-            let transform = getTransformProperty(y);
+        <CalendarAnimation>
+          {weeks.map((week, weekIndex) => {
             return (
-              <animated.div
-                key={key}
-                className="Calendar_animation_wrapper"
-                style={{ transform, zIndex: index }}
-              >
-                {item.weeks.map((week, weekIndex) => (
-                  <div key={weekIndex} className="Calendar_week">
-                    {week.map((day, dayIndex) => {
-                      const showMonth = shouldShowMonth(
-                        day.date,
-                        dayIndex,
-                        weekIndex
-                      );
-                      return (
-                        <Day
-                          modalIsOpen={modalIsOpen}
-                          user={user}
-                          key={dayIndex}
-                          showMonth={showMonth}
-                          day={day}
-                          isOwner={isOwner}
-                          onNewPost={() => setNewPostDate(day.date)}
-                          hasNewPost={
-                            dayWithNewPost === formatDate(day.date, DATE_FORMAT)
-                          }
-                          onAnimatedTextRest={handleAnimationRest}
-                        />
-                      );
-                    })}
-                  </div>
-                ))}
-              </animated.div>
+              <Week
+                key={weekIndex}
+                {...weekDefaultProps}
+                weekIndex={weekIndex}
+                week={week}
+              />
             );
           })}
-        </div>
+        </CalendarAnimation>
         <CalendarNav
           showLater={showLater}
           onEarlier={handleEarlierClick}
@@ -167,22 +95,4 @@ export function Calendar({ user, posts, modalIsOpen }) {
       </div>
     </Fragment>
   );
-
-  function shouldShowMonth(date, day, week) {
-    function isFirstPageOfCalendar(day, week) {
-      return week + day === 0;
-    }
-
-    return isFirstPageOfCalendar(day, week) || isFirstDayOfMonth(date);
-  }
-
-  function getTransformProperty(y) {
-    let transform = "translate3d(0px, 0%, 0px)";
-    if (transitionDirection === "earlier") {
-      transform = y.interpolate((y) => `translate3d(0px, ${y}%, 0px)`);
-    } else if (transitionDirection === "later") {
-      transform = y.interpolate((y) => `translate3d(0px, ${-y}%, 0px)`);
-    }
-    return transform;
-  }
 }

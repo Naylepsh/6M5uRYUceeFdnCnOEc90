@@ -15,10 +15,6 @@
   -moz-appearance: none;
 }
 
-.Calendar_week {
-  display: flex;
-}
-
 .Calendar_minutes_text {
   font-size: 200%;
   padding: 0.25rem 0.5rem;
