@@ -1,7 +1,7 @@
 import { useAppState } from "../../states/AppState";
 import React from "react";
 
-export function ProtectedComponent({ children }) {
+export function ProtectedComponents({ children }) {
   const [{ auth }] = useAppState();
 
   if (!auth) return null;

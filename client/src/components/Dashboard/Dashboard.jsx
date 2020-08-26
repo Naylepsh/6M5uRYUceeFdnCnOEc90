@@ -6,7 +6,7 @@ import Posts from "../Post/Posts";
 import usePosts from "../Post/use-posts";
 import { useAppState } from "../../states/AppState";
 import { Calendar } from "../Calendar/Calendar";
-import { ProtectedComponent } from "../common/ProtectedComponent";
+import { ProtectedComponents } from "../common/ProtectedComponent";
 
 //This component is responsible for
 //main page of aplication
@@ -27,9 +27,9 @@ export default function Dashboard() {
       </AnimatedDialog>
       {posts ? (
         <div className="UserCalendar">
-          <ProtectedComponent>
+          <ProtectedComponents>
             <Calendar user={user} posts={posts} modalIsOpen={showDayInModal} />
-          </ProtectedComponent>
+          </ProtectedComponents>
         </div>
       ) : null}
     </Fragment>
