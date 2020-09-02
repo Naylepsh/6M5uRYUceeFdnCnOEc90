@@ -1,14 +1,14 @@
 import React, { useRef, useState, useEffect } from "react";
+import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import { format as formatDate } from "date-fns";
 import { useAppState } from "../../states/AppState";
 import useDocWithCache from "../../use-doc-with-cache";
 import NewPost from "./NewPost";
-import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import { translateMonths } from "../../tools";
 import usePosts from "./use-posts";
-import "./Posts.css";
 import { ConsultationsService } from "../../services/consultations-service";
 import { getDate } from "../../utils/date";
+import "./Posts.css";
 
 //This component is called when Day
 //is clicked. Provides list of posts
