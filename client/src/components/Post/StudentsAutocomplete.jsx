@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { StudentsService } from "../../../services/students-service";
-import Autocomplete from "./Autocomplete";
-import { parseInput } from "./parseInput";
+import { StudentsService } from "../../services/students-service";
+import Autocomplete from "../common/Autocomplete";
+import { parseInput } from "../../utils/parseInput";
 
 export const StudentsAutocomplete = React.forwardRef((props, ref) => {
   const [students] = useStudents();

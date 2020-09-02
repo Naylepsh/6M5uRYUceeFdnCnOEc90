@@ -5,7 +5,7 @@ import { format as formatDate } from "date-fns";
 import { FaHome } from "react-icons/fa";
 import RecentPostsDropdown from "./RecentPostsDropdown";
 import { ConsultationsService } from "../../services/consultations-service";
-import { StudentsAutocomplete } from "../common/Autocomplete/StudentsAutocomplete";
+import { StudentsAutocomplete } from "./StudentsAutocomplete";
 import "./NewPost.css";
 
 const MAX_MESSAGE_LENGTH = 200;
