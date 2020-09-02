@@ -101,7 +101,7 @@ function Post({ post }) {
   return (
     <div className="Post">
       <div className="Post_message">{post.description}</div>
-      <div className="Post_info">Uczeń: {students}</div>
+      <div className="Post_info">Uczniowie: {students}</div>
       <div className="Post_info">Prowadzący: {lecturers}</div>
       <div className="Post_info">Grupa: {post.group}</div>
       <div className="Post_info">Lokalizacja: {post.address}</div>
