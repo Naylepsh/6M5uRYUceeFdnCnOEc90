@@ -5,6 +5,7 @@ import { format as formatDate } from "date-fns";
 import { FaHome } from "react-icons/fa";
 import RecentPostsDropdown from "./RecentPostsDropdown";
 import { ConsultationsService } from "../../services/consultations-service";
+import { StudentsAutocomplete } from "../common/Autocomplete/StudentsAutocomplete";
 import "./NewPost.css";
 
 const MAX_MESSAGE_LENGTH = 200;
@@ -159,7 +160,7 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
         </div>
         <RecentPostsDropdown uid={auth.uid} onSelect={handleRecentSelect} />
         <label htmlFor="student">Uczeń: </label>
-        <input
+        <StudentsAutocomplete
           className="NewPost_fields"
           type="text"
           id="student"
