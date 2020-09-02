@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { getLastValueFromInput } from "../../utils/parseInput";
 import { LecturersService } from "./../../services/lecturers-service";
 import Autocomplete from "../common/Autocomplete";
 import { findMatchingPeople } from "../../utils/matchers/find-matching-people";
@@ -12,8 +11,8 @@ export const LecturersAutocomplete = React.forwardRef((props, ref) => {
       ref={ref}
       suggestions={lecturers}
       findMatchingSuggestions={findMatchingPeople}
-      parseInput={getLastValueFromInput}
       renderSuggestion={renderLecturerSuggestion}
+      acceptSuggestion={acceptLecturerSuggestion}
     />
   );
 });
@@ -36,4 +35,8 @@ function useLecturers() {
 
 function renderLecturerSuggestion(lecturer) {
   return `${lecturer.id}, ${lecturer.firstName}, ${lecturer.lastName}`;
+}
+
+function acceptLecturerSuggestion(lecturer) {
+  return lecturer.id;
 }
