@@ -81,7 +81,8 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
 
   const submit = async (form) => {
     function createUUUIDArray(value) {
-      return value ? [value] : [];
+      const uuids = value.split(",").filter((uuid) => !!uuid);
+      return uuids.map((uuid) => uuid.trim());
     }
     setSaving(true);
 

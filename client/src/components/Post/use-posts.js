@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { subscribeToPosts, fetchPosts } from "../../tools";
+import { ConsultationsService } from "../../services/consultations-service";
 
 const cache = {};
 
@@ -7,17 +7,28 @@ export default function usePosts(uid, { listen } = { listen: true }) {
   const cached = cache[uid];
   const [posts, setPosts] = useState(cached);
   useEffect(() => {
+    const consultationsService = new ConsultationsService();
+
+    async function fetchConsultations() {
+      try {
+        const { data: consultations } = await consultationsService.getAll();
+        cache[uid] = consultations;
+        setPosts(consultations);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
     if (listen) {
-      return subscribeToPosts(uid, (posts) => {
-        cache[uid] = posts;
-        setPosts(posts);
-      });
+      fetchConsultations();
     }
   }, [uid, listen]);
   return posts;
 }
 
 export async function preloadPosts(uid) {
-  cache[uid] = await fetchPosts(uid);
+  const consultationsService = new ConsultationsService();
+  const { data: consultations } = await consultationsService.getAll();
+  cache[uid] = consultations;
   return;
 }

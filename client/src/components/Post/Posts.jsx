@@ -1,11 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
+import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import { format as formatDate } from "date-fns";
 import { useAppState } from "../../states/AppState";
 import useDocWithCache from "../../use-doc-with-cache";
 import NewPost from "./NewPost";
-import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
-import { deletePost, translateMonths } from "../../tools";
+import { translateMonths } from "../../tools";
 import usePosts from "./use-posts";
+import { ConsultationsService } from "../../services/consultations-service";
+import { getDate } from "../../utils/date";
 import "./Posts.css";
 
 //This component is called when Day
@@ -37,7 +39,8 @@ export default function Posts({ params }) {
     }
   }, [adding]);
 
-  const dayPosts = posts && posts.filter((post) => post.date === date);
+  const dayPosts =
+    posts && posts.filter((post) => getDate(post.datetime) === getDate(date));
 
   return posts && user ? (
     <div className="Posts">
@@ -88,27 +91,34 @@ export default function Posts({ params }) {
 //about it + option to delete a post.
 
 function Post({ post }) {
-  const [{ auth }] = useAppState();
-  const canDelete = auth.uid === post.uid;
-  const handleDelete = () => deletePost(post.id);
+  const consultationService = new ConsultationsService();
+  const handleDelete = () => {
+    consultationService.delete(post.id);
+  };
+  const students = mapEntitiesToViewModel(post.students);
+  const lecturers = mapEntitiesToViewModel(post.lecturers);
 
   return (
     <div className="Post">
-      <div className="Post_message">{post.message}</div>
-      <div className="Post_info">Uczeń: {post.student}</div>
-      <div className="Post_info">Prowadzący: {post.lecturer}</div>
+      <div className="Post_message">{post.description}</div>
+      <div className="Post_info">Uczniowie: {students}</div>
+      <div className="Post_info">Prowadzący: {lecturers}</div>
       <div className="Post_info">Grupa: {post.group}</div>
-      <div className="Post_info">Lokalizacja: {post.place}</div>
+      <div className="Post_info">Lokalizacja: {post.address}</div>
       <div className="Post_delete">
-        {canDelete && (
+        {
           <button
             className="Post_delete_button icon_button"
             onClick={handleDelete}
           >
             <FaTrashAlt /> <span>Usuń</span>
           </button>
-        )}
+        }
       </div>
     </div>
   );
+}
+
+function mapEntitiesToViewModel(entities) {
+  return entities.map((entity) => entity.id).join(", ");
 }

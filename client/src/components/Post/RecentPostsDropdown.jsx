@@ -32,11 +32,11 @@ export default function RecentPostsDropdown({ uid, onSelect }) {
       <MenuList>
         {consultations &&
           consultations
-            .filter((post) => post.message.trim() !== "")
+            .filter((post) => post.description.trim() !== "")
             .reverse()
             .map((post, index) => (
-              <MenuItem key={index} onSelect={() => onSelect(post.message)}>
-                {post.message}
+              <MenuItem key={index} onSelect={() => onSelect(post.description)}>
+                {post.description}
               </MenuItem>
             ))}
       </MenuList>
