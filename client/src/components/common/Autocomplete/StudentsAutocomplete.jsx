@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StudentsService } from "../../../services/students-service";
 import Autocomplete from "./Autocomplete";
+import { parseInput } from "./parseInput";
 
 export const StudentsAutocomplete = React.forwardRef((props, ref) => {
   const [students] = useStudents();
@@ -29,17 +30,6 @@ function useStudents() {
   }, []);
 
   return [students];
-}
-
-function parseInput(event) {
-  const valuesString = event.currentTarget.value;
-  const values = valuesString
-    .split(",")
-    .filter((value) => !!value)
-    .map((value) => value.trim());
-  const [lastValue] = values.slice(-1);
-
-  return lastValue;
 }
 
 function findMatchingStudents(students, string) {
