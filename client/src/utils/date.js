@@ -9,9 +9,8 @@ export function getFirstDayOfTheWeek(date) {
 }
 
 export function getDate(datetime) {
-  return `${datetime.getDate()}-${
-    datetime.getMonth() + 1
-  }-${datetime.getYear()}`;
+  const date = new Date(datetime);
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }
 
 export function setDateToBeginningOfTheDay(date) {
