@@ -9,15 +9,15 @@ import { CalendarNav } from "./CalendarNav";
 import { CalendarAnimation } from "./CalendarAnimation";
 import { Week } from "./Week";
 import { getStartDate } from "./use-start-date";
-import { getWeeks } from "./get-weeks";
-import { useConsultations } from "./use-consultations";
+import { getCalendar } from "./get-calendar";
+import { useCalendar } from "./use-calendar";
 import "./Calendar.css";
 
 const pagesInCalendar = 5 * 7;
 
 export function Calendar({ user, modalIsOpen }) {
   const [calendarDate, setCalendarDate] = useState(new Date());
-  const [weeks, setWeeks] = useConsultations(calendarDate);
+  const [weeks, setWeeks] = useCalendar(calendarDate);
   const [newPostDate, setNewPostDate] = useState(null);
   const [dayWithNewPost, setDayWithNewPost] = useState(null);
 
@@ -49,7 +49,7 @@ export function Calendar({ user, modalIsOpen }) {
   const closeDialog = () => setNewPostDate(null);
 
   const handleNewPostSuccess = async () => {
-    const newWeeks = await getWeeks(calendarDate);
+    const newWeeks = await getCalendar(calendarDate);
     setWeeks(newWeeks);
 
     setDayWithNewPost(formatDate(newPostDate, DATE_FORMAT));

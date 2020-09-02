@@ -1,4 +1,4 @@
-export function parseInput(event) {
+export function getLastValueFromInput(event) {
   const valuesString = event.currentTarget.value;
   const values = valuesString
     .split(",")

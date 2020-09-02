@@ -1,6 +1,6 @@
 import { CalendarService } from "../../services/calendar-service";
 
-export function getWeeks(date) {
+export function getCalendar(date) {
   const dataLoader = new CalendarService(date);
   return dataLoader.getCalendar();
 }
