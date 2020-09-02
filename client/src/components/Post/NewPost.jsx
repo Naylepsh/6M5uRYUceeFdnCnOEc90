@@ -160,7 +160,7 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
           {message.length}/{MAX_MESSAGE_LENGTH}
         </div>
         <RecentPostsDropdown uid={auth.uid} onSelect={handleRecentSelect} />
-        <label htmlFor="student">Uczeń: </label>
+        <label htmlFor="student">Uczniowie: </label>
         <StudentsAutocomplete
           className="NewPost_fields"
           type="text"
