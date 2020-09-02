@@ -6,6 +6,7 @@ import { FaHome } from "react-icons/fa";
 import RecentPostsDropdown from "./RecentPostsDropdown";
 import { ConsultationsService } from "../../services/consultations-service";
 import { StudentsAutocomplete } from "./StudentsAutocomplete";
+import { LecturersAutocomplete } from "./LecturersAutocomplete";
 import "./NewPost.css";
 
 const MAX_MESSAGE_LENGTH = 200;
@@ -170,7 +171,7 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
           onChange={handleAboutChangeStudent}
         />
         <label htmlFor="lecturer"> Prowadzący: </label>
-        <input
+        <LecturersAutocomplete
           className="NewPost_fields"
           type="text"
           id="lecturer"
