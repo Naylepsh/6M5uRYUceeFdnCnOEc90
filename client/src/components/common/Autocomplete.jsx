@@ -22,10 +22,8 @@ export const Autocomplete = React.forwardRef((props, ref) => {
 
   return (
     <React.Fragment>
-      <div className="search">
-        <input ref={ref} {...inputProps} onChange={onInputChange} />
-        <ul></ul>
-      </div>
+      <input ref={ref} {...inputProps} onChange={onInputChange} />
+      <ul></ul>
     </React.Fragment>
   );
 });
