@@ -14,6 +14,7 @@ export const StudentsAutocomplete = React.forwardRef((props, ref) => {
       suggestions={students}
       findMatchingSuggestions={findMatchingPeople}
       parseInput={getLastValueFromInput}
+      renderSuggestion={renderStudentSuggestion}
     />
   );
 });
@@ -32,4 +33,8 @@ function useStudents() {
   }, []);
 
   return [students];
+}
+
+function renderStudentSuggestion(student) {
+  return `${student.id}, ${student.firstName}, ${student.lastName}`;
 }

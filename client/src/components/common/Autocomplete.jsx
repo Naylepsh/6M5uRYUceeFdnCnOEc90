@@ -7,6 +7,7 @@ export const Autocomplete = React.forwardRef((props, ref) => {
     findMatchingSuggestions,
     parseInput,
     onChange,
+    renderSuggestion,
     ...inputProps
   } = props;
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
@@ -18,12 +19,14 @@ export const Autocomplete = React.forwardRef((props, ref) => {
     onChange(event);
   };
 
-  console.log(filteredSuggestions);
-
   return (
     <React.Fragment>
       <input ref={ref} {...inputProps} onChange={onInputChange} />
-      <ul></ul>
+      <ul>
+        {filteredSuggestions.map((suggestion) => (
+          <li>{renderSuggestion(suggestion)}</li>
+        ))}
+      </ul>
     </React.Fragment>
   );
 });

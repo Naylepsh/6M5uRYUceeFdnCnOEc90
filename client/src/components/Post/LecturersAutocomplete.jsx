@@ -13,6 +13,7 @@ export const LecturersAutocomplete = React.forwardRef((props, ref) => {
       suggestions={lecturers}
       findMatchingSuggestions={findMatchingPeople}
       parseInput={getLastValueFromInput}
+      renderSuggestion={renderLecturerSuggestion}
     />
   );
 });
@@ -31,4 +32,8 @@ function useLecturers() {
   }, []);
 
   return [lecturers];
+}
+
+function renderLecturerSuggestion(lecturer) {
+  return `${lecturer.id}, ${lecturer.firstName}, ${lecturer.lastName}`;
 }
