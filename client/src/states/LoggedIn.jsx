@@ -4,6 +4,7 @@ import { fetchDoc, isValidDate } from "./../tools";
 import { useAppState } from "./AppState";
 import UserDatePosts from "./../components/Post/Posts";
 import Feed from "./../components/Feed/Feed";
+import Manager from "./../components/Manager/Manager";
 import TopBar from "./../components/TopBar";
 import User from "../components/User/User";
 import NotFound from "../components/common/NotFound";
@@ -43,6 +44,9 @@ export default function LoggedIn() {
           </Route>
           <Route path="feed">
             <Feed />
+          </Route>
+          <Route path="manager">
+            <Manager />
           </Route>
           <DefaultRoute>
             <NotFound />
