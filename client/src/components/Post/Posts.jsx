@@ -104,7 +104,10 @@ function Post({ post }) {
       <div className="Post_info">Uczniowie: {students}</div>
       <div className="Post_info">Prowadzący: {lecturers}</div>
       <div className="Post_info">Grupa: {post.group}</div>
-      <div className="Post_info">Lokalizacja: {post.address}</div>
+      <div className="Post_info">Lokalizacja: {post.place}</div>
+      <div className="Post_info">
+        Od: {post.startHour} Do: {post.endHour}
+      </div>
       <div className="Post_delete">
         {
           <button

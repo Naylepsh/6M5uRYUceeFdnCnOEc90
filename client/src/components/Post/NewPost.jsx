@@ -32,6 +32,14 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
     getLocalStorageValue(makeNewPostKey(date)) || ""
   );
 
+  const [startHour, setStartHour] = useState(
+    getLocalStorageValue(makeNewPostKey(date)) || ""
+  );
+
+  const [endHour, setEndHour] = useState(
+    getLocalStorageValue(makeNewPostKey(date)) || ""
+  );
+
   const [saving, setSaving] = useState(false);
   const formRef = useRef();
   const messageRef = useRef();
@@ -39,6 +47,8 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
   const studentRef = useRef();
   const lecturerRef = useRef();
   const groupRef = useRef();
+  const startHourRef = useRef();
+  const endHourRef = useRef();
 
   useEffect(() => {
     setLocalStorage(
@@ -47,7 +57,9 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
       place,
       student,
       lecturer,
-      group
+      group,
+      startHour,
+      endHour
     );
   });
 
@@ -77,6 +89,14 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
     setGroup(event.target.value);
   };
 
+  const handleAboutChangeStartHour = (event) => {
+    setStartHour(event.target.value);
+  };
+
+  const handleAboutChangeEndHour = (event) => {
+    setEndHour(event.target.value);
+  };
+
   const tooMuchText = message.length > MAX_MESSAGE_LENGTH;
 
   const submit = async (form) => {
@@ -92,6 +112,8 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
     const students = createUUUIDArray(studentRef.current.value);
     const lecturers = createUUUIDArray(lecturerRef.current.value);
     const groups = createUUUIDArray(groupRef.current.value);
+    const startHour = startHourRef.current.value;
+    const endHour = endHourRef.current.value;
     const consultationSerivce = new ConsultationsService();
 
     try {
@@ -102,6 +124,8 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
         students,
         lecturers,
         groups,
+        startHour,
+        endHour,
       });
 
       createPost({
@@ -110,6 +134,8 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
         student: studentRef.current.value,
         lecturer: lecturerRef.current.value,
         group: groupRef.current.value,
+        startHour: startHourRef.current.value,
+        endHour: endHourRef.current.value,
         date: formatDate(date, DATE_FORMAT),
         uid: auth.uid,
       }).then((post) => {
@@ -178,6 +204,27 @@ export default function NewPost({ takeFocus, date, onSuccess }) {
           autoComplete="on"
           onChange={handleAboutChangeLecturer}
         />
+        <label htmlFor="startHour"> Od: </label>
+        <input
+          className="NewPost_fields"
+          type="time"
+          id="startHour"
+          name="startHour"
+          ref={startHourRef}
+          autoComplete="on"
+          onChange={handleAboutChangeStartHour}
+        />
+        <label htmlFor="startHour"> Do: </label>
+        <input
+          className="NewPost_fields"
+          type="time"
+          id="endHour"
+          name="endHour"
+          ref={endHourRef}
+          autoComplete="on"
+          onChange={handleAboutChangeEndHour}
+        />
+        <br />
         <br />
         <label htmlFor="group"> Grupa: </label>
         <input

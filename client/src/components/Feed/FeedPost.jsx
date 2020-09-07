@@ -34,6 +34,9 @@ export default function FeedPost({ post }) {
         <div className="FeedPost_info">Uczeń: {post.student} </div>
         <div className="FeedPost_info">Grupa: {post.group} </div>
         <div className="FeedPost_info">Prowadzący: {post.lecturer}</div>
+        <div className="FeedPost_info">
+          Od: {post.startHour}       Do: {post.endHour}
+        </div>
       </div>
     </div>
   ) : (
