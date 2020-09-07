@@ -1,0 +1,24 @@
+@font-face {
+  font-family: Montserrat;
+  src: url(../../utils/Montserrat-Regular.ttf);
+}
+
+.Manager {
+  margin-top: 3rem;
+  background: white;
+  box-shadow: 1px 1px 5px hsla(0, 0%, 0%, 0.25);
+  border-top-right-radius: 0.8rem;
+  border-top-left-radius: 0.8rem;
+  overflow: hidden;
+}
+
+.Manager_title_form {
+  font-family: Montserrat;
+  margin-top: 1rem;
+  font-size: 150%;
+  color: #c8553d;
+}
+
+.Manager_form {
+  font-family: Montserrat;
+}
