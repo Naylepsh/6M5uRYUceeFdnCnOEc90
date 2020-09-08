@@ -188,3 +188,9 @@ body {
 [data-reach-menu-item][data-selected] {
   background: var(--accent);
 }
+
+@media screen and (max-width: 480px) {
+  .Main {
+    margin: 0px;
+  }
+}

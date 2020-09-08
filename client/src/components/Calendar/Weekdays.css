@@ -22,3 +22,16 @@
   font-size: 85%;
   font-family: Montserrat;
 }
+
+@media screen and (max-width: 768px) {
+  .Weekdays {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .Weekdays {
+    width: 100%;
+    margin: 0px;
+  }
+}
