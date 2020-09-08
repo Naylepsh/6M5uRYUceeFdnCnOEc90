@@ -1,17 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Weekdays.css";
-//Simpy static elements with polish day names
+
+const weekdays = ["pon", "wt", "śr", "czw", "pt", "sb", "nd"];
 
 export function Weekdays() {
   return (
     <div className="Weekdays">
-      <div>poniedziałek</div>
-      <div>wtorek</div>
-      <div>środa</div>
-      <div>czwartek</div>
-      <div>piątek</div>
-      <div>sobota</div>
-      <div>niedziela</div>
+      {weekdays.map((day, i) => (
+        <div key={i}>{day}</div>
+      ))}
     </div>
   );
 }

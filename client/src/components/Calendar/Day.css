@@ -7,15 +7,19 @@
   position: relative;
   flex: 1;
   display: flex;
-  flex-direction: column;
-  min-height: 6.5rem;
-  min-width: 80px;
-  max-width: 150px;
+  /* max-width: 150px; */
   background: #fbc26d;
   margin-top: 2px;
   margin-bottom: 2px;
   margin-left: 10px;
   margin-right: 10px;
+}
+
+/* Making calendar dares more square-ish */
+.Day::before {
+  content: "";
+  display: block;
+  padding-top: 100%;
 }
 
 .Day:hover {
@@ -137,4 +141,20 @@
 
 .Day_link:hover {
   color: var(--accent);
+}
+
+@media screen and (max-width: 768px) {
+  .Day {
+    margin: 4px;
+  }
+
+  .Day_month {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .Day {
+    margin: 2px;
+  }
 }

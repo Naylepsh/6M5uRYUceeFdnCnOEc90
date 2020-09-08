@@ -235,29 +235,29 @@ export function tween(duration, callback) {
 export function translateMonths(month) {
   switch (month) {
     case "Jan":
-      return "STYCZEŃ";
+      return "STY";
     case "Feb":
-      return "LUTY";
+      return "LUT";
     case "Mar":
-      return "MARZEC";
+      return "MAR";
     case "Apr":
-      return "KWIECIEŃ";
+      return "KWI";
     case "May":
       return "MAJ";
     case "Jun":
-      return "CZERWIEC";
+      return "CZE";
     case "Jul":
-      return "LIPIEC";
+      return "LIP";
     case "Aug":
-      return "SIERPIEŃ";
+      return "SIE";
     case "Sep":
-      return "WRZESIEŃ";
+      return "WRZ";
     case "Oct":
-      return "PAŹDZIERNIK";
+      return "PAŹ";
     case "Nov":
-      return "LISTOPAD";
+      return "LIS";
     case "Dec":
-      return "GRUDZIEŃ";
+      return "GRU";
     default:
       console.log(`Error, can't figure what ${month} is `);
   }
