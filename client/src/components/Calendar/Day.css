@@ -143,14 +143,18 @@
   color: var(--accent);
 }
 
-@media screen and (max-width: 480px) {
-  .Day {
-    margin: 2px;
-  }
-}
-
 @media screen and (max-width: 768px) {
   .Day {
     margin: 4px;
+  }
+
+  .Day_month {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .Day {
+    margin: 2px;
   }
 }
