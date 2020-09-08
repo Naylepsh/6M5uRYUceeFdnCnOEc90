@@ -1,6 +1,7 @@
-const dotenv = require("dotenv");
-dotenv.config();
+import { config } from "dotenv";
+config();
 
+console.log(process.env.REACT_APP_CONSULTATIONS_SERVICE_URL);
 export default {
-  consultationServiceURL: process.env.CONSULTATIONS_SERVICE_URL,
+  apiUrl: process.env.REACT_APP_CONSULTATIONS_SERVICE_URL,
 };

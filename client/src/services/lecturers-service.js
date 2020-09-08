@@ -1,8 +1,9 @@
 import { HttpService } from "./http-service";
+import config from "../config";
 
 export class LecturersService extends HttpService {
   constructor() {
-    const apiEndpoint = "http://localhost:3333/lecturers";
+    const apiEndpoint = `${config.apiUrl}/lecturers`;
     super(apiEndpoint);
   }
 }

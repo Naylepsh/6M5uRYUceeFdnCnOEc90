@@ -1,8 +1,9 @@
 import { HttpService } from "./http-service";
+import config from "../config";
 
 export class GroupsService extends HttpService {
   constructor() {
-    const apiEndpoint = "http://localhost:3333/groups";
+    const apiEndpoint = `${config.apiUrl}/groups`;
     super(apiEndpoint);
   }
 }
