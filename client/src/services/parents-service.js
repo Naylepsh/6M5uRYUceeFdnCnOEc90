@@ -1,8 +1,9 @@
 import { HttpService } from "./http-service";
+import config from "../config";
 
 export class ParentsService extends HttpService {
   constructor() {
-    const apiEndpoint = "http://localhost:3333/parents";
+    const apiEndpoint = `${config.apiUrl}/parents`;
     super(apiEndpoint);
   }
 }
