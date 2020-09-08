@@ -14,10 +14,11 @@ const weekdaysFullNames = [
 
 export function Weekdays() {
   const [weekdays, setWeekdays] = useState(weekdaysFullNames);
+  const maxWidth = 768;
 
   const shortenNames = useCallback(() => {
     const newWeekdays =
-      window.innerWidth < 768
+      window.innerWidth < maxWidth
         ? weekdays.map((day) => day.slice(0, 3))
         : weekdaysFullNames;
     setWeekdays(newWeekdays);
@@ -25,7 +26,7 @@ export function Weekdays() {
 
   useEffect(() => {
     shortenNames();
-    window.matchMedia("(max-width: 768px)").addListener(shortenNames);
+    window.matchMedia(`(max-width: ${maxWidth}px)`).addListener(shortenNames);
   }, [shortenNames]);
 
   return (
