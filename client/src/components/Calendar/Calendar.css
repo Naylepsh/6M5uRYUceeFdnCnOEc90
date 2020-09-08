@@ -64,7 +64,7 @@
 .Calendar_animation_overflow {
   overflow: hidden;
   position: relative;
-  height: calc(33rem + 12px);
+  height: calc(45rem + 12px);
   width: 80%;
   margin: 0 auto;
 }
@@ -72,12 +72,12 @@
 .Calendar_animation_wrapper {
   width: 100%;
   height: 100%;
-  /* position: absolute; */
-  position: relative;
+  position: absolute;
 }
 
 @media screen and (max-width: 1024px) {
   .Calendar_animation_overflow {
+    height: calc(33rem + 12px);
     width: 90%;
   }
 }
