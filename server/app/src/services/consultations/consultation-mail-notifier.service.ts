@@ -17,7 +17,7 @@ export class ConsultationNotifier {
     private readonly notifiers: INotifier<IConsultation>[],
   ) {}
 
-  public async notifyParentsAboutTheirChildrenConsultations(): Promise<void> {
+  public async notifyAboutConsultations(): Promise<void> {
     const timeFrame = this.createTimeFrame();
     const upcommingConsultations = await this.getUpcomingConsultations(
       timeFrame,

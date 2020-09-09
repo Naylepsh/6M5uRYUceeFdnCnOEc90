@@ -101,7 +101,7 @@ describe('Consultation Notifier', () => {
   });
 
   it('should send emails', async () => {
-    await notifier.notifyParentsAboutTheirChildrenConsultations();
+    await notifier.notifyAboutConsultations();
 
     expect(emailService.sendMail).toHaveBeenCalled();
   });
