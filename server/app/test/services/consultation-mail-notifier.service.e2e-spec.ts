@@ -5,6 +5,7 @@ import {
   createSampleConsultation,
   createSampleParent,
   createSampleStudent,
+  createSampleLecturer,
 } from '../helpers/models.helpers';
 import { ConsultationNotifier } from '../../src/services/consultations/consultation-mail-notifier.service';
 import getAccount from '../../src/config/mail.account.configuration';
@@ -13,6 +14,7 @@ import { ITimeInverval } from '../../src/services/consultations/consultation-mai
 import '../../src/utils/extensions/date.extentions';
 import { DatabaseUtility } from './../helpers/database.helper';
 import * as request from 'supertest';
+import { ParentNotifier } from '../../src/services/consultations/parent-notifier';
 
 interface Entity {
   id: string;
@@ -47,7 +49,8 @@ describe('Consultation Notifier', () => {
     const account = await getAccount();
     emailService = new EmailService(account);
     jest.spyOn(emailService, 'sendMail');
-    notifier = new ConsultationNotifier(emailService, timeInterval);
+    const notifiers = [new ParentNotifier(emailService)];
+    notifier = new ConsultationNotifier(timeInterval, notifiers);
   };
 
   beforeEach(async () => {
@@ -57,7 +60,8 @@ describe('Consultation Notifier', () => {
   const populateDatabase = async () => {
     const parent = await createParent();
     const student = await createStudent([parent.id]);
-    await createConsultation([student.id]);
+    const lecturer = await createLecturer();
+    await createConsultation([student.id], [lecturer.id]);
   };
 
   const createParent = async (): Promise<Entity> => {
@@ -77,8 +81,20 @@ describe('Consultation Notifier', () => {
     return body;
   };
 
-  const createConsultation = async (studentIds: string[]): Promise<Entity> => {
+  const createLecturer = async (): Promise<Entity> => {
+    const lecturer = createSampleLecturer();
+    const { body } = await request(app.getHttpServer())
+      .post('/lecturers')
+      .send(lecturer);
+    return body;
+  };
+
+  const createConsultation = async (
+    studentIds: string[],
+    lecturersIds: string[],
+  ): Promise<Entity> => {
     const consultation = createSampleConsultation();
+
     consultation.datetime = new Date(
       new Date()
         .addHours(1)
@@ -86,9 +102,12 @@ describe('Consultation Notifier', () => {
         .toUTCString(),
     );
     consultation.students = studentIds;
+    consultation.lecturers = lecturersIds;
+
     const { body } = await request(app.getHttpServer())
       .post('/consultations')
       .send(consultation);
+
     return body;
   };
 
@@ -101,7 +120,7 @@ describe('Consultation Notifier', () => {
   });
 
   it('should send emails', async () => {
-    await notifier.notifyParentsAboutTheirChildrenConsultations();
+    await notifier.notifyAboutConsultations();
 
     expect(emailService.sendMail).toHaveBeenCalled();
   });

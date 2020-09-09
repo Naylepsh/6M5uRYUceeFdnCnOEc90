@@ -12,6 +12,7 @@ export interface IConsultation {
   id: string;
   datetime: Date;
   students: IStudent[];
+  lecturers: ILecturer[];
 }
 
 export interface IStudent {
@@ -21,5 +22,10 @@ export interface IStudent {
 }
 
 export interface IParent {
+  email: string;
+}
+
+export interface ILecturer {
+  id: string;
   email: string;
 }
