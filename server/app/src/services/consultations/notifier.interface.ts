@@ -1,3 +1,3 @@
 export interface INotifier<T> {
-  sendNotifications(notifications: T[]): void;
+  sendNotifications(notifications: T[]): Promise<any>;
 }

@@ -12,20 +12,32 @@ export class ParentNotifier implements INotifier<IConsultation> {
 
   constructor(private readonly emailService: EmailService) {}
 
-  public sendNotifications(upcomingConsultations: IConsultation[]): void {
+  public sendNotifications(
+    upcomingConsultations: IConsultation[],
+  ): Promise<any> {
+    const mailsSent = [];
+
     for (const consultation of upcomingConsultations) {
       if (!consultation.students) break;
 
       for (const student of consultation.students) {
         const key = this.createKey(consultation, student);
-        if (this.isEligableForNotification(student, key))
-          this.sendMail(consultation, student, student.parents);
+        if (this.isEligableForNotification(student, key)) {
+          const mailSent = this.sendMail(
+            consultation,
+            student,
+            student.parents,
+          );
+          mailsSent.push(mailSent);
+        }
         this.notificationsSentInCurrentRound.set(key, true);
       }
     }
 
     this.notificationsSentInPreviousRound = this.notificationsSentInCurrentRound;
     this.notificationsSentInCurrentRound = new Map();
+
+    return Promise.all(mailsSent);
   }
 
   private createKey(consultation: IConsultation, student: IStudent): string {
