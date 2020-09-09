@@ -2,6 +2,7 @@ import { ConsultationNotifier } from './consultation-mail-notifier.service';
 import { EmailService } from '../email/email.service';
 import getAccount from '../../config/mail.account.configuration';
 import '../../utils/extensions/date.extentions';
+import { ParentNotifier } from './parent-notifier';
 
 describe('ConsultationNotifier', () => {
   let notifier: ConsultationNotifier;
@@ -43,7 +44,8 @@ describe('ConsultationNotifier', () => {
       shouldStartAfterMinutes: 10,
       shouldEndBeforeMinutes: 20,
     };
-    notifier = new ConsultationNotifier(emailService, timeInterval);
+    const parentNotifier = new ParentNotifier(emailService);
+    notifier = new ConsultationNotifier(timeInterval, [parentNotifier]);
     jest
       .spyOn(notifier, 'getUpcomingConsultations')
       .mockImplementation(() => consultations);

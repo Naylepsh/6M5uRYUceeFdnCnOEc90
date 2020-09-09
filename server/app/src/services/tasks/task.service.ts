@@ -3,6 +3,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import getAccount from '../../config/mail.account.configuration';
 import { ConsultationNotifier } from '../consultations/consultation-mail-notifier.service';
 import { EmailService } from '../email/email.service';
+import { ParentNotifier } from '../consultations/parent-notifier';
 
 @Injectable()
 export class TasksService {
@@ -25,6 +26,7 @@ export class TasksService {
       shouldStartAfterMinutes: 60,
       shouldEndBeforeMinutes: 90,
     };
-    this.notifier = new ConsultationNotifier(emailService, timeInterval);
+    const parentNotifier = new ParentNotifier(emailService);
+    this.notifier = new ConsultationNotifier(timeInterval, [parentNotifier]);
   }
 }
